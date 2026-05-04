@@ -1,0 +1,190 @@
+:host {
+  display: block;
+  background: var(--paper);
+  min-height: 100dvh;
+}
+
+.screen {
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--paper);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 100px;
+}
+
+// Avatar
+.avatar-section {
+  padding: 24px 20px 0;
+  text-align: center;
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F5B92E 0%, #DD4D2A 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--paper);
+  box-shadow: 0 6px 0 var(--ink);
+}
+
+.avatar-letter {
+  font-size: 50px;
+  color: var(--ink);
+}
+
+.avatar-level {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--ink);
+  color: var(--maiz);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 3px solid var(--paper);
+}
+
+.user-name {
+  font-size: 28px;
+  margin: 14px 0 4px;
+}
+
+.user-info {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+// Stats
+.stats-row {
+  display: flex;
+  gap: 8px;
+  padding: 20px 20px 0;
+}
+
+.stat-item {
+  flex: 1;
+  padding: 10px 4px;
+  text-align: center;
+}
+
+.stat-emoji {
+  font-size: 16px;
+}
+
+.stat-value {
+  font-size: 18px;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.stat-label {
+  font-size: 9px;
+  color: var(--ink-3);
+  margin-top: 2px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+// Tabs
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 20px 20px 0;
+}
+
+// Collection grid
+.collection {
+  padding: 16px 20px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.collection-item {
+  aspect-ratio: 1;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid rgba(36,21,16,0.08);
+}
+
+.collection-emoji {
+  font-size: 32px;
+}
+
+.collection-name {
+  font-size: 9px;
+  font-weight: 700;
+  margin-top: 3px;
+  color: var(--ink);
+}
+
+// CTA comerciante
+.comerciante-cta {
+  margin: 24px 20px 0;
+  padding: 16px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.comerciante-bg {
+  position: absolute;
+  right: -12px;
+  bottom: -12px;
+  font-size: 90px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.comerciante-label {
+  font-size: 11px;
+  color: var(--maiz);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.comerciante-title {
+  font-size: 22px;
+  line-height: 1.05;
+  margin: 6px 0 8px;
+  max-width: 220px;
+}
+
+.comerciante-sub {
+  font-size: 12px;
+  color: rgba(247,241,230,0.7);
+  margin-bottom: 12px;
+}
+
+.comerciante-btn {
+  background: var(--terracota);
+  color: #FCF4E6;
+  box-shadow: 0 3px 0 var(--terracota-d);
+  padding: 10px 16px;
+  font-size: 13px;
+  position: relative;
+}

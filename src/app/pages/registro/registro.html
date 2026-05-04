@@ -1,0 +1,61 @@
+<div class="screen">
+  <!-- Header with back + progress -->
+  <div class="header">
+    <a routerLink="/login" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+    </a>
+    <div class="progress-steps">
+      <div class="step step-active"></div>
+      <div class="step"></div>
+      <div class="step"></div>
+    </div>
+  </div>
+
+  <div class="scroll-content">
+    <span class="step-label">PASO 1 DE 3</span>
+    <h1 class="cv2-serif page-title">
+      Bienvenida<br>
+      <span class="cv2-serif-i accent">al barrio</span>
+    </h1>
+    <p class="page-sub">Cuéntanos un poco sobre ti para personalizar tus recomendaciones.</p>
+
+    <!-- Avatar picker -->
+    <div class="avatar-picker">
+      <div class="avatar-circle">
+        <span class="cv2-serif avatar-letter">M</span>
+      </div>
+      <div class="avatar-camera">📷</div>
+    </div>
+
+    <!-- Form fields -->
+    @for (f of fields; track f.label) {
+      <div class="field-group">
+        <label class="field-label">{{ f.label }}</label>
+        <div class="field-input">
+          @if (f.icon) {
+            <span class="field-icon">{{ f.icon }}</span>
+          }
+          <input [type]="f.type || 'text'" class="field-text" [placeholder]="f.placeholder">
+        </div>
+      </div>
+    }
+
+    <!-- Términos -->
+    <div class="terms-box">
+      <div class="terms-check">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#FCF7EC" stroke-width="3" stroke-linecap="round"><path d="M3 8l3 3 7-7"/></svg>
+      </div>
+      <div class="terms-text">
+        Acepto los <strong class="terms-link">términos de servicio</strong> y la <strong class="terms-link">política de privacidad</strong> de Changarro.
+      </div>
+    </div>
+
+    <a routerLink="/bienvenida">
+      <button class="cv2-btn cv2-btn-primary submit-btn">Siguiente — elige tus gustos →</button>
+    </a>
+
+    <div class="coins-hint">
+      Al registrarte recibes <strong class="accent">+100 🪙 monedas</strong> de bienvenida
+    </div>
+  </div>
+</div>

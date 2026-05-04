@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: #f0eee9;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  color: #241510;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --paper: #FBF4E4;
+  --paper-2: #F4E9D0;
+  --paper-3: #EBDDB8;
+  --ink: #241510;
+  --ink-2: #4A3A30;
+  --ink-3: #7A6A60;
+  --ink-mute: #B8A898;
+
+  --terracota: #DD4D2A;
+  --terracota-d: #A33B22;
+  --nopal: #4A8A3A;
+  --nopal-l: #6FB055;
+  --maiz: #F5B92E;
+  --maiz-l: #FFD970;
+  --talavera: #2B6FA0;
+  --rosa: #E8628E;
+  --morado: #7A3FA8;
+}
+
+// Typography
+.cv2-serif {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.cv2-serif-i {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-style: italic;
+}
+
+// Animations
+@keyframes cv2-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes cv2-wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes cv2-pop {
+  0% { transform: scale(0.9); opacity: 0; }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes cv2-shine {
+  0% { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(300%) skewX(-20deg); }
+}
+
+.cv2-bounce { animation: cv2-bounce 1.6s ease-in-out infinite; }
+.cv2-wiggle { animation: cv2-wiggle 2s ease-in-out infinite; }
+.cv2-pop { animation: cv2-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+// Button
+.cv2-btn {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-size: 15px;
+  transition: transform 0.12s;
+  position: relative;
+  overflow: hidden;
+
+  &:active { transform: scale(0.96); }
+}
+
+.cv2-btn-primary {
+  background: var(--terracota);
+  color: #FCF4E6;
+  box-shadow: 0 4px 0 var(--terracota-d), 0 8px 16px rgba(221,77,42,0.3);
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--terracota-d);
+  }
+}
+
+.cv2-btn-dark {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 4px 0 #000, 0 8px 16px rgba(0,0,0,0.15);
+}
+
+// Sticker
+.cv2-sticker {
+  position: relative;
+  border-radius: 20px;
+  background: #FCF7EC;
+  border: 3px solid #FCF7EC;
+  outline: 1px solid rgba(36,21,16,0.1);
+  box-shadow: 0 4px 0 rgba(36,21,16,0.08), 0 8px 16px rgba(36,21,16,0.06);
+}
+
+// Coin
+.cv2-coin {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD970 0%, #F5B92E 50%, #C68A12 100%);
+  border: 2px solid #C68A12;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6B3E08;
+  font-weight: 900;
+  font-size: 14px;
+  position: relative;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+}
+
+// Card
+.cv2-card {
+  background: #FCF7EC;
+  border-radius: 22px;
+  border: 1px solid rgba(36,21,16,0.08);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(36,21,16,0.05);
+  break-inside: avoid;
+}
+
+// Promo sticker
+.cv2-promo-sticker {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--maiz);
+  border: 3px solid #FCF7EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'DM Serif Display', serif;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1;
+  transform: rotate(-12deg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  letter-spacing: -0.01em;
+}
+
+// Sello pasaporte
+.cv2-sello {
+  width: 80px;
+  height: 80px;
+  border: 2.5px dashed currentColor;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: 'DM Serif Display', serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  font-weight: 700;
+  background: rgba(255,255,255,0.4);
+
+  &.locked {
+    color: var(--ink-mute);
+    opacity: 0.6;
+  }
+}
+
+// Points pill
+.cv2-points {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--ink);
+  color: var(--maiz);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+// Progress bar
+.cv2-progress {
+  height: 8px;
+  background: var(--paper-3);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cv2-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--maiz) 0%, var(--terracota) 100%);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+// Chip
+.cv2-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #FCF7EC;
+  border: 2px solid var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  box-shadow: 0 2px 0 var(--ink);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &.active {
+    background: var(--ink);
+    color: var(--maiz);
+  }
+}
+
+// Image placeholder
+.cv2-img-ph {
+  background: repeating-linear-gradient(135deg, rgba(36,21,16,0.06) 0 8px, rgba(36,21,16,0.02) 8px 16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--ink-3);
+}
+
+// Category color classes
+.cv2-cat-comida    { background: #FFE0C2; color: #8B3A1F; }
+.cv2-cat-tienda    { background: #D4ECC2; color: #2F5A22; }
+.cv2-cat-servicios { background: #C2E0EC; color: #1A4258; }
+.cv2-cat-entrete   { background: #FFD0DA; color: #8A2F46; }
+.cv2-cat-salud     { background: #E8C8DD; color: #6B2A52; }

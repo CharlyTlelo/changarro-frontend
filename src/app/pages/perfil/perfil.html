@@ -1,0 +1,54 @@
+<div class="screen">
+  <div class="scroll-content">
+    <!-- Avatar -->
+    <div class="avatar-section">
+      <div class="avatar-wrapper">
+        <div class="avatar">
+          <span class="cv2-serif avatar-letter">M</span>
+        </div>
+        <div class="avatar-level">Lvl 4</div>
+      </div>
+      <h1 class="cv2-serif user-name">María Hernández</h1>
+      <div class="user-info">👑 Embajadora del barrio · Roma Norte</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      @for (s of stats; track s.l) {
+        <div class="cv2-sticker stat-item">
+          <div class="stat-emoji">{{ s.emoji }}</div>
+          <div class="cv2-serif stat-value">{{ s.v }}</div>
+          <div class="stat-label">{{ s.l }}</div>
+        </div>
+      }
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      @for (tab of tabs; track tab) {
+        <div class="cv2-chip" [class.active]="activeTab === tab" (click)="activeTab = tab">{{ tab }}</div>
+      }
+    </div>
+
+    <!-- Collection grid -->
+    <div class="collection">
+      @for (v of collection; track v.n) {
+        <div class="collection-item" [style.background]="v.c">
+          <span class="collection-emoji">{{ v.e }}</span>
+          <span class="collection-name">{{ v.n }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- CTA comerciante -->
+    <div class="comerciante-cta">
+      <div class="comerciante-bg">🏪</div>
+      <div class="comerciante-label">¿TIENES UN CHANGARRO?</div>
+      <div class="cv2-serif comerciante-title">Súmate al catálogo del barrio</div>
+      <div class="comerciante-sub">Promos, fotos, reseñas y clientes nuevos. Gratis.</div>
+      <button class="cv2-btn comerciante-btn">Registrar mi negocio →</button>
+    </div>
+  </div>
+
+  <app-tab-bar active="perfil" />
+</div>
