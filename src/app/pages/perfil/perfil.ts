@@ -111,6 +111,6 @@ export class Perfil {
 
   cerrarSesion(): void {
     // TODO: llamar POST /auth/logout y borrar tokens almacenados
-    void this.router.navigate(['/login']);
+    void (['/login']);
   }
 }

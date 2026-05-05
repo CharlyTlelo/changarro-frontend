@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -9,6 +9,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './biz-analytics.scss',
 })
 export class BizAnalytics {
+  businessName = signal('Tacos Don Juan');
+  businessEmoji = signal('🌮');
   kpis = [
     { value: '1,247', label: 'Visitas', icon: '🚶', trend: '+12%', trendUp: true },
     { value: '234', label: 'Reseñas', icon: '✍️', trend: '+8', trendUp: true },
