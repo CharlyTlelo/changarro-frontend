@@ -1,4 +1,14 @@
 <div class="screen">
+  <input
+    #profilePhotoFile
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    class="perfil-photo-file-input"
+    (change)="onProfilePhotoSelect($event)"
+    tabindex="-1"
+    aria-hidden="true"
+  />
+
   <!-- Sidebar (tablet only) -->
   <app-sidebar class="tablet-only sidebar-slot" active="perfil" />
 
@@ -11,7 +21,11 @@
       <div class="avatar-section mobile-only">
         <div class="avatar-wrapper">
           <div class="avatar">
-            <span class="cv2-serif avatar-letter">M</span>
+            @if (profilePhotoUrl) {
+              <img [src]="profilePhotoUrl" alt="" class="avatar-img" />
+            } @else {
+              <span class="cv2-serif avatar-letter">{{ avatarLetter }}</span>
+            }
           </div>
           <div class="avatar-level">Lvl 4</div>
         </div>
@@ -36,6 +50,31 @@
           <button class="cv2-btn edit-btn" (click)="startEditing()">✏️ Editar perfil</button>
         } @else {
           <div class="edit-card cv2-sticker">
+            <div class="edit-photo-block">
+              <div class="edit-photo-preview">
+                @if (profilePhotoUrl) {
+                  <img [src]="profilePhotoUrl" alt="" class="edit-photo-img" />
+                } @else {
+                  <span class="cv2-serif edit-photo-letter">{{ avatarLetter }}</span>
+                }
+                <button type="button" class="edit-photo-badge" (click)="profilePhotoFile.click()" aria-label="Elegir imagen desde el dispositivo">
+                  📷
+                </button>
+              </div>
+              <div class="edit-photo-copy">
+                <span class="edit-photo-title">Foto de perfil</span>
+                @if (!profilePhotoUrl) {
+                  <span class="edit-photo-hint">Aún no tienes foto. Súbela para que el barrio te reconozca.</span>
+                  <button type="button" class="edit-photo-primary-btn" (click)="profilePhotoFile.click()">📷 Subir foto</button>
+                } @else {
+                  <span class="edit-photo-hint">JPG, PNG o WebP. Puedes sustituirla o quitarla.</span>
+                  <div class="edit-photo-actions">
+                    <button type="button" class="edit-photo-secondary-btn" (click)="profilePhotoFile.click()">Cambiar foto</button>
+                    <button type="button" class="edit-photo-remove-btn" (click)="removeProfilePhoto()">Quitar foto</button>
+                  </div>
+                }
+              </div>
+            </div>
             <div class="edit-field">
               <label class="edit-label">NOMBRE</label>
               <input class="edit-input" [(ngModel)]="editName" placeholder="Tu nombre" />
@@ -69,10 +108,13 @@
         }
       </div>
 
-      <!-- Danger zone (mobile) -->
-      <div class="danger-zone mobile-only">
-        <button class="danger-btn" (click)="openDeleteModal()">🗑️ Eliminar mi cuenta</button>
+      <!-- Cerrar sesión (mobile) -->
+      <div class="session-section mobile-only">
+        <h2 class="session-heading cv2-serif">Sesión</h2>
+        <p class="session-desc">Sal de tu cuenta en este dispositivo.</p>
+        <button type="button" class="logout-btn" (click)="cerrarSesion()">Cerrar sesión</button>
       </div>
+
 
       <!-- CTA comerciante (mobile) -->
       <div class="comerciante-cta mobile-only">
@@ -90,10 +132,7 @@
         <!-- Header -->
         <div class="t-header">
           <h1 class="cv2-serif t-title">Mi perfil</h1>
-          <div class="t-coins cv2-points">
-            <span class="cv2-coin" style="width:22px;height:22px;font-size:11px">$</span>
-            1,240
-          </div>
+         
         </div>
 
         <!-- Two-column layout -->
@@ -104,7 +143,11 @@
             <div class="t-profile-card cv2-card">
               <div class="t-profile-top">
                 <div class="t-avatar">
-                  <span class="cv2-serif t-avatar-letter">M</span>
+                  @if (profilePhotoUrl) {
+                    <img [src]="profilePhotoUrl" alt="" class="t-avatar-img" />
+                  } @else {
+                    <span class="cv2-serif t-avatar-letter">{{ avatarLetter }}</span>
+                  }
                 </div>
                 <div class="t-profile-info">
                   <h2 class="cv2-serif t-profile-name">María Hernández</h2>
@@ -124,16 +167,6 @@
                 }
               </div>
 
-              <!-- Level progress -->
-              <div class="t-level">
-                <div class="t-level-header">
-                  <span class="t-level-label">Nivel 4 — Embajadora</span>
-                  <span class="t-level-next">760 para Leyenda</span>
-                </div>
-                <div class="cv2-progress">
-                  <div class="cv2-progress-fill" style="width:62%"></div>
-                </div>
-              </div>
             </div>
 
             <!-- Edit card -->
@@ -147,6 +180,30 @@
 
               @if (!editing) {
                 <div class="t-info-rows">
+                  <div class="t-info-row t-info-row--photo">
+                    <div class="t-photo-thumb-wrap">
+                      @if (profilePhotoUrl) {
+                        <img [src]="profilePhotoUrl" alt="" class="t-photo-thumb" />
+                      } @else {
+                        <span class="cv2-serif t-photo-thumb-letter">{{ avatarLetter }}</span>
+                      }
+                    </div>
+                    <div class="t-info-content">
+                      <div class="t-info-label">Foto de perfil</div>
+                      @if (!profilePhotoUrl) {
+                        <div class="t-info-value t-info-value--muted">Sin foto · Visible tu inicial en el barrio</div>
+                      } @else {
+                        <div class="t-info-value t-info-value--muted">Visible en tu perfil del barrio</div>
+                      }
+                    </div>
+                    <div class="t-photo-row-actions">
+                      @if (!profilePhotoUrl) {
+                        <button type="button" class="t-photo-chip-btn t-photo-chip-btn--primary" (click)="profilePhotoFile.click()">Subir foto</button>
+                      } @else {
+                        <button type="button" class="t-photo-chip-btn" (click)="profilePhotoFile.click()">Cambiar foto</button>
+                      }
+                    </div>
+                  </div>
                   <div class="t-info-row">
                     <span class="t-info-icon">👤</span>
                     <div class="t-info-content">
@@ -157,19 +214,38 @@
                   <div class="t-info-row">
                     <span class="t-info-icon">📱</span>
                     <div class="t-info-content">
-                      <div class="t-info-label">Teléfono</div>
+                      <div class="t-info-label">WhatsApp</div>
                       <div class="t-info-value">55 1234 5678</div>
                     </div>
                   </div>
-                  <div class="t-info-row">
-                    <span class="t-info-icon">📧</span>
-                    <div class="t-info-content">
-                      <div class="t-info-label">Correo</div>
-                      <div class="t-info-value">maria&#64;changarro.com</div>
-                    </div>
-                  </div>
+                  
                 </div>
               } @else {
+                <div class="t-photo-editor">
+                  <div class="t-photo-editor-preview">
+                    @if (profilePhotoUrl) {
+                      <img [src]="profilePhotoUrl" alt="" class="t-photo-editor-img" />
+                    } @else {
+                      <span class="cv2-serif t-photo-editor-letter">{{ avatarLetter }}</span>
+                    }
+                    <button type="button" class="t-photo-editor-badge" (click)="profilePhotoFile.click()" aria-label="Elegir imagen">
+                      📷
+                    </button>
+                  </div>
+                  <div class="t-photo-editor-copy">
+                    <div class="t-photo-editor-title">Foto de perfil</div>
+                    @if (!profilePhotoUrl) {
+                      <p class="t-photo-editor-hint">Aún no cargaste una imagen. Formatos JPG, PNG o WebP. La vista previa es local hasta guardar.</p>
+                      <button type="button" class="t-photo-editor-primary-btn" (click)="profilePhotoFile.click()">📷 Cargar foto</button>
+                    } @else {
+                      <p class="t-photo-editor-hint">Puedes cambiar la imagen o quitarla. Los cambios aplican al guardar.</p>
+                      <div class="t-photo-editor-actions">
+                        <button type="button" class="t-photo-editor-secondary-btn" (click)="profilePhotoFile.click()">Cambiar foto</button>
+                        <button type="button" class="t-photo-editor-remove-btn" (click)="removeProfilePhoto()">Quitar foto</button>
+                      </div>
+                    }
+                  </div>
+                </div>
                 <div class="t-edit-form">
                   <div class="t-form-field">
                     <label class="t-form-label">NOMBRE</label>
@@ -187,14 +263,14 @@
               }
             </div>
 
-            <!-- Danger zone -->
-            <div class="t-danger cv2-card">
-              <div class="t-danger-header">
-                <h3 class="cv2-serif t-danger-title">Zona peligrosa</h3>
-              </div>
-              <p class="t-danger-text">Eliminar tu cuenta borrará permanentemente todos tus datos, sellos, monedas y reseñas.</p>
-              <button class="t-danger-btn" (click)="openDeleteModal()">🗑️ Eliminar mi cuenta</button>
+            <!-- Cerrar sesión (tablet) -->
+            <div class="t-session cv2-card">
+              <h3 class="cv2-serif t-session-title">Sesión</h3>
+              <p class="t-session-desc">Sal de tu cuenta en este dispositivo.</p>
+              <button type="button" class="t-logout-btn" (click)="cerrarSesion()">Cerrar sesión</button>
             </div>
+
+            
           </div>
 
           <!-- Right column -->
@@ -227,21 +303,6 @@
               </div>
             </div>
 
-            <!-- Collection -->
-            <div class="t-collection cv2-card">
-              <div class="t-section-header">
-                <h3 class="cv2-serif t-section-title">Mi colección</h3>
-                <span class="t-section-count">{{ collection.length }} negocios</span>
-              </div>
-              <div class="t-collection-grid">
-                @for (v of collection; track v.n) {
-                  <div class="t-collection-item" [style.background]="v.c">
-                    <span class="t-collection-emoji">{{ v.e }}</span>
-                    <span class="t-collection-name">{{ v.n }}</span>
-                  </div>
-                }
-              </div>
-            </div>
 
             <!-- Activity -->
             <div class="t-activity cv2-card">
@@ -267,29 +328,4 @@
   </div>
 </div>
 
-<!-- Delete account modal -->
-@if (showDeleteModal) {
-  <div class="modal-overlay" (click)="closeDeleteModal()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
-      <div class="modal-icon">⚠️</div>
-      <h2 class="cv2-serif modal-title">¿Eliminar tu cuenta?</h2>
-      <p class="modal-text">Esta acción es <strong>irreversible</strong>. Se borrarán permanentemente:</p>
-      <ul class="modal-list">
-        <li>Tus 1,240 monedas</li>
-        <li>4 sellos del pasaporte</li>
-        <li>21 reseñas publicadas</li>
-        <li>Todos tus favoritos y visitas</li>
-      </ul>
-      <div class="modal-confirm">
-        <label class="modal-label">Escribe <strong>ELIMINAR</strong> para confirmar:</label>
-        <input class="modal-input" [(ngModel)]="deleteConfirmText" placeholder="ELIMINAR" />
-      </div>
-      <div class="modal-actions">
-        <button class="cv2-btn modal-delete-btn" [disabled]="deleteConfirmText !== 'ELIMINAR'" (click)="confirmDelete()">
-          Eliminar cuenta
-        </button>
-        <button class="cv2-btn modal-cancel-btn" (click)="closeDeleteModal()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-}
+

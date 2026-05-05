@@ -1,0 +1,121 @@
+<div class="biz-page">
+  <header class="biz-page__header">
+    <a routerLink="/negocio" class="biz-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+      Panel
+    </a>
+    <h1 class="cv2-serif biz-page__title">Tus <span class="cv2-serif-i accent">analytics</span></h1>
+    <p class="biz-page__sub">Métricas y tendencias de Tacos Don Juan</p>
+  </header>
+
+  <!-- ═══ KPIs ═══ -->
+  <div class="an-kpis">
+    @for (k of kpis; track k.label) {
+      <div class="an-kpi cv2-card">
+        <span class="an-kpi__icon">{{ k.icon }}</span>
+        <span class="an-kpi__value">{{ k.value }}</span>
+        <span class="an-kpi__label">{{ k.label }}</span>
+        @if (k.trend) {
+          <span class="an-kpi__trend" [class.an-kpi__trend--up]="k.trendUp">{{ k.trend }}</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ═══ WEEKLY CHART ═══ -->
+  <div class="an-section">
+    <h2 class="an-section__title">📅 Visitas esta semana</h2>
+    <div class="an-chart cv2-card">
+      <div class="an-bars">
+        @for (d of weeklyVisits; track d.day) {
+          <div class="an-bar-col">
+            <span class="an-bar-val">{{ d.value }}</span>
+            <div class="an-bar-track">
+              <div class="an-bar-fill" [style.height.%]="d.pct" [class.an-bar-fill--peak]="d.pct === 100"></div>
+            </div>
+            <span class="an-bar-day" [class.an-bar-day--peak]="d.pct === 100">{{ d.day }}</span>
+          </div>
+        }
+      </div>
+      <div class="an-chart__footer">
+        <span>Total: <strong>405</strong> visitas</span>
+        <span class="an-chart__trend">↑ +12% vs semana pasada</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TWO-COL: PRODUCTS + RATING ═══ -->
+  <div class="an-two-col">
+    <!-- Top products -->
+    <div class="an-section">
+      <h2 class="an-section__title">🏆 Top productos</h2>
+      <div class="an-products cv2-card">
+        @for (p of topProducts; track p.name; let i = $index) {
+          <div class="an-product">
+            <span class="an-product__rank" [class.an-product__rank--gold]="i === 0">{{ i + 1 }}</span>
+            <span class="an-product__emoji">{{ p.emoji }}</span>
+            <div class="an-product__info">
+              <span class="an-product__name">{{ p.name }}</span>
+              <div class="an-product__bar-wrap">
+                <div class="an-product__bar" [style.width.%]="p.pct"></div>
+              </div>
+            </div>
+            <div class="an-product__stats">
+              <span class="an-product__orders">{{ p.orders }}</span>
+              <span class="an-product__rev">{{ p.revenue }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Rating breakdown -->
+    <div class="an-section">
+      <h2 class="an-section__title">⭐ Distribución de rating</h2>
+      <div class="an-rating cv2-card">
+        <div class="an-rating__big">
+          <span class="an-rating__score cv2-serif">4.8</span>
+          <div class="an-rating__stars">★★★★★</div>
+          <span class="an-rating__total">234 reseñas</span>
+        </div>
+        <div class="an-rating__breakdown">
+          @for (r of ratingBreakdown; track r.stars) {
+            <div class="an-rating__row">
+              <span class="an-rating__row-label">{{ r.stars }}★</span>
+              <div class="an-rating__row-bar">
+                <div class="an-rating__row-fill" [style.width.%]="r.pct"></div>
+              </div>
+              <span class="an-rating__row-count">{{ r.count }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ REVIEWS ═══ -->
+  <div class="an-section">
+    <h2 class="an-section__title">💬 Últimas reseñas</h2>
+    <div class="an-reviews">
+      @for (r of recentReviews; track r.name) {
+        <div class="an-review cv2-card">
+          <div class="an-review__top">
+            <div class="an-review__user">
+              <span class="an-review__avatar">{{ r.emoji }}</span>
+              <span class="an-review__name">{{ r.name }}</span>
+            </div>
+            <div class="an-review__right">
+              <span class="an-review__stars">
+                @for (s of starsArray(r.rating); track $index) {
+                  <span [class]="s ? 'star-on' : 'star-off'">★</span>
+                }
+              </span>
+              <span class="an-review__when">{{ r.when }}</span>
+            </div>
+          </div>
+          <p class="an-review__text">{{ r.text }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

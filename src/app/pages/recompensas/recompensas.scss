@@ -6,7 +6,6 @@
 
 // Responsive helpers
 .tablet-only { display: none !important; }
-.mobile-only { display: initial; }
 
 .screen {
   max-width: 430px;
@@ -25,8 +24,8 @@
 
 // Points card
 .points-card {
-  margin: 16px 16px 0;
-  padding: 20px;
+  margin: 16px clamp(12px, 4vw, 18px) 0;
+  padding: clamp(16px, 4vw, 20px);
   border-radius: 24px;
   background: linear-gradient(140deg, #241510 0%, #4A2818 100%);
   color: var(--paper);
@@ -113,25 +112,30 @@
 }
 
 .section {
-  padding: 24px 20px 0;
+  padding: 24px clamp(14px, 4vw, 22px) 0;
 }
 
 .section-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 4px;
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: clamp(20px, 5vw, 24px);
   margin: 0;
+  line-height: 1.1;
+  flex: 1;
+  min-width: 0;
 }
 
 .section-count {
   font-size: 13px;
   color: var(--ink-3);
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .section-sub {
@@ -143,27 +147,65 @@
 // Sellos grid
 .sellos-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(8px, 2vw, 12px);
+  row-gap: clamp(12px, 2.5vw, 18px);
+  justify-items: center;
+  align-items: start;
+  width: 100%;
 }
 
 .sello-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
   text-align: center;
+}
+
+.sello-item .cv2-sello {
+  flex-shrink: 0;
 }
 
 .sello-emoji {
   font-size: 28px;
+  line-height: 1;
 }
 
 .sello-lock {
   font-size: 18px;
+  line-height: 1;
   color: var(--ink-mute);
 }
 
 .sello-label {
   font-size: 11px;
   font-weight: 700;
-  margin-top: 6px;
+  line-height: 1.25;
+  margin: 0;
+  max-width: 100%;
+  padding: 0 2px;
+  text-wrap: balance;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+@media (max-width: 400px) {
+  .sellos-grid .cv2-sello {
+    width: 62px !important;
+    height: 62px !important;
+  }
+
+  .sello-emoji {
+    font-size: 24px;
+  }
+
+  .sello-lock {
+    font-size: 15px;
+  }
 }
 
 // Rewards
@@ -334,6 +376,11 @@
     margin-bottom: 4px;
   }
 
+  .t-sellos .t-section-header {
+    align-items: center;
+    gap: 12px;
+  }
+
   .t-section-title {
     font-size: 18px;
     margin: 0;
@@ -343,6 +390,8 @@
     font-size: 12px;
     color: var(--ink-3);
     font-weight: 600;
+    flex-shrink: 0;
+    line-height: 1.2;
   }
 
   .t-section-sub {
@@ -358,18 +407,40 @@
 
   .t-sellos-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: clamp(8px, 1.4vw, 14px);
+    row-gap: clamp(14px, 2.2vw, 20px);
+    justify-items: center;
+    align-items: start;
+    width: 100%;
   }
 
   .t-sello-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     text-align: center;
   }
 
+  .t-sello-item .cv2-sello {
+    flex-shrink: 0;
+  }
+
   .t-sello-label {
-    font-size: 10px;
+    font-size: clamp(9px, 0.85vw + 6px, 11px);
     font-weight: 700;
-    margin-top: 6px;
+    line-height: 1.25;
+    margin: 0;
+    max-width: 100%;
+    padding: 0 2px;
+    text-wrap: balance;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   // How to earn

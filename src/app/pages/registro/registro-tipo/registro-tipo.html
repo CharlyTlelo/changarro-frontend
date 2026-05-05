@@ -1,0 +1,39 @@
+<div class="screen">
+  <div class="header">
+    <a routerLink="/login" class="back-btn" aria-label="Volver al inicio de sesión">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+    </a>
+  </div>
+
+  <div class="content">
+    <span class="eyebrow">CREAR CUENTA</span>
+    <h1 class="cv2-serif title">
+      ¿Te registras como<br>
+      <span class="cv2-serif-i accent">usuario o negocio?</span>
+    </h1>
+    <p class="sub">Elige una opción para continuar con el formulario adecuado.</p>
+
+    <a routerLink="/registro/usuario" class="choice choice-user">
+      <span class="choice-emoji" aria-hidden="true">👤</span>
+      <span class="choice-body">
+        <span class="choice-title">Soy usuario</span>
+        <span class="choice-desc">Explora changarros, sellos, monedas y promos guardadas.</span>
+      </span>
+      <span class="choice-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a routerLink="/registro/negocio" class="choice choice-business">
+      <span class="choice-emoji" aria-hidden="true">🏪</span>
+      <span class="choice-body">
+        <span class="choice-title">Soy negocio</span>
+        <span class="choice-desc">Da de alta tu changarro y conecta con el barrio.</span>
+      </span>
+      <span class="choice-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <p class="hint">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login" class="link-login">Inicia sesión</a>
+    </p>
+  </div>
+</div>
