@@ -11,7 +11,8 @@ import { RouterLink } from '@angular/router';
 export class Registro {
   fields = [
     { label: 'Nombre', value: '', placeholder: '¿Cómo te llamas?', icon: '' },
-    { label: 'Correo', value: '', placeholder: 'tu@correo.com', icon: '✉' },
+    { label: 'Apellido', value: '', placeholder: '¿Cómo te apellidas?', icon: '' },
+    { label: 'Whatsapp', value: '', placeholder: 'tu numero de whats ', icon: '📞' },
     { label: 'Crea una contraseña', value: '', placeholder: 'Mínimo 8 caracteres', icon: '🔒', type: 'password' },
   ];
 }

@@ -39,6 +39,7 @@
   display: flex;
   gap: 4px;
   flex: 1;
+  min-width: 0;
 }
 
 .step {
@@ -79,8 +80,61 @@
 .page-sub {
   font-size: 13px;
   color: var(--ink-2);
-  margin: 0 0 22px;
-  line-height: 1.4;
+  margin: 0 0 18px;
+  line-height: 1.45;
+}
+
+.social-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.social-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.12s;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.social-google {
+  background: #FCF7EC;
+  color: var(--ink);
+  box-shadow: 0 3px 0 var(--ink);
+}
+
+.reg-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 20px;
+}
+
+.reg-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(36, 21, 16, 0.12);
+}
+
+.reg-divider-text {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 // Avatar
@@ -149,6 +203,8 @@
   background: #FCF7EC;
   border: 1px solid rgba(36,21,16,0.12);
   border-radius: 12px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .field-icon {
@@ -158,6 +214,8 @@
 
 .field-text {
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
   border: none;
   background: transparent;
   font-size: 14px;

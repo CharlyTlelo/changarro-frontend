@@ -14,42 +14,26 @@
         </h1>
         <div class="subtitle tablet-only">133 changarros activos cerca de Roma Norte</div>
       </div>
-      <!-- Mobile points -->
-      <div class="cv2-points mobile-only">
-        <span class="cv2-coin coin-sm">$</span>
-        <span>1,240</span>
-      </div>
-      <!-- Tablet search bar -->
-      <div class="search-bar tablet-only">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+
+    </div>
+
+    <!-- Buscador centrado encima de filtros (mobile + tablet) -->
+    <div class="catalog-search">
+      <div class="catalog-search__field" role="search">
+        <svg class="catalog-search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="11" cy="11" r="7" stroke="#7A6A60" stroke-width="2"/>
           <path d="M20 20l-3.5-3.5" stroke="#7A6A60" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <span class="search-placeholder">Busca tacos, ferreteria, salon...</span>
-        <kbd class="search-kbd">&#x2318; K</kbd>
+        <label class="visually-hidden" for="catalogo-buscar">Buscar en el catálogo</label>
+        <input
+          id="catalogo-buscar"
+          type="search"
+          class="catalog-search__input"
+          placeholder="Busca tacos, ferretería, salón..."
+          autocomplete="off"
+          enterkeyhint="search"
+        />
       </div>
-    </div>
-
-    <!-- Reto semanal -->
-    <div class="reto">
-      <div class="reto-bg">&#x1f3c6;</div>
-      <div class="cv2-bounce reto-icon">&#x1f3af;</div>
-      <div class="reto-content">
-        <div class="reto-label">RETO DE LA SEMANA</div>
-        <div class="cv2-serif reto-title">Visita 3 changarros nuevos</div>
-        <div class="reto-progress">
-          <div class="cv2-progress" style="flex:1">
-            <div class="cv2-progress-fill" style="width:66%"></div>
-          </div>
-          <span class="reto-count">2/3</span>
-          <span class="reto-days tablet-only">&middot; faltan 4 dias</span>
-        </div>
-      </div>
-      <div class="reto-reward">
-        <div class="cv2-coin coin-lg">$</div>
-        <div class="reto-reward-amount">+500 &#x1fa99;</div>
-      </div>
-      <button class="cv2-btn reto-cta tablet-only">Ver retos &rarr;</button>
     </div>
 
     <!-- Category pills (mobile) / Filter chips (tablet) -->

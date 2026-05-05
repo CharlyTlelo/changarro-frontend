@@ -1,46 +1,75 @@
 <div class="screen">
-  <!-- Confetti -->
-  <div class="confetti-dot" style="left:40px;top:80px;background:#F5B92E;transform:rotate(-20deg)"></div>
-  <div class="confetti-dot" style="left:320px;top:100px;background:#4A8A3A;transform:rotate(15deg)"></div>
-  <div class="confetti-dot" style="left:60px;top:170px;background:#E8628E;transform:rotate(10deg)"></div>
-  <div class="confetti-dot" style="right:50px;top:180px;background:#FCF7EC;transform:rotate(25deg)"></div>
-  <div class="confetti-dot" style="left:100px;top:240px;background:#2B6FA0;transform:rotate(30deg)"></div>
-  <div class="confetti-dot" style="right:110px;top:260px;background:#F5B92E;transform:rotate(-10deg)"></div>
-  <div class="confetti-dot" style="left:200px;top:90px;background:#FCF7EC;transform:rotate(8deg)"></div>
-  <div class="confetti-dot" style="left:30px;top:280px;background:#E8628E;transform:rotate(-25deg)"></div>
-  <div class="confetti-dot" style="right:40px;top:320px;background:#4A8A3A;transform:rotate(18deg)"></div>
+  <!-- Tablet: panel izquierdo -->
+  <aside class="b-left" aria-hidden="true">
+    <div class="b-confetti b-confetti--t">
+      <div class="confetti-dot" style="left:12%;top:18%;background:#F5B92E;transform:rotate(-20deg)"></div>
+      <div class="confetti-dot" style="right:18%;top:22%;background:#4A8A3A;transform:rotate(15deg)"></div>
+      <div class="confetti-dot" style="left:20%;top:45%;background:#E8628E;transform:rotate(10deg)"></div>
+      <div class="confetti-dot" style="right:14%;bottom:38%;background:#FCF7EC;transform:rotate(25deg)"></div>
+      <div class="confetti-dot" style="left:8%;bottom:28%;background:#2B6FA0;transform:rotate(30deg)"></div>
+      <div class="confetti-dot" style="right:22%;top:52%;background:#F5B92E;transform:rotate(-10deg)"></div>
+    </div>
+    <svg class="b-banderines" viewBox="0 0 520 48" preserveAspectRatio="xMidYMid slice">
+      <path d="M0 6 Q48 24 96 6 T192 6 T288 6 T384 6 T480 6 T520 6" stroke="#FCF7EC" stroke-width="1" fill="none" opacity="0.45"/>
+      <g transform="translate(36,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#F5B92E" opacity="0.92"/></g>
+      <g transform="translate(96,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#4A8A3A" opacity="0.92"/></g>
+      <g transform="translate(156,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#E8628E" opacity="0.92"/></g>
+      <g transform="translate(216,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#2B6FA0" opacity="0.92"/></g>
+      <g transform="translate(276,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#FCF7EC" opacity="0.92"/></g>
+      <g transform="translate(336,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#F5B92E" opacity="0.92"/></g>
+      <g transform="translate(396,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#4A8A3A" opacity="0.92"/></g>
+    </svg>
+    <div class="b-left-inner">
+      <span class="cv2-serif b-left-brand">changarro</span>
+      <p class="b-left-tagline">Lo bueno,<br><span class="cv2-serif-i">a la vuelta</span></p>
+    </div>
+  </aside>
 
-  <div class="content">
-    <div class="celebration">
-      <div class="cv2-bounce party-emoji">🎉</div>
-      <h1 class="cv2-serif welcome-title">
-        ¡Listo, María!<br>
-        <span class="cv2-serif-i">eres del barrio</span>
-      </h1>
-      <p class="welcome-sub">Tu cuenta está lista. Aquí tienes tus primeros regalos:</p>
-
-      <!-- Rewards -->
-      <div class="rewards">
-        @for (r of rewards; track r.label) {
-          <div class="reward-card">
-            @if (r.isCoin) {
-              <div class="cv2-coin reward-coin">$</div>
-            } @else {
-              <div class="reward-icon" [style.background]="r.color" [style.color]="r.textColor || 'var(--ink)'">{{ r.emoji }}</div>
-            }
-            <div class="reward-info">
-              <div class="cv2-serif reward-label">{{ r.label }}</div>
-              <div class="reward-sub">{{ r.sub }}</div>
-            </div>
-          </div>
-        }
-      </div>
+  <div class="b-main">
+    <!-- Móvil: confetti sobre el degradado -->
+    <div class="b-confetti b-confetti--m">
+      <div class="confetti-dot" style="left:40px;top:80px;background:#F5B92E;transform:rotate(-20deg)"></div>
+      <div class="confetti-dot" style="left:320px;top:100px;background:#4A8A3A;transform:rotate(15deg)"></div>
+      <div class="confetti-dot" style="left:60px;top:170px;background:#E8628E;transform:rotate(10deg)"></div>
+      <div class="confetti-dot" style="right:50px;top:180px;background:#FCF7EC;transform:rotate(25deg)"></div>
+      <div class="confetti-dot" style="left:100px;top:240px;background:#2B6FA0;transform:rotate(30deg)"></div>
+      <div class="confetti-dot" style="right:110px;top:260px;background:#F5B92E;transform:rotate(-10deg)"></div>
+      <div class="confetti-dot" style="left:200px;top:90px;background:#FCF7EC;transform:rotate(8deg)"></div>
+      <div class="confetti-dot" style="left:30px;top:280px;background:#E8628E;transform:rotate(-25deg)"></div>
+      <div class="confetti-dot" style="right:40px;top:320px;background:#4A8A3A;transform:rotate(18deg)"></div>
     </div>
 
-    <div class="bottom-actions">
-      <a routerLink="/catalogo" class="explore-btn">Empezar a explorar →</a>
-      <div class="biz-link">
-        ¿Tienes un negocio? <strong class="biz-link-strong">Regístralo aquí</strong>
+    <div class="content">
+      <div class="celebration">
+        <div class="cv2-bounce party-emoji">🎉</div>
+        <h1 class="cv2-serif welcome-title">
+          ¡Listo, María!<br>
+          <span class="cv2-serif-i welcome-title-accent">eres del barrio</span>
+        </h1>
+        <p class="welcome-sub">Tu cuenta está lista. Aquí tienes tus primeros regalos:</p>
+
+        <div class="rewards">
+          @for (r of rewards; track r.label) {
+            <div class="reward-card">
+              @if (r.isCoin) {
+                <div class="cv2-coin reward-coin">$</div>
+              } @else {
+                <div class="reward-icon" [style.background]="r.color" [style.color]="r.textColor || 'var(--ink)'">{{ r.emoji }}</div>
+              }
+              <div class="reward-info">
+                <div class="cv2-serif reward-label">{{ r.label }}</div>
+                <div class="reward-sub">{{ r.sub }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        <a routerLink="/catalogo" class="explore-btn">Empezar a explorar →</a>
+        <a routerLink="/registro/tipo" class="biz-link">
+          ¿Tienes un negocio? <strong class="biz-link-strong">Regístralo aquí</strong>
+        </a>
       </div>
     </div>
   </div>

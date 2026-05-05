@@ -298,7 +298,6 @@ export class Sidebar {
 
   navItems = [
     { id: 'cat', label: 'Catalogo', icon: '⊞', route: '/catalogo' },
-    { id: 'buscar', label: 'Buscar', icon: '⌕', route: '/catalogo' },
     { id: 'fav', label: 'Favoritos', icon: '♡', count: 13, route: '/catalogo' },
     { id: 'rec', label: 'Recompensas', icon: '★', badge: '+340', route: '/recompensas' },
   ];

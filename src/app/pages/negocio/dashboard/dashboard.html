@@ -1,0 +1,238 @@
+<div class="biz-screen">
+  <!-- ═══ SIDEBAR (tablet+) ═══ -->
+  <aside class="biz-sidebar tablet-only">
+    <div class="biz-sidebar__head">
+      <svg width="30" height="30" viewBox="0 0 32 32">
+        <path d="M4 12 Q8 8 12 12 Q16 8 20 12 Q24 8 28 12 L28 14 L4 14 Z" fill="#241510"/>
+        <rect x="6" y="14" width="20" height="14" stroke="#241510" stroke-width="2" fill="none"/>
+        <path d="M13 28 L13 20 L19 20 L19 28" stroke="#241510" stroke-width="2" fill="none"/>
+        <circle cx="26" cy="6" r="3" fill="#DD4D2A"/>
+      </svg>
+      <span class="cv2-serif biz-sidebar__brand">changarro</span>
+    </div>
+
+    <!-- Biz identity card -->
+    <div class="biz-identity">
+      <div class="biz-identity__emoji">{{ businessEmoji() }}</div>
+      <div class="biz-identity__info">
+        <span class="biz-identity__name">{{ businessName() }}</span>
+        <span class="biz-identity__badge">Verificado ✓</span>
+      </div>
+    </div>
+
+    <span class="biz-sidebar__label">ADMINISTRAR</span>
+
+    <a routerLink="/negocio" class="biz-snav biz-snav--active">
+      <span class="biz-snav__dot" style="background:#DD4D2A"></span>
+      Panel
+    </a>
+    <a routerLink="/negocio/menu" class="biz-snav">
+      <span class="biz-snav__dot" style="background:#4A8A3A"></span>
+      Menú
+    </a>
+    <a routerLink="/negocio/promos" class="biz-snav">
+      <span class="biz-snav__dot" style="background:#F5B92E"></span>
+      Promociones
+    </a>
+    <a routerLink="/negocio/perfil" class="biz-snav">
+      <span class="biz-snav__dot" style="background:#2B6FA0"></span>
+      Datos del negocio
+    </a>
+    <a routerLink="/negocio/analytics" class="biz-snav">
+      <span class="biz-snav__dot" style="background:#E8628E"></span>
+      Analytics
+    </a>
+
+    <div class="biz-sidebar__spacer"></div>
+
+    <!-- Live badge -->
+    <div class="biz-live-badge">
+      <span class="biz-live-badge__dot"></span>
+      <span>Tu negocio está <strong>activo</strong></span>
+    </div>
+
+    <a routerLink="/catalogo" class="biz-snav biz-snav--muted">
+      ← Ver como cliente
+    </a>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="biz-main">
+    <!-- Mobile topbar -->
+    <header class="biz-topbar mobile-only">
+      <div class="biz-topbar__left">
+        <span class="biz-topbar__emoji">{{ businessEmoji() }}</span>
+        <span class="cv2-serif biz-topbar__name">{{ businessName() }}</span>
+      </div>
+      <span class="biz-topbar__verified">✓</span>
+    </header>
+
+    <div class="biz-content">
+      <!-- ═══ WELCOME HERO ═══ -->
+      <div class="biz-hero">
+        <!-- Confetti -->
+        <div class="confetti-dot" style="left:20px;top:16px;background:#F5B92E"></div>
+        <div class="confetti-dot" style="right:40px;top:24px;background:#4A8A3A"></div>
+        <div class="confetti-dot" style="left:60%;top:8px;background:#E8628E"></div>
+
+        <div class="biz-hero__text">
+          <span class="biz-hero__greeting">Buenos días, {{ userName() }}! 👋</span>
+          <h1 class="cv2-serif biz-hero__title">
+            Tu <span class="cv2-serif-i accent">changarro</span><br class="mobile-only">
+            <span class="tablet-only"> </span>hoy
+          </h1>
+        </div>
+
+        <!-- Active promo banner -->
+        <div class="biz-promo-banner">
+          <div class="cv2-promo-sticker biz-promo-sticker">
+            <div>
+              <div style="font-size:8px;font-weight:600">HOY</div>
+              <div style="font-size:13px">2x1</div>
+            </div>
+          </div>
+          <div class="biz-promo-banner__info">
+            <span class="biz-promo-banner__label">PROMO ACTIVA</span>
+            <span class="biz-promo-banner__title">2x1 al pastor</span>
+            <span class="biz-promo-banner__until">Hasta las 11PM</span>
+          </div>
+          <a routerLink="/negocio/promos" class="biz-promo-banner__edit">Editar →</a>
+        </div>
+      </div>
+
+      <!-- ═══ STATS GRID ═══ -->
+      <div class="biz-stats">
+        @for (s of stats; track s.label) {
+          <div class="biz-stat cv2-card">
+            <div class="biz-stat__top">
+              <span class="biz-stat__icon">{{ s.icon }}</span>
+              @if (s.trend) {
+                <span class="biz-stat__trend">{{ s.trend }}</span>
+              }
+            </div>
+            <span class="biz-stat__value">{{ s.value }}</span>
+            <span class="biz-stat__label">{{ s.label }}</span>
+            <div class="biz-stat__bar">
+              <div class="biz-stat__bar-fill" [style.background]="s.color"></div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- ═══ QUICK ACTIONS ═══ -->
+      <div class="biz-section">
+        <h2 class="biz-section__title">Acciones rápidas</h2>
+        <div class="biz-actions">
+          @for (a of quickActions; track a.route) {
+            <a [routerLink]="a.route" class="biz-action cv2-card">
+              <div class="biz-action__icon" [style.background]="a.bg">{{ a.emoji }}</div>
+              <div class="biz-action__text">
+                <span class="biz-action__title">{{ a.title }}</span>
+                <span class="biz-action__desc">{{ a.desc }}</span>
+              </div>
+              <span class="biz-action__arrow">›</span>
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- ═══ TWO-COL: TOP PRODUCTS + ACTIVITY ═══ -->
+      <div class="biz-two-col">
+        <!-- Top products -->
+        <div class="biz-section">
+          <h2 class="biz-section__title">🏆 Productos estrella</h2>
+          <div class="biz-top-products cv2-card">
+            @for (p of topProducts; track p.name; let i = $index) {
+              <div class="biz-top-item">
+                <span class="biz-top-item__rank">{{ i + 1 }}</span>
+                <span class="biz-top-item__emoji">{{ p.emoji }}</span>
+                <div class="biz-top-item__info">
+                  <span class="biz-top-item__name">{{ p.name }}</span>
+                  <div class="biz-top-item__bar-wrap">
+                    <div class="biz-top-item__bar" [style.width.%]="p.pct"></div>
+                  </div>
+                </div>
+                <span class="biz-top-item__orders">{{ p.orders }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Activity feed -->
+        <div class="biz-section">
+          <h2 class="biz-section__title">⚡ Actividad reciente</h2>
+          <div class="biz-activity cv2-card">
+            @for (a of activity; track a.text) {
+              <div class="biz-activity-item">
+                <span class="biz-activity-item__emoji">{{ a.emoji }}</span>
+                <div class="biz-activity-item__info">
+                  <span class="biz-activity-item__text">{{ a.text }}</span>
+                  <span class="biz-activity-item__when">{{ a.when }}</span>
+                </div>
+                @if (a.coins) {
+                  <span class="biz-activity-item__coins">{{ a.coins }} 🪙</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ REVIEWS ═══ -->
+      <div class="biz-section">
+        <div class="biz-section__header">
+          <h2 class="biz-section__title">Últimas reseñas</h2>
+          <a routerLink="/negocio/analytics" class="biz-section__link">Ver todas →</a>
+        </div>
+        <div class="biz-reviews">
+          @for (r of recentReviews; track r.name) {
+            <div class="biz-review cv2-card">
+              <div class="biz-review__head">
+                <div class="biz-review__user">
+                  <span class="biz-review__avatar">{{ r.emoji }}</span>
+                  <div>
+                    <span class="biz-review__name">{{ r.name }}</span>
+                    <span class="biz-review__level">{{ r.level }}</span>
+                  </div>
+                </div>
+                <div class="biz-review__meta">
+                  <div class="biz-review__stars">
+                    @for (s of stars(r.rating); track $index) {
+                      <span [class]="s ? 'star-on' : 'star-off'">★</span>
+                    }
+                  </div>
+                  <span class="biz-review__when">{{ r.when }}</span>
+                </div>
+              </div>
+              <p class="biz-review__text">{{ r.text }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ MOBILE BOTTOM NAV ═══ -->
+    <nav class="biz-bottomnav mobile-only">
+      <a routerLink="/negocio" class="biz-bnav biz-bnav--active">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Panel</span>
+      </a>
+      <a routerLink="/negocio/menu" class="biz-bnav">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h12"/></svg>
+        <span>Menú</span>
+      </a>
+      <a routerLink="/negocio/promos" class="biz-bnav">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 14.8 7 17.3 8 11.8 4 7.8l5.5-.8L12 2z"/></svg>
+        <span>Promos</span>
+      </a>
+      <a routerLink="/negocio/analytics" class="biz-bnav">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <span>Stats</span>
+      </a>
+      <a routerLink="/negocio/perfil" class="biz-bnav">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Config</span>
+      </a>
+    </nav>
+  </main>
+</div>

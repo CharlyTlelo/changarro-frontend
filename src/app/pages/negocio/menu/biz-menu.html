@@ -1,0 +1,78 @@
+<div class="biz-page">
+  <header class="biz-page__header">
+    <a routerLink="/negocio" class="biz-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+      Panel
+    </a>
+    <h1 class="cv2-serif biz-page__title">Tu <span class="cv2-serif-i accent">menú</span></h1>
+    <p class="biz-page__sub">{{ items().length }} productos · {{ totalOrders }} pedidos totales</p>
+  </header>
+
+  <!-- Items list -->
+  <div class="menu-list">
+    @for (item of items(); track $index; let i = $index) {
+      <div class="menu-item cv2-card" [class.menu-item--popular]="item.popular">
+        @if (item.popular) {
+          <span class="menu-item__badge">🔥 MÁS PEDIDO</span>
+        }
+        <div class="menu-item__main">
+          <div class="menu-item__emoji-wrap">
+            <span class="menu-item__emoji">{{ item.emoji }}</span>
+          </div>
+          <div class="menu-item__info">
+            <span class="menu-item__name">{{ item.name }}</span>
+            <div class="menu-item__meta">
+              <span class="menu-item__price">{{ item.price }}</span>
+              <span class="menu-item__dot">·</span>
+              <span class="menu-item__orders">{{ item.orderCount }} pedidos</span>
+            </div>
+          </div>
+          <button class="menu-item__remove" (click)="removeItem(i)" aria-label="Eliminar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <!-- Mini bar -->
+        <div class="menu-item__bar">
+          <div class="menu-item__bar-fill" [style.width.%]="(item.orderCount / 142) * 100"></div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Add form -->
+  @if (showAdd()) {
+    <div class="menu-add cv2-card">
+      <h3 class="menu-add__title">Nuevo producto</h3>
+      <div class="menu-add__fields">
+        <div class="menu-field menu-field--sm">
+          <label>Emoji</label>
+          <input [(ngModel)]="newEmoji" placeholder="🌮" maxlength="4">
+        </div>
+        <div class="menu-field menu-field--grow">
+          <label>Nombre</label>
+          <input [(ngModel)]="newName" placeholder="Ej. Tacos de birria">
+        </div>
+        <div class="menu-field menu-field--sm">
+          <label>Precio</label>
+          <input [(ngModel)]="newPrice" placeholder="$30">
+        </div>
+      </div>
+      <div class="menu-add__actions">
+        <button class="cv2-btn cv2-btn-dark menu-add__btn" (click)="addItem()">Agregar al menú</button>
+        <button class="menu-add__cancel" (click)="showAdd.set(false)">Cancelar</button>
+      </div>
+    </div>
+  } @else {
+    <button class="menu-add-trigger" (click)="showAdd.set(true)">
+      <span class="menu-add-trigger__icon">+</span>
+      <span>Agregar producto</span>
+    </button>
+  }
+
+  <!-- Sticky save -->
+  <div class="menu-save">
+    <button class="cv2-btn cv2-btn-primary menu-save__btn" [disabled]="saving()" (click)="save()">
+      {{ saving() ? 'Guardando...' : 'Guardar cambios →' }}
+    </button>
+  </div>
+</div>

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TabBar } from '../../shared/components/tab-bar/tab-bar';
 import { Sidebar } from '../../shared/components/sidebar/sidebar';
 import { COLLECTION, SELLOS } from '../../shared/data/mock-data';
@@ -12,6 +13,8 @@ import { COLLECTION, SELLOS } from '../../shared/data/mock-data';
   styleUrl: './perfil.scss',
 })
 export class Perfil {
+  private readonly router = inject(Router);
+
   collection = COLLECTION;
   sellos = SELLOS;
 
@@ -29,6 +32,35 @@ export class Perfil {
   editing = false;
   editName = 'María Hernández';
   editPhone = '55 1234 5678';
+  profilePhotoUrl: string | null = null;
+  private editPhotoSnapshot: string | null = null;
+
+  get avatarLetter(): string {
+    const n = this.editName.trim();
+    return n ? n.charAt(0).toUpperCase() : '?';
+  }
+
+  onProfilePhotoSelect(ev: Event): void {
+    const input = ev.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file?.type.startsWith('image/')) {
+      input.value = '';
+      return;
+    }
+    if (!this.editing) {
+      this.startEditing();
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.profilePhotoUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  removeProfilePhoto(): void {
+    this.profilePhotoUrl = null;
+  }
 
   // Delete modal
   showDeleteModal = false;
@@ -44,6 +76,7 @@ export class Perfil {
   ];
 
   startEditing() {
+    this.editPhotoSnapshot = this.profilePhotoUrl;
     this.editing = true;
   }
 
@@ -51,6 +84,7 @@ export class Perfil {
     this.editing = false;
     this.editName = 'María Hernández';
     this.editPhone = '55 1234 5678';
+    this.profilePhotoUrl = this.editPhotoSnapshot;
   }
 
   saveProfile() {
@@ -73,5 +107,10 @@ export class Perfil {
       // TODO: call backend DELETE /api/users/me
       this.showDeleteModal = false;
     }
+  }
+
+  cerrarSesion(): void {
+    // TODO: llamar POST /auth/logout y borrar tokens almacenados
+    void this.router.navigate(['/login']);
   }
 }

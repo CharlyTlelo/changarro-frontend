@@ -1,0 +1,170 @@
+<div class="screen rn-screen">
+  <aside class="rn-left" aria-hidden="true">
+    <div class="rn-confetti">
+      <span class="rn-dot" style="left:12%;top:20%;background:#F5B92E"></span>
+      <span class="rn-dot" style="right:18%;top:24%;background:#4A8A3A"></span>
+      <span class="rn-dot" style="left:18%;bottom:35%;background:#E8628E"></span>
+      <span class="rn-dot" style="right:14%;bottom:28%;background:#FCF7EC"></span>
+      <span class="rn-dot" style="left:8%;top:48%;background:#2B6FA0"></span>
+    </div>
+    <svg class="rn-banderines" viewBox="0 0 520 48" preserveAspectRatio="xMidYMid slice">
+      <path d="M0 6 Q48 24 96 6 T192 6 T288 6 T384 6 T480 6 T520 6" stroke="#FCF7EC" stroke-width="1" fill="none" opacity="0.45"/>
+      <g transform="translate(36,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#F5B92E" opacity="0.92"/></g>
+      <g transform="translate(96,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#4A8A3A" opacity="0.92"/></g>
+      <g transform="translate(156,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#E8628E" opacity="0.92"/></g>
+      <g transform="translate(216,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#2B6FA0" opacity="0.92"/></g>
+      <g transform="translate(276,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#FCF7EC" opacity="0.92"/></g>
+      <g transform="translate(336,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#F5B92E" opacity="0.92"/></g>
+    </svg>
+    <div class="rn-left-inner">
+      <span class="cv2-serif rn-brand">changarro</span>
+      <p class="rn-kicker">REGISTRO DE NEGOCIO</p>
+      <h2 class="cv2-serif rn-headline">
+        Abrí tu changarro<br>
+        <span class="cv2-serif-i">al paso del barrio</span>
+      </h2>
+      <p class="rn-desc">Clientes cercanos te encuentran en el mapa, ven fotos y promos.</p>
+      <ul class="rn-bullets">
+        <li><span class="rn-bull-icon">📍</span> Enlace o dirección de Google Maps</li>
+        <li><span class="rn-bull-icon">✏️</span> Descripción de tu oferta</li>
+        <li><span class="rn-bull-icon">📷</span> Fotos opcionales (hasta {{ maxPhotos }})</li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="rn-main">
+    <div class="header rn-header">
+      <a routerLink="/registro/tipo" class="back-btn" aria-label="Elegir otro tipo de cuenta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+      </a>
+      <div class="progress-steps">
+        <div class="step step-active"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+      </div>
+    </div>
+
+    <div class="scroll-content rn-scroll">
+      <span class="step-label">NEGOCIO · PASO 1 DE 3</span>
+      <h1 class="cv2-serif page-title">
+        <span class="rn-title-mobile">
+          Tu changarro<br>
+          <span class="cv2-serif-i accent">en el mapa</span>
+        </span>
+        <span class="rn-title-tablet">Datos de tu <span class="cv2-serif-i accent">negocio</span></span>
+      </h1>
+      <p class="page-sub">Nombre, teléfono, ubicación con Google Maps o dirección completa, descripción y fotos opcionales.</p>
+
+      <div class="rn-two-col">
+        @for (f of fields; track f.label) {
+          <div class="field-group">
+            <label class="field-label">{{ f.label }}</label>
+            <div class="field-input">
+              @if (f.icon) {
+                <span class="field-icon">{{ f.icon }}</span>
+              }
+              <input [type]="f.type || 'text'" class="field-text" [placeholder]="f.placeholder">
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="biz-ubicacion">Ubicación (Google Maps o dirección)</label>
+        <div class="field-input field-input--stack">
+          <span class="field-icon" aria-hidden="true">📍</span>
+          <textarea
+            id="biz-ubicacion"
+            class="field-textarea"
+            [(ngModel)]="ubicacion"
+            rows="4"
+            autocomplete="street-address"
+            placeholder="Pegá el enlace de Google Maps (maps.app.goo.gl, goo.gl/maps, etc.) o escribí calle, número, colonia y ciudad."
+          ></textarea>
+        </div>
+        <p class="field-hint">Tip: en Google Maps tocá “Compartir” y pegá el enlace aquí.</p>
+      </div>
+
+      <div class="rn-split-desc-photo">
+        <div class="field-group rn-split-desc-photo__desc">
+          <label class="field-label" for="biz-descripcion">Descripción del negocio</label>
+          <div class="field-input field-input--stack">
+            <span class="field-icon field-icon--textarea" aria-hidden="true">✏️</span>
+            <textarea
+              id="biz-descripcion"
+              class="field-textarea field-textarea--tall"
+              [(ngModel)]="descripcion"
+              rows="5"
+              maxlength="600"
+              placeholder="Qué ofrecés, horarios aproximados, especialidad… Máx. 600 caracteres."
+            ></textarea>
+          </div>
+          <p class="field-hint field-hint--count">{{ descripcion.length }}/600</p>
+        </div>
+
+        <div class="biz-photo-block rn-split-desc-photo__photos">
+          <div class="biz-photo-head">
+            <span class="field-label biz-photo-title">Fotos del negocio</span>
+            <span class="biz-photo-optional">Opcional · hasta {{ maxPhotos }}</span>
+          </div>
+          <input
+            #bizPhotosInput
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            class="biz-photo-input"
+            (change)="onPhotosSelected($event)"
+            aria-hidden="true"
+            tabindex="-1"
+          />
+          <button type="button" class="biz-photo-add-btn" (click)="triggerPhotoInput(bizPhotosInput)" [disabled]="businessPhotos.length >= maxPhotos">
+            📷 Añadir fotos
+          </button>
+          @if (businessPhotos.length > 0) {
+            <div class="biz-photo-grid" aria-live="polite">
+              @for (src of businessPhotos; track $index) {
+                <div class="biz-photo-tile">
+                  <img [src]="src" alt="" class="biz-photo-img" />
+                  <button type="button" class="biz-photo-remove" (click)="removePhoto($index)" [attr.aria-label]="'Quitar foto ' + ($index + 1)">✕</button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="biz-password">Contraseña</label>
+        <div class="field-input">
+          <span class="field-icon">🔒</span>
+          <input id="biz-password" type="password" class="field-text" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="biz-password">Repetir Contraseña</label>
+        <div class="field-input">
+          <span class="field-icon">🔒</span>
+          <input id="biz-password" type="password" class="field-text" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="terms-box">
+        <div class="terms-check">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#FCF7EC" stroke-width="3" stroke-linecap="round"><path d="M3 8l3 3 7-7"/></svg>
+        </div>
+        <div class="terms-text">
+          Acepto los <strong class="terms-link">términos de servicio</strong> y la <strong class="terms-link">política de privacidad</strong> de Changarro.
+        </div>
+      </div>
+
+      <a routerLink="/bienvenida">
+        <button class="cv2-btn cv2-btn-primary submit-btn">Siguiente — datos del negocio →</button>
+      </a>
+
+      <div class="coins-hint">
+        Los negocios verificados acceden a <strong class="accent">herramientas y estadísticas</strong> del barrio
+      </div>
+    </div>
+  </div>
+</div>
