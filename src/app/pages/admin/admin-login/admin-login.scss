@@ -1,0 +1,113 @@
+:host { display: block; background: var(--paper); min-height: 100dvh; }
+
+.accent { color: var(--terracota); }
+
+.admin-screen {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+}
+
+.admin-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 20px;
+  background: #FCF7EC;
+  border-radius: 22px;
+  border: 1px solid rgba(36,21,16,0.08);
+}
+
+.admin-card__head { margin-bottom: 14px; }
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--maiz);
+  margin-bottom: 10px;
+}
+
+.admin-title { font-size: 28px; margin: 0 0 6px; line-height: 1.05; }
+.admin-sub { margin: 0; font-size: 13px; color: var(--ink-3); font-weight: 600; }
+
+.admin-field {
+  margin-top: 12px;
+
+  label {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid rgba(36,21,16,0.12);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+    color: var(--ink);
+    &:focus { outline: 2px solid var(--terracota); border-color: transparent; }
+  }
+}
+
+.admin-password {
+  position: relative;
+
+  input { padding-right: 44px; }
+}
+
+.admin-eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 0;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover { background: var(--paper-3); color: var(--ink); }
+}
+
+.admin-error {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(221,77,42,0.08);
+  border: 1px solid rgba(221,77,42,0.18);
+  color: var(--terracota);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-btn { width: 100%; margin-top: 14px; }
+
+.admin-back {
+  display: inline-flex;
+  margin-top: 12px;
+  text-decoration: none;
+  color: var(--ink-3);
+  font-weight: 700;
+  font-size: 13px;
+  &:hover { color: var(--terracota); }
+}
+
