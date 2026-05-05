@@ -38,6 +38,7 @@ export class AuthService {
   user = this._user.asReadonly();
   isLoggedIn = computed(() => !!this._user());
   isBusiness = computed(() => this._user()?.role === 'BUSINESS');
+  isAdmin = computed(() => this._user()?.role === 'ADMIN');
   token = computed(() => this._user()?.token ?? null);
 
   private loadFromStorage(): AuthResponse | null {
@@ -56,6 +57,12 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http.post<AuthResponse>(`${API}/login`, { email, password }).pipe(
+      tap(res => this.persist(res))
+    );
+  }
+
+  adminLogin(email: string, password: string) {
+    return this.http.post<AuthResponse>(`${API}/admin/login`, { email, password }).pipe(
       tap(res => this.persist(res))
     );
   }
@@ -80,7 +87,9 @@ export class AuthService {
 
   navigateAfterAuth() {
     const user = this._user();
-    if (user?.role === 'BUSINESS') {
+    if (user?.role === 'ADMIN') {
+      this.router.navigate(['/admin']);
+    } else if (user?.role === 'BUSINESS') {
       this.router.navigate(['/negocio']);
     } else {
       this.router.navigate(['/catalogo']);

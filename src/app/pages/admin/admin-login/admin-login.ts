@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
 
@@ -27,7 +28,7 @@ export class AdminLogin {
 
     this.auth.adminLogin(this.email.trim(), this.password).subscribe({
       next: () => this.router.navigate(['/admin']),
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = err?.error?.error;
         this.error.set(typeof msg === 'string' && msg.trim() ? msg : 'Credenciales inválidas.');
         this.saving.set(false);
