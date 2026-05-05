@@ -1,0 +1,45 @@
+<div class="admin-screen">
+  <div class="admin-card cv2-card">
+    <div class="admin-card__head">
+      <div class="admin-badge">admin</div>
+      <h1 class="cv2-serif admin-title">Acceso de <span class="cv2-serif-i accent">Administrador</span></h1>
+      <p class="admin-sub">Entra para administrar Changarro.</p>
+    </div>
+
+    <div class="admin-field">
+      <label>Email</label>
+      <input [(ngModel)]="email" type="email" autocomplete="username" placeholder="admin@changarro.com">
+    </div>
+
+    <div class="admin-field">
+      <label>Contraseña</label>
+      <div class="admin-password">
+        <input [(ngModel)]="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password" placeholder="••••••••">
+        <button type="button" class="admin-eye" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+          @if (showPassword()) {
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          } @else {
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+              <path d="M4 4l16 16"/>
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (error(); as msg) {
+      <div class="admin-error">{{ msg }}</div>
+    }
+
+    <button class="cv2-btn cv2-btn-dark admin-btn" [disabled]="saving() || !email.trim() || !password" (click)="login()">
+      {{ saving() ? 'Entrando...' : 'Entrar →' }}
+    </button>
+
+    <a routerLink="/login" class="admin-back">← Volver al login normal</a>
+  </div>
+</div>
+

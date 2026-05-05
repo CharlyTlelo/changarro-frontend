@@ -1,0 +1,41 @@
+<div class="admin-shell">
+  <header class="admin-top">
+    <div class="admin-top__brand">
+      <span class="cv2-serif">changarro</span>
+      <span class="admin-top__pill">ADMIN</span>
+    </div>
+    <button class="cv2-btn cv2-btn-dark admin-top__logout" (click)="logout()">Salir</button>
+  </header>
+
+  <main class="admin-main">
+    <h1 class="cv2-serif admin-h1">Panel de <span class="cv2-serif-i accent">Administrador</span></h1>
+    <p class="admin-sub">Sesión: {{ user()?.email }} · Rol: {{ user()?.role }}</p>
+
+    <div class="admin-grid">
+      <a class="admin-card cv2-card" routerLink="/negocio">
+        <div class="admin-card__icon">🏪</div>
+        <div>
+          <div class="admin-card__title">Ver panel negocio</div>
+          <div class="admin-card__sub">Navega al área de negocio</div>
+        </div>
+      </a>
+
+      <div class="admin-card cv2-card admin-card--disabled">
+        <div class="admin-card__icon">👥</div>
+        <div>
+          <div class="admin-card__title">Usuarios</div>
+          <div class="admin-card__sub">Próximamente</div>
+        </div>
+      </div>
+
+      <div class="admin-card cv2-card admin-card--disabled">
+        <div class="admin-card__icon">🧾</div>
+        <div>
+          <div class="admin-card__title">Auditoría</div>
+          <div class="admin-card__sub">Próximamente</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
