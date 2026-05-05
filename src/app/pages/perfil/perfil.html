@@ -1,54 +1,295 @@
 <div class="screen">
-  <div class="scroll-content">
-    <!-- Avatar -->
-    <div class="avatar-section">
-      <div class="avatar-wrapper">
-        <div class="avatar">
-          <span class="cv2-serif avatar-letter">M</span>
+  <!-- Sidebar (tablet only) -->
+  <app-sidebar class="tablet-only sidebar-slot" active="perfil" />
+
+  <div class="main-area">
+    <div class="scroll-content">
+
+      <!-- ════════════ MOBILE LAYOUT ════════════ -->
+
+      <!-- Avatar section -->
+      <div class="avatar-section mobile-only">
+        <div class="avatar-wrapper">
+          <div class="avatar">
+            <span class="cv2-serif avatar-letter">M</span>
+          </div>
+          <div class="avatar-level">Lvl 4</div>
         </div>
-        <div class="avatar-level">Lvl 4</div>
+        <h1 class="cv2-serif user-name">María Hernández</h1>
+        <div class="user-info">👑 Embajadora del barrio · Roma Norte</div>
       </div>
-      <h1 class="cv2-serif user-name">María Hernández</h1>
-      <div class="user-info">👑 Embajadora del barrio · Roma Norte</div>
-    </div>
 
-    <!-- Stats -->
-    <div class="stats-row">
-      @for (s of stats; track s.l) {
-        <div class="cv2-sticker stat-item">
-          <div class="stat-emoji">{{ s.emoji }}</div>
-          <div class="cv2-serif stat-value">{{ s.v }}</div>
-          <div class="stat-label">{{ s.l }}</div>
+      <!-- Stats -->
+      <div class="stats-row mobile-only">
+        @for (s of stats; track s.l) {
+          <div class="cv2-sticker stat-item">
+            <div class="stat-emoji">{{ s.emoji }}</div>
+            <div class="cv2-serif stat-value">{{ s.v }}</div>
+            <div class="stat-label">{{ s.l }}</div>
+          </div>
+        }
+      </div>
+
+      <!-- Edit section (mobile) -->
+      <div class="edit-section mobile-only">
+        @if (!editing) {
+          <button class="cv2-btn edit-btn" (click)="startEditing()">✏️ Editar perfil</button>
+        } @else {
+          <div class="edit-card cv2-sticker">
+            <div class="edit-field">
+              <label class="edit-label">NOMBRE</label>
+              <input class="edit-input" [(ngModel)]="editName" placeholder="Tu nombre" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">TELÉFONO</label>
+              <input class="edit-input" [(ngModel)]="editPhone" placeholder="55 1234 5678" type="tel" />
+            </div>
+            <div class="edit-actions">
+              <button class="cv2-btn save-btn" (click)="saveProfile()">Guardar</button>
+              <button class="cv2-btn cancel-btn" (click)="cancelEditing()">Cancelar</button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Tabs (mobile) -->
+      <div class="tabs mobile-only">
+        @for (tab of tabs; track tab) {
+          <div class="cv2-chip" [class.active]="activeTab === tab" (click)="activeTab = tab">{{ tab }}</div>
+        }
+      </div>
+
+      <!-- Collection grid (mobile) -->
+      <div class="collection mobile-only">
+        @for (v of collection; track v.n) {
+          <div class="collection-item" [style.background]="v.c">
+            <span class="collection-emoji">{{ v.e }}</span>
+            <span class="collection-name">{{ v.n }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Danger zone (mobile) -->
+      <div class="danger-zone mobile-only">
+        <button class="danger-btn" (click)="openDeleteModal()">🗑️ Eliminar mi cuenta</button>
+      </div>
+
+      <!-- CTA comerciante (mobile) -->
+      <div class="comerciante-cta mobile-only">
+        <div class="comerciante-bg">🏪</div>
+        <div class="comerciante-label">¿TIENES UN CHANGARRO?</div>
+        <div class="cv2-serif comerciante-title">Súmate al catálogo del barrio</div>
+        <div class="comerciante-sub">Promos, fotos, reseñas y clientes nuevos. Gratis.</div>
+        <button class="cv2-btn comerciante-btn">Registrar mi negocio →</button>
+      </div>
+
+
+      <!-- ════════════ TABLET LAYOUT ════════════ -->
+
+      <div class="t-content tablet-only">
+        <!-- Header -->
+        <div class="t-header">
+          <h1 class="cv2-serif t-title">Mi perfil</h1>
+          <div class="t-coins cv2-points">
+            <span class="cv2-coin" style="width:22px;height:22px;font-size:11px">$</span>
+            1,240
+          </div>
         </div>
-      }
-    </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      @for (tab of tabs; track tab) {
-        <div class="cv2-chip" [class.active]="activeTab === tab" (click)="activeTab = tab">{{ tab }}</div>
-      }
-    </div>
+        <!-- Two-column layout -->
+        <div class="t-grid">
+          <!-- Left column: profile card -->
+          <div class="t-left">
+            <!-- Profile card -->
+            <div class="t-profile-card cv2-card">
+              <div class="t-profile-top">
+                <div class="t-avatar">
+                  <span class="cv2-serif t-avatar-letter">M</span>
+                </div>
+                <div class="t-profile-info">
+                  <h2 class="cv2-serif t-profile-name">María Hernández</h2>
+                  <div class="t-profile-level">👑 Embajadora del barrio</div>
+                  <div class="t-profile-meta">Roma Norte · Desde 2024</div>
+                </div>
+              </div>
 
-    <!-- Collection grid -->
-    <div class="collection">
-      @for (v of collection; track v.n) {
-        <div class="collection-item" [style.background]="v.c">
-          <span class="collection-emoji">{{ v.e }}</span>
-          <span class="collection-name">{{ v.n }}</span>
+              <!-- Stats row -->
+              <div class="t-stats">
+                @for (s of stats; track s.l) {
+                  <div class="t-stat">
+                    <div class="t-stat-emoji">{{ s.emoji }}</div>
+                    <div class="cv2-serif t-stat-value">{{ s.v }}</div>
+                    <div class="t-stat-label">{{ s.l }}</div>
+                  </div>
+                }
+              </div>
+
+              <!-- Level progress -->
+              <div class="t-level">
+                <div class="t-level-header">
+                  <span class="t-level-label">Nivel 4 — Embajadora</span>
+                  <span class="t-level-next">760 para Leyenda</span>
+                </div>
+                <div class="cv2-progress">
+                  <div class="cv2-progress-fill" style="width:62%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Edit card -->
+            <div class="t-edit-card cv2-card">
+              <div class="t-edit-header">
+                <h3 class="cv2-serif t-edit-title">Información personal</h3>
+                @if (!editing) {
+                  <button class="t-edit-btn" (click)="startEditing()">✏️ Editar</button>
+                }
+              </div>
+
+              @if (!editing) {
+                <div class="t-info-rows">
+                  <div class="t-info-row">
+                    <span class="t-info-icon">👤</span>
+                    <div class="t-info-content">
+                      <div class="t-info-label">Nombre</div>
+                      <div class="t-info-value">María Hernández</div>
+                    </div>
+                  </div>
+                  <div class="t-info-row">
+                    <span class="t-info-icon">📱</span>
+                    <div class="t-info-content">
+                      <div class="t-info-label">Teléfono</div>
+                      <div class="t-info-value">55 1234 5678</div>
+                    </div>
+                  </div>
+                  <div class="t-info-row">
+                    <span class="t-info-icon">📧</span>
+                    <div class="t-info-content">
+                      <div class="t-info-label">Correo</div>
+                      <div class="t-info-value">maria&#64;changarro.com</div>
+                    </div>
+                  </div>
+                </div>
+              } @else {
+                <div class="t-edit-form">
+                  <div class="t-form-field">
+                    <label class="t-form-label">NOMBRE</label>
+                    <input class="t-form-input" [(ngModel)]="editName" placeholder="Tu nombre" />
+                  </div>
+                  <div class="t-form-field">
+                    <label class="t-form-label">TELÉFONO</label>
+                    <input class="t-form-input" [(ngModel)]="editPhone" placeholder="55 1234 5678" type="tel" />
+                  </div>
+                  <div class="t-form-actions">
+                    <button class="cv2-btn cv2-btn-primary t-save-btn" (click)="saveProfile()">Guardar cambios</button>
+                    <button class="cv2-btn t-cancel-btn" (click)="cancelEditing()">Cancelar</button>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Danger zone -->
+            <div class="t-danger cv2-card">
+              <div class="t-danger-header">
+                <h3 class="cv2-serif t-danger-title">Zona peligrosa</h3>
+              </div>
+              <p class="t-danger-text">Eliminar tu cuenta borrará permanentemente todos tus datos, sellos, monedas y reseñas.</p>
+              <button class="t-danger-btn" (click)="openDeleteModal()">🗑️ Eliminar mi cuenta</button>
+            </div>
+          </div>
+
+          <!-- Right column -->
+          <div class="t-right">
+            <!-- Sellos passport -->
+            <div class="t-sellos cv2-card">
+              <div class="t-section-header">
+                <h3 class="cv2-serif t-section-title">Pasaporte del barrio</h3>
+                <span class="t-section-count">4/{{ sellos.length }}</span>
+              </div>
+              <div class="t-sellos-grid">
+                @for (s of sellos; track s.label) {
+                  <div class="t-sello-item">
+                    <div class="cv2-sello"
+                      [class.locked]="!s.got"
+                      [style.color]="s.got ? s.color : 'var(--ink-mute)'"
+                      [style.width.px]="64"
+                      [style.height.px]="64"
+                      [style.background]="s.got ? s.color + '22' : 'rgba(36,21,16,0.04)'"
+                      [style.border-style]="s.got ? 'solid' : 'dashed'">
+                      @if (s.got) {
+                        <span style="font-size:24px">{{ s.emoji }}</span>
+                      } @else {
+                        <span style="font-size:16px;color:var(--ink-mute)">🔒</span>
+                      }
+                    </div>
+                    <div class="t-sello-label" [style.color]="s.got ? 'var(--ink)' : 'var(--ink-mute)'">{{ s.label }}</div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Collection -->
+            <div class="t-collection cv2-card">
+              <div class="t-section-header">
+                <h3 class="cv2-serif t-section-title">Mi colección</h3>
+                <span class="t-section-count">{{ collection.length }} negocios</span>
+              </div>
+              <div class="t-collection-grid">
+                @for (v of collection; track v.n) {
+                  <div class="t-collection-item" [style.background]="v.c">
+                    <span class="t-collection-emoji">{{ v.e }}</span>
+                    <span class="t-collection-name">{{ v.n }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Activity -->
+            <div class="t-activity cv2-card">
+              <h3 class="cv2-serif t-section-title" style="padding:20px 20px 0">Actividad reciente</h3>
+              @for (a of activity; track a.text) {
+                <div class="t-activity-item">
+                  <span class="t-activity-emoji">{{ a.emoji }}</span>
+                  <div class="t-activity-info">
+                    <div class="t-activity-text">{{ a.text }}</div>
+                    <div class="t-activity-when">{{ a.when }}</div>
+                  </div>
+                  <div class="t-activity-coins" [class.negative]="a.coins.startsWith('-')">{{ a.coins }}</div>
+                </div>
+              }
+            </div>
+          </div>
         </div>
-      }
+      </div>
+
     </div>
 
-    <!-- CTA comerciante -->
-    <div class="comerciante-cta">
-      <div class="comerciante-bg">🏪</div>
-      <div class="comerciante-label">¿TIENES UN CHANGARRO?</div>
-      <div class="cv2-serif comerciante-title">Súmate al catálogo del barrio</div>
-      <div class="comerciante-sub">Promos, fotos, reseñas y clientes nuevos. Gratis.</div>
-      <button class="cv2-btn comerciante-btn">Registrar mi negocio →</button>
+    <app-tab-bar active="perfil" />
+  </div>
+</div>
+
+<!-- Delete account modal -->
+@if (showDeleteModal) {
+  <div class="modal-overlay" (click)="closeDeleteModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-icon">⚠️</div>
+      <h2 class="cv2-serif modal-title">¿Eliminar tu cuenta?</h2>
+      <p class="modal-text">Esta acción es <strong>irreversible</strong>. Se borrarán permanentemente:</p>
+      <ul class="modal-list">
+        <li>Tus 1,240 monedas</li>
+        <li>4 sellos del pasaporte</li>
+        <li>21 reseñas publicadas</li>
+        <li>Todos tus favoritos y visitas</li>
+      </ul>
+      <div class="modal-confirm">
+        <label class="modal-label">Escribe <strong>ELIMINAR</strong> para confirmar:</label>
+        <input class="modal-input" [(ngModel)]="deleteConfirmText" placeholder="ELIMINAR" />
+      </div>
+      <div class="modal-actions">
+        <button class="cv2-btn modal-delete-btn" [disabled]="deleteConfirmText !== 'ELIMINAR'" (click)="confirmDelete()">
+          Eliminar cuenta
+        </button>
+        <button class="cv2-btn modal-cancel-btn" (click)="closeDeleteModal()">Cancelar</button>
+      </div>
     </div>
   </div>
-
-  <app-tab-bar active="perfil" />
-</div>
+}

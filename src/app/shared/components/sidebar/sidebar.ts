@@ -2,6 +2,12 @@ import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CATEGORIES } from '../../data/mock-data';
 
+interface SubCategory {
+  label: string;
+  emoji: string;
+  count: number;
+}
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -37,19 +43,36 @@ import { CATEGORIES } from '../../data/mock-data';
       <div class="divider"></div>
       <div class="cat-heading">CATEGORIAS</div>
 
-      <!-- Categories -->
-      @for (c of categories; track c.id) {
-        <div class="cat-item">
-          <div class="cat-icon" [style.background]="c.bg">{{ c.emoji }}</div>
-          <span class="cat-label">{{ c.label }}</span>
-          <span class="cat-count">{{ getCatCount(c.id) }}</span>
-        </div>
-      }
+      <!-- Categories with subcategories -->
+      <div class="cat-scroll">
+        @for (c of categories; track c.id) {
+          <div class="cat-group">
+            <div class="cat-item" (click)="toggleCategory(c.id)" [class.expanded]="expandedCat === c.id">
+              <div class="cat-icon" [style.background]="c.bg">{{ c.emoji }}</div>
+              <span class="cat-label">{{ c.label }}</span>
+              <span class="cat-count">{{ getCatCount(c.id) }}</span>
+              <span class="cat-arrow" [class.open]="expandedCat === c.id">›</span>
+            </div>
+
+            @if (expandedCat === c.id) {
+              <div class="sub-list">
+                @for (sub of getSubcategories(c.id); track sub.label) {
+                  <div class="sub-item">
+                    <span class="sub-emoji">{{ sub.emoji }}</span>
+                    <span class="sub-label">{{ sub.label }}</span>
+                    <span class="sub-count">{{ sub.count }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
 
       <div class="spacer"></div>
 
       <!-- User mini profile -->
-      <div class="user-card">
+      <div class="user-card" routerLink="/perfil">
         <div class="user-avatar cv2-serif">M</div>
         <div class="user-info">
           <div class="user-name">Maria Hernandez</div>
@@ -130,16 +153,37 @@ import { CATEGORIES } from '../../data/mock-data';
       padding: 4px 12px 6px;
     }
 
+    .cat-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    .cat-group {
+      margin-bottom: 2px;
+    }
+
     .cat-item {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       padding: 8px 12px;
       border-radius: 10px;
       font-size: 13px;
       font-weight: 500;
       color: var(--ink-2);
       cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .cat-item:hover {
+      background: rgba(36,21,16,0.03);
+    }
+
+    .cat-item.expanded {
+      background: rgba(36,21,16,0.04);
+      font-weight: 600;
+      color: var(--ink);
     }
 
     .cat-icon {
@@ -150,12 +194,72 @@ import { CATEGORIES } from '../../data/mock-data';
       align-items: center;
       justify-content: center;
       font-size: 14px;
+      flex-shrink: 0;
     }
 
     .cat-label { flex: 1; }
     .cat-count { font-size: 11px; color: var(--ink-3); }
 
-    .spacer { flex: 1; }
+    .cat-arrow {
+      font-size: 14px;
+      color: var(--ink-3);
+      transition: transform 0.2s;
+      width: 14px;
+      text-align: center;
+    }
+
+    .cat-arrow.open {
+      transform: rotate(90deg);
+      color: var(--ink);
+    }
+
+    /* Subcategory list */
+    .sub-list {
+      padding: 2px 0 6px 0;
+      animation: subSlide 0.2s ease both;
+    }
+
+    @keyframes subSlide {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .sub-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 22px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--ink-2);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+
+    .sub-item:hover {
+      background: rgba(36,21,16,0.04);
+      color: var(--ink);
+    }
+
+    .sub-emoji {
+      font-size: 13px;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .sub-label {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .sub-count {
+      font-size: 10px;
+      color: var(--ink-mute);
+      font-weight: 600;
+    }
+
+    .spacer { flex: 0 0 8px; }
 
     .user-card {
       display: flex;
@@ -165,6 +269,8 @@ import { CATEGORIES } from '../../data/mock-data';
       border-radius: 12px;
       background: #FCF7EC;
       border: 1px solid rgba(36,21,16,0.08);
+      cursor: pointer;
+      flex-shrink: 0;
     }
 
     .user-avatar {
@@ -188,6 +294,7 @@ import { CATEGORIES } from '../../data/mock-data';
 export class Sidebar {
   active = input<string>('cat');
   categories = CATEGORIES;
+  expandedCat: string | null = null;
 
   navItems = [
     { id: 'cat', label: 'Catalogo', icon: '⊞', route: '/catalogo' },
@@ -196,10 +303,80 @@ export class Sidebar {
     { id: 'rec', label: 'Recompensas', icon: '★', badge: '+340', route: '/recompensas' },
   ];
 
+  private subcategories: Record<string, SubCategory[]> = {
+    comida: [
+      { label: 'Tacos',          emoji: '🌮', count: 12 },
+      { label: 'Tortas',         emoji: '🥖', count: 6 },
+      { label: 'Pizza',          emoji: '🍕', count: 4 },
+      { label: 'Hamburguesas',   emoji: '🍔', count: 3 },
+      { label: 'Café',           emoji: '☕', count: 5 },
+      { label: 'Panadería',      emoji: '🥐', count: 4 },
+      { label: 'Mariscos',       emoji: '🦐', count: 2 },
+      { label: 'Comida corrida', emoji: '🍲', count: 6 },
+      { label: 'Antojitos',      emoji: '🫔', count: 3 },
+      { label: 'Jugos',          emoji: '🧃', count: 3 },
+    ],
+    tienda: [
+      { label: 'Abarrotes',    emoji: '🏪', count: 8 },
+      { label: 'Mercería',     emoji: '🧵', count: 3 },
+      { label: 'Papelería',    emoji: '📒', count: 4 },
+      { label: 'Florería',     emoji: '💐', count: 2 },
+      { label: 'Tlapalería',   emoji: '🔧', count: 3 },
+      { label: 'Ropa',         emoji: '👕', count: 4 },
+      { label: 'Zapatería',    emoji: '👟', count: 2 },
+      { label: 'Dulcería',     emoji: '🍬', count: 3 },
+      { label: 'Regalos',      emoji: '🎁', count: 2 },
+      { label: 'Electrónica',  emoji: '📱', count: 1 },
+    ],
+    servicios: [
+      { label: 'Estética',       emoji: '💇', count: 5 },
+      { label: 'Lavandería',     emoji: '🧺', count: 3 },
+      { label: 'Cerrajería',     emoji: '🔑', count: 2 },
+      { label: 'Taller mecánico',emoji: '🔩', count: 2 },
+      { label: 'Plomería',       emoji: '🚿', count: 1 },
+      { label: 'Electricista',   emoji: '⚡', count: 2 },
+      { label: 'Copias',         emoji: '🖨️', count: 2 },
+      { label: 'Costura',        emoji: '🪡', count: 1 },
+      { label: 'Veterinaria',    emoji: '🐾', count: 2 },
+      { label: 'Cel / Reparación', emoji: '📲', count: 1 },
+    ],
+    entrete: [
+      { label: 'Bar / Cantina',  emoji: '🍺', count: 4 },
+      { label: 'Disco / Antro',  emoji: '🪩', count: 2 },
+      { label: 'Billar',         emoji: '🎱', count: 1 },
+      { label: 'Karaoke',        emoji: '🎤', count: 1 },
+      { label: 'Gimnasio',       emoji: '🏋️', count: 2 },
+      { label: 'Arcade',         emoji: '🕹️', count: 1 },
+      { label: 'Parque',         emoji: '🌳', count: 2 },
+      { label: 'Eventos',        emoji: '🎪', count: 1 },
+    ],
+    salud: [
+      { label: 'Farmacia',       emoji: '💊', count: 4 },
+      { label: 'Consultorio',    emoji: '🩺', count: 3 },
+      { label: 'Dentista',       emoji: '🦷', count: 2 },
+      { label: 'Óptica',         emoji: '👓', count: 2 },
+      { label: 'Laboratorio',    emoji: '🧪', count: 1 },
+      { label: 'Nutriólogo',     emoji: '🥗', count: 1 },
+      { label: 'Fisioterapia',   emoji: '🤸', count: 1 },
+      { label: 'Psicólogo',      emoji: '🧠', count: 2 },
+      { label: 'Herbolaria',     emoji: '🌿', count: 1 },
+      { label: 'Naturista',      emoji: '🍃', count: 1 },
+    ],
+  };
+
+  toggleCategory(id: string) {
+    this.expandedCat = this.expandedCat === id ? null : id;
+  }
+
+  getSubcategories(id: string): SubCategory[] {
+    return this.subcategories[id] || [];
+  }
+
   getCatCount(id: string): string {
-    const counts: Record<string, string> = {
-      comida: '48', tienda: '32', servicios: '21', entrete: '14', salud: '18',
-    };
-    return counts[id] || '0';
+    const subs = this.subcategories[id];
+    if (subs) {
+      return String(subs.reduce((sum, s) => sum + s.count, 0));
+    }
+    return '0';
   }
 }
