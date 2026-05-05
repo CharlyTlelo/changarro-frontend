@@ -1,0 +1,111 @@
+<!-- Top Bar -->
+<div class="sa-topbar">
+  <div class="sa-topbar__left">
+    <div class="sa-topbar__sub">MODERACIÓN · 23 PENDIENTES · SLA 24H</div>
+    <h1 class="cv2-serif sa-topbar__title">Cola de reportes</h1>
+  </div>
+  <div class="sa-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#7A6A60" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#7A6A60" stroke-width="2" stroke-linecap="round"/></svg>
+    <span class="sa-search__text">Buscar reporte por ID, comercio, usuario…</span>
+    <kbd class="sa-search__kbd">⌘ K</kbd>
+  </div>
+  <div class="sa-topbar__actions">
+    <button class="sa-topbar__btn">📊 Exportar</button>
+    <div class="sa-topbar__bell">
+      <span>🔔</span>
+      <div class="sa-topbar__bell-badge">23</div>
+    </div>
+  </div>
+</div>
+
+<!-- Priority tabs -->
+<div class="sa-priority-tabs">
+  @for (tab of tabs; track tab.label) {
+    <div class="sa-priority-tab" [class.active]="tab.active" (click)="tab.active = !tab.active">
+      @if (tab.color) {
+        <span class="sa-priority-tab__dot" [style.background]="tab.color"></span>
+      }
+      {{ tab.label }}
+      <span class="sa-priority-tab__count">{{ tab.count }}</span>
+    </div>
+  }
+</div>
+
+<!-- Two-panel layout -->
+<div class="sa-mod-panels">
+  <!-- Left: report list -->
+  <div class="sa-mod-list">
+    @for (r of reportes; track r.id; let i = $index) {
+      <div class="sa-mod-item" [class.selected]="r.selected" (click)="selectReport(i)">
+        <div class="sa-mod-item__top">
+          <span class="sa-mod-item__sev" [class.urgent]="r.sev === 'urgent'">{{ r.sev === 'urgent' ? 'URGENTE' : 'NORMAL' }}</span>
+          <span class="sa-mod-item__id">{{ r.id }}</span>
+          <div class="sa-mod-item__spacer"></div>
+          <span class="sa-mod-item__age">hace {{ r.age }}</span>
+        </div>
+        <div class="sa-mod-item__target">{{ r.target }} <span class="sa-mod-item__type">· {{ r.type }}</span></div>
+        <div class="sa-mod-item__reason">"{{ r.reason }}"</div>
+        <div class="sa-mod-item__who">Por {{ r.who }}</div>
+      </div>
+    }
+  </div>
+
+  <!-- Right: report detail -->
+  <div class="sa-mod-detail">
+    <div class="sa-mod-detail__header">
+      <span class="sa-mod-detail__sla">URGENTE · SLA 22H</span>
+      <span class="sa-mod-detail__id">#R-1247</span>
+      <span class="sa-mod-detail__time">· hace 2 horas</span>
+      <div class="sa-mod-detail__spacer"></div>
+      <button class="sa-mod-detail__btn">📋 Copiar ID</button>
+      <button class="sa-mod-detail__btn">↗ Asignar</button>
+    </div>
+
+    <h2 class="cv2-serif sa-mod-detail__title">Información falsa de horarios</h2>
+    <div class="sa-mod-detail__sub">Reportado contra <strong>Florería Camelia</strong> · 4° reporte en 7 días</div>
+
+    <!-- Reporter -->
+    <div class="sa-mod-reporter">
+      <div class="sa-mod-reporter__avatar">C</div>
+      <div class="sa-mod-reporter__info">
+        <div class="sa-mod-reporter__name">Carlos Rodríguez <span class="sa-mod-reporter__meta">· Vecino · 12 reportes previos</span></div>
+        <div class="sa-mod-reporter__sub">carlos.r&#64;email.com · Roma Norte · alta hace 47 días</div>
+      </div>
+      <div class="sa-mod-reporter__badge">Reportes válidos: 9/12</div>
+    </div>
+
+    <!-- Description -->
+    <div class="sa-mod-description">
+      <div class="sa-mod-description__label">DESCRIPCIÓN DEL REPORTE</div>
+      <p class="sa-mod-description__text">
+        "Llegué a las 8pm porque el perfil dice que cierran a las 9pm y estaba cerrado. Es la tercera vez que me pasa este mes. Los horarios publicados no corresponden con la realidad y otros vecinos en el grupo de Facebook han reportado lo mismo."
+      </p>
+      <div class="sa-mod-description__evidence">
+        <div class="sa-mod-evidence" style="background: #FFB57A">📷 1</div>
+        <div class="sa-mod-evidence" style="background: #A8D08B">📷 2</div>
+        <div class="sa-mod-evidence" style="background: #8FC4DC">📷 3</div>
+        <span class="sa-mod-evidence__label">3 evidencias adjuntas</span>
+      </div>
+    </div>
+
+    <!-- Resolution actions -->
+    <div class="sa-mod-resolution">
+      <div class="sa-mod-resolution__label">RESOLUCIÓN</div>
+      <div class="sa-mod-resolution__grid">
+        @for (a of actions; track a.label) {
+          <div class="sa-mod-resolution__item" [class.danger]="a.danger">
+            <span class="sa-mod-resolution__icon">{{ a.icon }}</span>
+            <div>
+              <div class="sa-mod-resolution__action-label">{{ a.label }}</div>
+              <div class="sa-mod-resolution__action-sub">{{ a.sub }}</div>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="sa-mod-resolution__suggestion">
+        <span>💡</span>
+        <span>Este negocio tiene 4 reportes en 7 días por la misma razón. Sugerencia: <strong>suspender 7 días</strong> y solicitar aclaración formal.</span>
+      </div>
+    </div>
+  </div>
+</div>

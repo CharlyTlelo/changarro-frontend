@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './shared/guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -51,6 +52,39 @@ export const routes: Routes = [
       {
         path: 'analytics',
         loadComponent: () => import('./pages/negocio/analytics/biz-analytics').then(m => m.BizAnalytics),
+      },
+    ],
+  },
+
+  // Admin platform
+  {
+    path: 'admin15-changarro',
+    loadComponent: () => import('./pages/admin/admin-login/admin-login').then(m => m.AdminLogin),
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./pages/admin/admin-panel/admin-panel').then(m => m.AdminPanel),
+    canActivate: [adminGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/admin/admin-overview/admin-overview').then(m => m.AdminOverview),
+      },
+      {
+        path: 'comercios',
+        loadComponent: () => import('./pages/admin/admin-comercios/admin-comercios').then(m => m.AdminComercios),
+      },
+      {
+        path: 'comercios/detalle',
+        loadComponent: () => import('./pages/admin/admin-comercio-detalle/admin-comercio-detalle').then(m => m.AdminComercioDetalle),
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () => import('./pages/admin/admin-usuarios/admin-usuarios').then(m => m.AdminUsuarios),
+      },
+      {
+        path: 'moderacion',
+        loadComponent: () => import('./pages/admin/admin-moderacion/admin-moderacion').then(m => m.AdminModeracion),
       },
     ],
   },

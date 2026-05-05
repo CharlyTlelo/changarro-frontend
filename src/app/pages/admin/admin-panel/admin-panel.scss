@@ -1,87 +1,19 @@
-:host { display: block; background: var(--paper); min-height: 100dvh; }
-.accent { color: var(--terracota); }
+:host {
+  display: block;
+  height: 100dvh;
+  overflow: hidden;
+}
 
-.admin-shell { min-height: 100dvh; }
-
-.admin-top {
+.admin-shell {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 18px;
-  border-bottom: 1px solid rgba(36,21,16,0.08);
-  background: rgba(251,244,228,0.92);
-  backdrop-filter: blur(18px) saturate(160%);
+  height: 100dvh;
+  background: #F4EFE3;
 }
 
-.admin-top__brand {
+.admin-content {
+  flex: 1;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 20px;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
-
-.admin-top__pill {
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: var(--maiz);
-}
-
-.admin-top__logout { padding: 10px 14px; font-size: 13px; }
-
-.admin-main {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 22px 16px 50px;
-}
-
-.admin-h1 { margin: 0 0 6px; font-size: 30px; line-height: 1.05; }
-.admin-sub { margin: 0 0 16px; font-size: 13px; color: var(--ink-3); font-weight: 600; }
-
-.admin-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-.admin-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.12s;
-
-  &:hover { transform: translateY(-1px); }
-}
-
-.admin-card__icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  background: var(--paper-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-}
-
-.admin-card__title { font-weight: 900; font-size: 15px; }
-.admin-card__sub { font-size: 12px; color: var(--ink-3); font-weight: 600; margin-top: 2px; }
-
-.admin-card--disabled {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-@media (min-width: 768px) {
-  .admin-main { padding: 30px 32px 70px; }
-  .admin-h1 { font-size: 36px; }
-  .admin-grid { grid-template-columns: repeat(3, 1fr); }
-}
-

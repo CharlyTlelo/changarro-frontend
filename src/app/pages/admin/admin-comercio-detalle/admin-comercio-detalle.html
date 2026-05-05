@@ -1,0 +1,114 @@
+<!-- Breadcrumb bar -->
+<div class="sa-breadcrumb">
+  <a class="sa-breadcrumb__back" routerLink="/admin/comercios">← Comercios</a>
+  <span class="sa-breadcrumb__sep">/</span>
+  <span class="sa-breadcrumb__current">Florería Camelia</span>
+  <span class="sa-breadcrumb__badge">🚩 REPORTADO ×4</span>
+  <div class="sa-breadcrumb__spacer"></div>
+  <button class="sa-breadcrumb__btn">👁 Ver perfil público</button>
+  <button class="sa-breadcrumb__btn sa-breadcrumb__btn--warn">⊘ Suspender</button>
+  <button class="sa-breadcrumb__btn sa-breadcrumb__btn--danger">🗑 Eliminar</button>
+</div>
+
+<!-- Content -->
+<div class="sa-detail-content">
+  <!-- Hero info row -->
+  <div class="sa-detail-hero">
+    <!-- Left: info card -->
+    <div class="sa-info-card">
+      <div class="sa-info-card__header">
+        <div class="sa-info-card__icon">
+          💐
+          <div class="sa-info-card__verif">✓</div>
+        </div>
+        <div class="sa-info-card__title-wrap">
+          <h2 class="cv2-serif sa-info-card__name">Florería Camelia</h2>
+          <div class="sa-info-card__sub">Tienda · ID #1004 · Verificado</div>
+          <div class="sa-info-card__rating">
+            <span class="sa-info-card__star">★</span>
+            <strong>5.0</strong>
+            <span class="sa-info-card__reviews">(67 reseñas)</span>
+          </div>
+        </div>
+      </div>
+      <div class="sa-info-card__divider"></div>
+      @for (field of info; track field.label) {
+        <div class="sa-info-card__field">
+          <span class="sa-info-card__field-label">{{ field.label }}</span>
+          <span class="sa-info-card__field-value">{{ field.value }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Right: reportes + métricas -->
+    <div class="sa-detail-right">
+      <div class="sa-reportes-card">
+        <div class="sa-reportes-card__header">
+          <span class="sa-reportes-card__emoji">🚩</span>
+          <div class="sa-reportes-card__info">
+            <h3 class="cv2-serif sa-reportes-card__title">4 reportes activos</h3>
+            <div class="sa-reportes-card__sub">Reportes en los últimos 7 días</div>
+          </div>
+          <button class="sa-reportes-card__btn">Ver todos</button>
+        </div>
+        @for (rp of reportes; track rp.user) {
+          <div class="sa-reporte-row">
+            <strong>{{ rp.user }}</strong>
+            <span class="sa-reporte-row__reason">{{ rp.reason }}</span>
+            <span class="sa-reporte-row__date">{{ rp.date }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="sa-detail-metrics">
+        @for (m of metrics; track m.label) {
+          <div class="sa-detail-metric">
+            <div class="sa-detail-metric__label">{{ m.label }}</div>
+            <div class="cv2-serif sa-detail-metric__value">{{ m.value }}</div>
+            <div class="sa-detail-metric__delta" [class.negative]="m.delta.startsWith('−')">{{ m.delta }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="sa-tabs">
+    @for (tab of tabs; track tab.label) {
+      <div class="sa-tab" [class.active]="tab.active">{{ tab.label }}</div>
+    }
+  </div>
+
+  <!-- Audit + Actions row -->
+  <div class="sa-detail-bottom">
+    <!-- Timeline -->
+    <div class="sa-timeline-card">
+      <h3 class="cv2-serif sa-timeline-card__title">Actividad reciente</h3>
+      @for (e of timeline; track e.what; let i = $index) {
+        <div class="sa-timeline-item" [class.bordered]="i > 0">
+          <div class="sa-timeline-item__icon">{{ e.icon }}</div>
+          <div class="sa-timeline-item__content">
+            <div class="sa-timeline-item__text"><strong>{{ e.who }}</strong> · <span>{{ e.what }}</span></div>
+            <div class="sa-timeline-item__when">{{ e.when }}</div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <div class="sa-actions-card">
+      <div class="sa-actions-card__label">ACCIONES DE MODERACIÓN</div>
+      <h3 class="cv2-serif sa-actions-card__title">Tomar acción</h3>
+      @for (a of actions; track a.label) {
+        <div class="sa-action-item" [class.danger]="a.danger">
+          <span class="sa-action-item__icon">{{ a.icon }}</span>
+          <div class="sa-action-item__info">
+            <div class="sa-action-item__label">{{ a.label }}</div>
+            <div class="sa-action-item__sub">{{ a.sub }}</div>
+          </div>
+          <span class="sa-action-item__arrow">›</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

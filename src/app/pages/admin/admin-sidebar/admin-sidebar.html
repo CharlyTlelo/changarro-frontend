@@ -1,0 +1,54 @@
+<aside class="sa-sidebar">
+  <!-- Logo -->
+  <div class="sa-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32">
+      <path d="M4 12 Q8 8 12 12 Q16 8 20 12 Q24 8 28 12 L28 14 L4 14 Z" fill="#F5B92E"/>
+      <rect x="6" y="14" width="20" height="14" stroke="#F5B92E" stroke-width="2" fill="none"/>
+      <path d="M13 28 L13 20 L19 20 L19 28" stroke="#F5B92E" stroke-width="2" fill="none"/>
+      <circle cx="26" cy="6" r="3" fill="#DD4D2A"/>
+    </svg>
+    <div class="sa-logo__text">
+      <span class="cv2-serif sa-logo__name">changarro</span>
+      <span class="sa-logo__badge">CONTROL CENTER</span>
+    </div>
+  </div>
+
+  <!-- Sections -->
+  <div class="sa-nav">
+    @for (sec of sections; track sec.title) {
+      <div class="sa-section">
+        <div class="sa-section__title">{{ sec.title }}</div>
+        @for (item of sec.items; track item.id) {
+          <a class="sa-item" [class.active]="active() === item.id" [routerLink]="item.route">
+            <span class="sa-item__icon">{{ item.icon }}</span>
+            <span class="sa-item__label">{{ item.label }}</span>
+            @if (item.dot === 'green') {
+              <span class="sa-item__dot"></span>
+            }
+            @if (item.urgent) {
+              <span class="sa-item__urgent">{{ item.urgent }}</span>
+            }
+            @if (item.count && !item.urgent) {
+              <span class="sa-item__count">{{ item.count }}</span>
+            }
+            @if (item.badge) {
+              <span class="sa-item__badge">{{ item.badge }}</span>
+            }
+          </a>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Operador -->
+  <div class="sa-user">
+    <div class="sa-user__avatar cv2-serif">A</div>
+    <div class="sa-user__info">
+      <div class="sa-user__name">Alex Ramírez</div>
+      <div class="sa-user__role">
+        <span class="sa-user__dot"></span> Super Admin
+      </div>
+    </div>
+    <span class="sa-user__more">⋯</span>
+  </div>
+</aside>
