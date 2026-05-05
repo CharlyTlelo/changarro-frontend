@@ -1,81 +1,244 @@
 <div class="screen">
-  <!-- Hero card de puntos -->
-  <div class="points-card">
-    <div class="points-shine"></div>
-    <div class="points-top">
-      <div>
-        <div class="points-label">MIS MONEDITAS</div>
-        <div class="points-amount">
-          <span class="cv2-coin coin-lg">$</span>
-          <span class="cv2-serif points-number">1,240</span>
-        </div>
-        <div class="points-week">+340 esta semana</div>
-      </div>
-      <div class="level-badge">👑 Embajadora</div>
-    </div>
+  <!-- Sidebar (tablet only) -->
+  <app-sidebar class="tablet-only sidebar-slot" active="rec" />
 
-    <div class="level-progress">
-      <div class="level-info">
-        <span>Nivel 4</span>
-        <span>760 para Nivel 5 · Leyenda</span>
-      </div>
-      <div class="cv2-progress" style="background: rgba(247,241,230,0.15)">
-        <div class="cv2-progress-fill" style="width:62%"></div>
-      </div>
-    </div>
-  </div>
+  <div class="main-area">
+    <div class="scroll-content">
 
-  <div class="scroll-content">
-    <!-- Pasaporte -->
-    <section class="section">
-      <div class="section-header">
-        <h2 class="cv2-serif section-title">Pasaporte del barrio</h2>
-        <span class="section-count">{{ sellosGot }}/{{ sellos.length }}</span>
-      </div>
-      <p class="section-sub">Visita changarros para coleccionar sellos</p>
+      <!-- ════════════ MOBILE LAYOUT ════════════ -->
 
-      <div class="sellos-grid">
-        @for (s of sellos; track s.label) {
-          <div class="sello-item">
-            <div class="cv2-sello"
-              [class.locked]="!s.got"
-              [style.color]="s.got ? s.color : 'var(--ink-mute)'"
-              [style.width.px]="72"
-              [style.height.px]="72"
-              [style.background]="s.got ? s.color + '22' : 'rgba(36,21,16,0.04)'"
-              [style.border-style]="s.got ? 'solid' : 'dashed'">
-              @if (s.got) {
-                <span class="sello-emoji">{{ s.emoji }}</span>
-              } @else {
-                <span class="sello-lock">🔒</span>
-              }
+      <!-- Hero card de puntos (mobile) -->
+      <div class="points-card mobile-only">
+        <div class="points-shine"></div>
+        <div class="points-top">
+          <div>
+            <div class="points-label">MIS MONEDITAS</div>
+            <div class="points-amount">
+              <span class="cv2-coin coin-lg">$</span>
+              <span class="cv2-serif points-number">1,240</span>
             </div>
-            <div class="sello-label" [style.color]="s.got ? 'var(--ink)' : 'var(--ink-mute)'">{{ s.label }}</div>
+            <div class="points-week">+340 esta semana</div>
+          </div>
+          <div class="level-badge">👑 Embajadora</div>
+        </div>
+
+        <div class="level-progress">
+          <div class="level-info">
+            <span>Nivel 4</span>
+            <span>760 para Nivel 5 · Leyenda</span>
+          </div>
+          <div class="cv2-progress" style="background: rgba(247,241,230,0.15)">
+            <div class="cv2-progress-fill" style="width:62%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pasaporte (mobile) -->
+      <section class="section mobile-only">
+        <div class="section-header">
+          <h2 class="cv2-serif section-title">Pasaporte del barrio</h2>
+          <span class="section-count">{{ sellosGot }}/{{ sellos.length }}</span>
+        </div>
+        <p class="section-sub">Visita changarros para coleccionar sellos</p>
+
+        <div class="sellos-grid">
+          @for (s of sellos; track s.label) {
+            <div class="sello-item">
+              <div class="cv2-sello"
+                [class.locked]="!s.got"
+                [style.color]="s.got ? s.color : 'var(--ink-mute)'"
+                [style.width.px]="72"
+                [style.height.px]="72"
+                [style.background]="s.got ? s.color + '22' : 'rgba(36,21,16,0.04)'"
+                [style.border-style]="s.got ? 'solid' : 'dashed'">
+                @if (s.got) {
+                  <span class="sello-emoji">{{ s.emoji }}</span>
+                } @else {
+                  <span class="sello-lock">🔒</span>
+                }
+              </div>
+              <div class="sello-label" [style.color]="s.got ? 'var(--ink)' : 'var(--ink-mute)'">{{ s.label }}</div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Canjear monedas (mobile) -->
+      <section class="section mobile-only">
+        <h2 class="cv2-serif section-title">Canjea tus monedas</h2>
+        <p class="section-sub">Descuentos reales de tus changarros favoritos</p>
+
+        @for (r of recompensas; track r.name) {
+          <div class="reward-item">
+            <div class="reward-icon" [style.background]="r.color">{{ r.emoji }}</div>
+            <div class="reward-info">
+              <div class="reward-name">{{ r.name }}</div>
+              <div class="reward-sold">{{ r.sold }}</div>
+            </div>
+            <div class="reward-cost">
+              <div class="cv2-coin coin-sm">$</div>
+              <div class="reward-price">{{ r.cost }}</div>
+            </div>
           </div>
         }
-      </div>
-    </section>
+      </section>
 
-    <!-- Canjear monedas -->
-    <section class="section">
-      <h2 class="cv2-serif section-title">Canjea tus monedas</h2>
-      <p class="section-sub">Descuentos reales de tus changarros favoritos</p>
 
-      @for (r of recompensas; track r.name) {
-        <div class="reward-item">
-          <div class="reward-icon" [style.background]="r.color">{{ r.emoji }}</div>
-          <div class="reward-info">
-            <div class="reward-name">{{ r.name }}</div>
-            <div class="reward-sold">{{ r.sold }}</div>
+      <!-- ════════════ TABLET LAYOUT ════════════ -->
+
+      <div class="t-content tablet-only">
+        <!-- Header -->
+        <div class="t-header">
+          <div>
+            <h1 class="cv2-serif t-title">Recompensas</h1>
+            <p class="t-subtitle">Gana monedas, canjea premios y sube de nivel</p>
           </div>
-          <div class="reward-cost">
-            <div class="cv2-coin coin-sm">$</div>
-            <div class="reward-price">{{ r.cost }}</div>
+          <div class="t-coins cv2-points">
+            <span class="cv2-coin" style="width:22px;height:22px;font-size:11px">$</span>
+            1,240
           </div>
         </div>
-      }
-    </section>
-  </div>
 
-  <app-tab-bar active="recompensas" />
+        <!-- Points hero (tablet) -->
+        <div class="t-points-card">
+          <div class="points-shine"></div>
+          <div class="t-points-grid">
+            <div class="t-points-left">
+              <div class="points-label">MIS MONEDITAS</div>
+              <div class="points-amount">
+                <span class="cv2-coin coin-lg">$</span>
+                <span class="cv2-serif points-number">1,240</span>
+              </div>
+              <div class="points-week">+340 esta semana</div>
+            </div>
+            <div class="t-points-right">
+              <div class="level-badge">👑 Embajadora</div>
+              <div class="level-progress" style="margin-top:12px">
+                <div class="level-info">
+                  <span>Nivel 4</span>
+                  <span>760 para Leyenda</span>
+                </div>
+                <div class="cv2-progress" style="background: rgba(247,241,230,0.15)">
+                  <div class="cv2-progress-fill" style="width:62%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-column grid -->
+        <div class="t-grid">
+          <!-- Left column -->
+          <div class="t-left">
+            <!-- Pasaporte -->
+            <div class="t-sellos cv2-card">
+              <div class="t-section-header">
+                <h3 class="cv2-serif t-section-title">Pasaporte del barrio</h3>
+                <span class="t-section-count">{{ sellosGot }}/{{ sellos.length }}</span>
+              </div>
+              <p class="t-section-sub">Visita changarros para coleccionar sellos</p>
+              <div class="t-sellos-grid">
+                @for (s of sellos; track s.label) {
+                  <div class="t-sello-item">
+                    <div class="cv2-sello"
+                      [class.locked]="!s.got"
+                      [style.color]="s.got ? s.color : 'var(--ink-mute)'"
+                      [style.width.px]="64"
+                      [style.height.px]="64"
+                      [style.background]="s.got ? s.color + '22' : 'rgba(36,21,16,0.04)'"
+                      [style.border-style]="s.got ? 'solid' : 'dashed'">
+                      @if (s.got) {
+                        <span style="font-size:24px">{{ s.emoji }}</span>
+                      } @else {
+                        <span style="font-size:16px;color:var(--ink-mute)">🔒</span>
+                      }
+                    </div>
+                    <div class="t-sello-label" [style.color]="s.got ? 'var(--ink)' : 'var(--ink-mute)'">{{ s.label }}</div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- How to earn -->
+            <div class="t-earn cv2-card">
+              <h3 class="cv2-serif t-section-title" style="padding:0 0 12px">Cómo ganar monedas</h3>
+              @for (m of earnMethods; track m.label) {
+                <div class="t-earn-item">
+                  <span class="t-earn-emoji">{{ m.emoji }}</span>
+                  <div class="t-earn-info">
+                    <div class="t-earn-label">{{ m.label }}</div>
+                    <div class="t-earn-desc">{{ m.desc }}</div>
+                  </div>
+                  <div class="t-earn-coins">{{ m.coins }}</div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Right column -->
+          <div class="t-right">
+            <!-- Rewards list -->
+            <div class="t-rewards cv2-card">
+              <div class="t-section-header">
+                <h3 class="cv2-serif t-section-title">Canjea tus monedas</h3>
+              </div>
+              <p class="t-section-sub">Descuentos reales de tus changarros favoritos</p>
+
+              @for (r of recompensas; track r.name) {
+                <div class="t-reward-item">
+                  <div class="t-reward-icon" [style.background]="r.color">{{ r.emoji }}</div>
+                  <div class="t-reward-info">
+                    <div class="t-reward-name">{{ r.name }}</div>
+                    <div class="t-reward-sold">{{ r.sold }}</div>
+                  </div>
+                  <button class="t-reward-btn">
+                    <span class="cv2-coin" style="width:18px;height:18px;font-size:9px">$</span>
+                    {{ r.cost }}
+                  </button>
+                </div>
+              }
+              @for (r of extraRecompensas; track r.name) {
+                <div class="t-reward-item">
+                  <div class="t-reward-icon" [style.background]="r.color">{{ r.emoji }}</div>
+                  <div class="t-reward-info">
+                    <div class="t-reward-name">{{ r.name }}</div>
+                    <div class="t-reward-sold">{{ r.sold }}</div>
+                  </div>
+                  <button class="t-reward-btn">
+                    <span class="cv2-coin" style="width:18px;height:18px;font-size:9px">$</span>
+                    {{ r.cost }}
+                  </button>
+                </div>
+              }
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="t-leaderboard cv2-card">
+              <div class="t-section-header">
+                <h3 class="cv2-serif t-section-title">Top del barrio</h3>
+                <span class="t-section-count">Roma Norte</span>
+              </div>
+              @for (u of leaderboard; track u.pos) {
+                <div class="t-leader-item" [class.me]="u.pos === 1">
+                  <span class="t-leader-pos" [class.gold]="u.pos === 1" [class.silver]="u.pos === 2" [class.bronze]="u.pos === 3">{{ u.pos }}</span>
+                  <span class="t-leader-emoji">{{ u.emoji }}</span>
+                  <div class="t-leader-info">
+                    <div class="t-leader-name">{{ u.name }}</div>
+                    <div class="t-leader-level">{{ u.level }}</div>
+                  </div>
+                  <div class="t-leader-coins">
+                    <span class="cv2-coin" style="width:16px;height:16px;font-size:8px">$</span>
+                    {{ u.coins }}
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <app-tab-bar active="recompensas" />
+  </div>
 </div>
