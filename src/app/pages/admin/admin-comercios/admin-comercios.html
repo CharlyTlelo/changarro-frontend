@@ -1,0 +1,112 @@
+<!-- Top Bar -->
+<div class="sa-topbar">
+  <div class="sa-topbar__left">
+    <div class="sa-topbar__sub">GESTIÓN · 1,247 COMERCIOS REGISTRADOS</div>
+    <h1 class="cv2-serif sa-topbar__title">Comercios</h1>
+  </div>
+  <div class="sa-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#7A6A60" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#7A6A60" stroke-width="2" stroke-linecap="round"/></svg>
+    <span class="sa-search__text">Buscar comercios, usuarios, reportes…</span>
+    <kbd class="sa-search__kbd">⌘ K</kbd>
+  </div>
+  <div class="sa-topbar__actions">
+    <button class="sa-topbar__btn">📊 Exportar</button>
+    <div class="sa-topbar__bell">
+      <span>🔔</span>
+      <div class="sa-topbar__bell-badge">23</div>
+    </div>
+  </div>
+</div>
+
+<!-- Mini stats -->
+<div class="sa-mini-stats">
+  @for (s of miniStats; track s.label) {
+    <div class="sa-mini-stat" [style.border-left-color]="s.color">
+      <div class="sa-mini-stat__label">{{ s.label }}</div>
+      <div class="cv2-serif sa-mini-stat__value">{{ s.value }}</div>
+    </div>
+  }
+</div>
+
+<!-- Toolbar -->
+<div class="sa-toolbar">
+  <div class="sa-toolbar__search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#7A6A60" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#7A6A60" stroke-width="2" stroke-linecap="round"/></svg>
+    <input class="sa-toolbar__input" placeholder="Buscar comercio, dueño, RFC…"/>
+  </div>
+  @for (f of filters; track f) {
+    <div class="sa-toolbar__filter">
+      {{ f }}
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  }
+  <div class="sa-toolbar__spacer"></div>
+  <button class="sa-toolbar__btn">📤 Exportar CSV</button>
+  <button class="sa-toolbar__btn sa-toolbar__btn--primary">+ Nuevo comercio</button>
+</div>
+
+<!-- Table -->
+<div class="sa-table-wrap">
+  <div class="sa-table">
+    <div class="sa-table__head">
+      <div class="sa-table__check"><div class="sa-checkbox"></div></div>
+      <span>NEGOCIO</span>
+      <span>DUEÑO</span>
+      <span>ZONA</span>
+      <span>ESTADO</span>
+      <span>★ RATING</span>
+      <span>ALTA</span>
+      <span></span>
+    </div>
+    @for (r of rows; track r.id; let last = $last) {
+      <div class="sa-table__row" [class.reported]="r.status === 'reportado'" [class.last]="last">
+        <div class="sa-table__check"><div class="sa-checkbox"></div></div>
+        <div class="sa-table__biz">
+          <div class="sa-table__biz-icon" [style.background]="r.color">
+            {{ r.emoji }}
+            @if (r.verif) {
+              <div class="sa-table__verif">✓</div>
+            }
+          </div>
+          <div>
+            <div class="sa-table__biz-name">
+              {{ r.name }}
+              @if (r.alerts) {
+                <span class="sa-table__biz-alert">{{ r.alerts }} ⚠</span>
+              }
+            </div>
+            <div class="sa-table__biz-sub">{{ r.cat }} · {{ r.reviews }} reseñas</div>
+          </div>
+        </div>
+        <div class="sa-table__owner">
+          <div class="sa-table__owner-name">{{ r.owner }}</div>
+          <div class="sa-table__owner-id">ID #{{ 1000 + r.id }}</div>
+        </div>
+        <div class="sa-table__zona">{{ r.zona }}</div>
+        <div>
+          <span class="sa-table__status" [style.background]="statusMap[r.status].bg" [style.color]="statusMap[r.status].fg">{{ statusMap[r.status].label }}</span>
+        </div>
+        <div class="sa-table__rating">
+          <span class="sa-table__star">★</span> {{ r.rating }}
+        </div>
+        <div class="sa-table__date">{{ r.joined }}</div>
+        <div class="sa-table__actions">
+          <a class="sa-table__action" routerLink="/admin/comercios/detalle" title="Ver">👁</a>
+          <span class="sa-table__action" title="Más">⋯</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  <div class="sa-pagination">
+    <span class="sa-pagination__info">Mostrando 1–9 de 1,247 comercios</span>
+    <div class="sa-pagination__pages">
+      <div class="sa-pagination__btn">‹ Ant</div>
+      @for (p of pages; track p; let i = $index) {
+        <div class="sa-pagination__page" [class.active]="i === 0">{{ p }}</div>
+      }
+      <div class="sa-pagination__btn">Sig ›</div>
+    </div>
+  </div>
+</div>

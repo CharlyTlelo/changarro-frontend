@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import { AdminSidebar } from '../admin-sidebar/admin-sidebar';
 import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-admin-panel',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterOutlet, AdminSidebar],
   templateUrl: './admin-panel.html',
   styleUrl: './admin-panel.scss',
 })
@@ -17,4 +18,3 @@ export class AdminPanel {
     this.auth.logout();
   }
 }
-

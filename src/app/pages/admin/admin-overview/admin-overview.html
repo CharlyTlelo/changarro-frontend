@@ -1,0 +1,142 @@
+<!-- Top Bar -->
+<div class="sa-topbar">
+  <div class="sa-topbar__left">
+    <div class="sa-topbar__sub">VISTA GENERAL · CDMX</div>
+    <h1 class="cv2-serif sa-topbar__title">Panel de control</h1>
+  </div>
+  <div class="sa-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#7A6A60" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#7A6A60" stroke-width="2" stroke-linecap="round"/></svg>
+    <span class="sa-search__text">Buscar comercios, usuarios, reportes…</span>
+    <kbd class="sa-search__kbd">⌘ K</kbd>
+  </div>
+  <div class="sa-topbar__actions">
+    <button class="sa-topbar__btn">📊 Exportar</button>
+    <div class="sa-topbar__bell">
+      <span>🔔</span>
+      <div class="sa-topbar__bell-badge">23</div>
+    </div>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="sa-content">
+  <!-- KPIs -->
+  <div class="sa-kpis">
+    @for (kpi of kpis; track kpi.label) {
+      <div class="sa-kpi">
+        <div class="sa-kpi__icon" [style.background]="kpi.color">{{ kpi.emoji }}</div>
+        <div class="sa-kpi__label">{{ kpi.label }}</div>
+        <div class="cv2-serif sa-kpi__value">{{ kpi.value }}</div>
+        <div class="sa-kpi__delta" [class.up]="kpi.up" [class.warn]="kpi.warn">
+          @if (kpi.up) { <span>↑</span> }
+          @if (kpi.warn) { <span>⚠</span> }
+          {{ kpi.delta }}
+          <span class="sa-kpi__unit">{{ kpi.unit }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Chart + Categories row -->
+  <div class="sa-row-2col">
+    <!-- Chart -->
+    <div class="sa-card sa-chart">
+      <div class="sa-chart__header">
+        <div>
+          <div class="sa-card__label">ACTIVIDAD DE LA PLATAFORMA</div>
+          <div class="sa-chart__metrics">
+            @for (m of chartMetrics; track m.label) {
+              <div class="sa-chart__metric">
+                <div class="cv2-serif sa-chart__metric-val">{{ m.value }}</div>
+                <div class="sa-chart__metric-label">
+                  <span class="sa-chart__dot" [style.background]="m.color"></span>{{ m.label }}
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="sa-chart__periods">
+          @for (p of periods; track p; let i = $index) {
+            <div class="sa-chart__period" [class.active]="i === activePeriod" (click)="activePeriod = i">{{ p }}</div>
+          }
+        </div>
+      </div>
+      <svg class="sa-chart__svg" viewBox="0 0 660 180" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sa-grad1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DD4D2A" stop-opacity="0.22"/><stop offset="1" stop-color="#DD4D2A" stop-opacity="0"/></linearGradient>
+        </defs>
+        <line x1="0" y1="40" x2="660" y2="40" stroke="#241510" stroke-opacity="0.05"/>
+        <line x1="0" y1="80" x2="660" y2="80" stroke="#241510" stroke-opacity="0.05"/>
+        <line x1="0" y1="120" x2="660" y2="120" stroke="#241510" stroke-opacity="0.05"/>
+        <line x1="0" y1="160" x2="660" y2="160" stroke="#241510" stroke-opacity="0.05"/>
+        <path d="M0 130 L60 115 L120 125 L180 90 L240 95 L300 70 L360 78 L420 55 L480 65 L540 40 L600 48 L660 25" fill="none" stroke="#DD4D2A" stroke-width="2.5"/>
+        <path d="M0 130 L60 115 L120 125 L180 90 L240 95 L300 70 L360 78 L420 55 L480 65 L540 40 L600 48 L660 25 L660 180 L0 180 Z" fill="url(#sa-grad1)"/>
+        <path d="M0 150 L60 145 L120 148 L180 130 L240 135 L300 120 L360 122 L420 110 L480 115 L540 100 L600 105 L660 90" fill="none" stroke="#4A8A3A" stroke-width="2"/>
+        <path d="M0 165 L60 162 L120 160 L180 155 L240 156 L300 150 L360 148 L420 142 L480 145 L540 138 L600 140 L660 132" fill="none" stroke="#F5B92E" stroke-width="2" stroke-dasharray="4 3"/>
+      </svg>
+      <div class="sa-chart__dates">
+        @for (d of ['1', '5', '10', '15', '20', '25', '30']; track d) {
+          <span>{{ d }} abr</span>
+        }
+      </div>
+    </div>
+
+    <!-- Top categorías -->
+    <div class="sa-card sa-categories">
+      <div class="sa-card__label">TOP CATEGORÍAS · CDMX</div>
+      @for (cat of categories; track cat.cat) {
+        <div class="sa-cat">
+          <div class="sa-cat__header">
+            <span class="sa-cat__name"><span>{{ cat.emoji }}</span> {{ cat.cat }}</span>
+            <span class="sa-cat__count">{{ cat.n }}</span>
+          </div>
+          <div class="sa-cat__bar">
+            <div class="sa-cat__fill" [style.width.%]="cat.pct" [style.background]="cat.color"></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Alerts + Zonas row -->
+  <div class="sa-row-alerts">
+    <!-- Bandeja -->
+    <div class="sa-card sa-bandeja">
+      <div class="sa-bandeja__header">
+        <div>
+          <div class="sa-card__label">BANDEJA · REQUIERE ACCIÓN</div>
+          <h3 class="cv2-serif sa-bandeja__title">Atención inmediata</h3>
+        </div>
+        <span class="sa-bandeja__link">Ver bandeja completa →</span>
+      </div>
+      @for (alert of alerts; track alert.label; let i = $index) {
+        <div class="sa-alert" [class.bordered]="i > 0">
+          <span class="sa-alert__tag" [style.background]="alert.color">{{ alert.tag }}</span>
+          <div class="sa-alert__info">
+            <div class="sa-alert__label">{{ alert.label }}</div>
+            <div class="sa-alert__sub">{{ alert.sub }}</div>
+          </div>
+          <span class="sa-alert__time">{{ alert.time }}</span>
+          <button class="sa-alert__btn">Revisar</button>
+        </div>
+      }
+    </div>
+
+    <!-- Zonas -->
+    <div class="sa-zonas">
+      <div class="sa-zonas__bg">📍</div>
+      <div class="sa-zonas__label">ZONAS MÁS ACTIVAS</div>
+      <div class="cv2-serif sa-zonas__title">Top barrios · CDMX</div>
+      <div class="sa-zonas__list">
+        @for (zona of zonas; track zona.name; let i = $index) {
+          <div class="sa-zona" [class.bordered]="i > 0">
+            <div class="sa-zona__rank" [class.top]="i < 3">{{ i + 1 }}</div>
+            <div class="sa-zona__name">{{ zona.name }}</div>
+            <div class="sa-zona__count">{{ zona.count }} negocios</div>
+            <div class="sa-zona__growth">{{ zona.growth }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
