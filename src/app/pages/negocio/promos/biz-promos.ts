@@ -18,6 +18,9 @@ interface Promo {
   styleUrl: './biz-promos.scss',
 })
 export class BizPromos {
+  businessName = signal('Tacos Don Juan');
+  businessEmoji = signal('🌮');
+
   activePromo = signal<Promo | null>({
     title: '2x1 al pastor',
     label: '2x1',

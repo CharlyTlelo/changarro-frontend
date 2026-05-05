@@ -1,146 +1,189 @@
-<div class="biz-page">
-  <header class="biz-page__header">
-    <a routerLink="/negocio" class="biz-back">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-      Panel
-    </a>
-    <h1 class="cv2-serif biz-page__title">Tus <span class="cv2-serif-i accent">promos</span></h1>
-    <p class="biz-page__sub">Crea promociones que aparecen en tu página y en el catálogo del barrio.</p>
-  </header>
-
-  <!-- Active promo card -->
-  @if (activePromo(); as p) {
-    @if (!editing()) {
-      <div class="promo-live">
-        <div class="promo-live__banner">
-          <div class="promo-live__confetti">
-            <span style="left:15%;top:20%;background:#F5B92E;transform:rotate(-12deg)"></span>
-            <span style="right:20%;top:15%;background:#4A8A3A;transform:rotate(18deg)"></span>
-            <span style="left:40%;bottom:25%;background:#E8628E;transform:rotate(8deg)"></span>
-          </div>
-
-          <div class="cv2-promo-sticker promo-live__sticker">
-            <div>
-              <div style="font-size:8px;font-weight:600">HOY</div>
-              <div style="font-size:15px">{{ p.label }}</div>
-            </div>
-          </div>
-
-          <div class="promo-live__info">
-            <span class="promo-live__eyebrow">🟢 PROMO ACTIVA</span>
-            <h2 class="cv2-serif promo-live__title">{{ p.title }}</h2>
-            <span class="promo-live__until">⏰ {{ p.validUntil }}</span>
-          </div>
-        </div>
-
-        <div class="promo-live__details">
-          @if (p.note) {
-            <div class="promo-detail">
-              <span class="promo-detail__icon">💬</span>
-              <span>{{ p.note }}</span>
-            </div>
-          }
-          @if (p.bonusCoins > 0) {
-            <div class="promo-detail">
-              <span class="promo-detail__icon">🪙</span>
-              <span>+{{ p.bonusCoins }} monedas al canjear</span>
-            </div>
-          }
-        </div>
-
-        <div class="promo-live__actions">
-          <button class="cv2-btn cv2-btn-dark" (click)="startEditing()">✏️ Editar promo</button>
-          <button class="promo-delete-btn" (click)="deletePromo()">Eliminar</button>
-        </div>
-      </div>
-    }
-  } @else if (!editing()) {
-    <div class="promo-empty">
-      <div class="promo-empty__visual">
-        <span class="promo-empty__icon">🎟️</span>
-        <div class="promo-empty__ring"></div>
-      </div>
-      <h3 class="cv2-serif promo-empty__title">Sin promo activa</h3>
-      <p class="promo-empty__text">Crea una promoción para atraer más clientes al changarro.</p>
-      <button class="cv2-btn cv2-btn-primary" (click)="editing.set(true)">Crear promoción →</button>
+<div class="biz-screen">
+  <!-- ═══ SIDEBAR (tablet+) ═══ -->
+  <aside class="biz-sidebar tablet-only">
+    <div class="biz-sidebar__head">
+      <svg width="30" height="30" viewBox="0 0 32 32">
+        <path d="M4 12 Q8 8 12 12 Q16 8 20 12 Q24 8 28 12 L28 14 L4 14 Z" fill="#241510"/>
+        <rect x="6" y="14" width="20" height="14" stroke="#241510" stroke-width="2" fill="none"/>
+        <path d="M13 28 L13 20 L19 20 L19 28" stroke="#241510" stroke-width="2" fill="none"/>
+        <circle cx="26" cy="6" r="3" fill="#DD4D2A"/>
+      </svg>
+      <span class="cv2-serif biz-sidebar__brand">changarro</span>
     </div>
-  }
-
-  <!-- Edit / Create form -->
-  @if (editing()) {
-    <div class="promo-form cv2-card">
-      <h2 class="promo-form__heading">{{ activePromo() ? '✏️ Editar' : '🆕 Nueva' }} promoción</h2>
-
-      <div class="promo-field">
-        <label>Título de la promo</label>
-        <input [(ngModel)]="title" placeholder="Ej. 2x1 al pastor">
+    <div class="biz-identity">
+      <div class="biz-identity__emoji">{{ businessEmoji() }}</div>
+      <div class="biz-identity__info">
+        <span class="biz-identity__name">{{ businessName() }}</span>
+        <span class="biz-identity__badge">Verificado ✓</span>
       </div>
+    </div>
+    <span class="biz-sidebar__label">ADMINISTRAR</span>
+    <a routerLink="/negocio" class="biz-snav"><span class="biz-snav__dot" style="background:#DD4D2A"></span>Panel</a>
+    <a routerLink="/negocio/menu" class="biz-snav"><span class="biz-snav__dot" style="background:#4A8A3A"></span>Menú</a>
+    <a routerLink="/negocio/promos" class="biz-snav biz-snav--active"><span class="biz-snav__dot" style="background:#F5B92E"></span>Promociones</a>
+    <a routerLink="/negocio/perfil" class="biz-snav"><span class="biz-snav__dot" style="background:#2B6FA0"></span>Datos del negocio</a>
+    <a routerLink="/negocio/analytics" class="biz-snav"><span class="biz-snav__dot" style="background:#E8628E"></span>Analytics</a>
+    <div class="biz-sidebar__spacer"></div>
+    <div class="biz-live-badge"><span class="biz-live-badge__dot"></span><span>Tu negocio está <strong>activo</strong></span></div>
+    <a routerLink="/catalogo" class="biz-snav biz-snav--muted">← Ver como cliente</a>
+  </aside>
 
-      <div class="promo-row">
-        <div class="promo-field promo-field--half">
-          <label>Etiqueta corta</label>
-          <input [(ngModel)]="label" placeholder="2x1" maxlength="10">
+  <!-- ═══ MAIN ═══ -->
+  <main class="biz-main">
+    <header class="biz-topbar mobile-only">
+      <div class="biz-topbar__left">
+        <a routerLink="/negocio" class="biz-topbar__back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+        <span class="cv2-serif biz-topbar__name">{{ businessName() }}</span>
+      </div>
+      <span class="biz-topbar__verified">✓</span>
+    </header>
+
+    <div class="biz-content">
+      <div class="promo-header">
+        <div>
+          <h1 class="cv2-serif promo-header__title">Tus <span class="cv2-serif-i accent">promos</span></h1>
+          <p class="promo-header__sub">Crea promociones que aparecen en tu página y en el catálogo del barrio.</p>
         </div>
-        <div class="promo-field promo-field--half">
-          <label>Vigencia</label>
-          <input [(ngModel)]="validUntil" placeholder="HOY HASTA 11PM">
-        </div>
+        @if (!activePromo() && !editing()) {
+          <button class="cv2-btn cv2-btn-primary promo-header__add tablet-only" (click)="editing.set(true)">+ Nueva promo</button>
+        }
       </div>
 
-      <div class="promo-field">
-        <label>Nota para el cliente</label>
-        <input [(ngModel)]="note" placeholder="Ej. Menciona Changarro al pedir">
-      </div>
+      <!-- ═══ TABLET TWO-COL LAYOUT ═══ -->
+      <div class="promo-layout">
+        <!-- LEFT: Active promo or empty -->
+        <div class="promo-layout__main">
+          @if (activePromo(); as p) {
+            @if (!editing()) {
+              <div class="promo-live">
+                <div class="promo-live__banner">
+                  <div class="promo-live__confetti">
+                    <span style="left:15%;top:20%;background:#F5B92E;transform:rotate(-12deg)"></span>
+                    <span style="right:20%;top:15%;background:#4A8A3A;transform:rotate(18deg)"></span>
+                    <span style="left:40%;bottom:25%;background:#E8628E;transform:rotate(8deg)"></span>
+                  </div>
+                  <div class="cv2-promo-sticker promo-live__sticker">
+                    <div>
+                      <div style="font-size:8px;font-weight:600">HOY</div>
+                      <div style="font-size:15px">{{ p.label }}</div>
+                    </div>
+                  </div>
+                  <div class="promo-live__info">
+                    <span class="promo-live__eyebrow">🟢 PROMO ACTIVA</span>
+                    <h2 class="cv2-serif promo-live__title">{{ p.title }}</h2>
+                    <span class="promo-live__until">⏰ {{ p.validUntil }}</span>
+                  </div>
+                </div>
+                <div class="promo-live__details">
+                  @if (p.note) {
+                    <div class="promo-detail"><span class="promo-detail__icon">💬</span><span>{{ p.note }}</span></div>
+                  }
+                  @if (p.bonusCoins > 0) {
+                    <div class="promo-detail"><span class="promo-detail__icon">🪙</span><span>+{{ p.bonusCoins }} monedas al canjear</span></div>
+                  }
+                </div>
+                <div class="promo-live__actions">
+                  <button class="cv2-btn cv2-btn-dark" (click)="startEditing()">✏️ Editar promo</button>
+                  <button class="promo-delete-btn" (click)="deletePromo()">Eliminar</button>
+                </div>
+              </div>
+            }
+          } @else if (!editing()) {
+            <div class="promo-empty">
+              <div class="promo-empty__visual">
+                <span class="promo-empty__icon">🎟️</span>
+                <div class="promo-empty__ring"></div>
+              </div>
+              <h3 class="cv2-serif promo-empty__title">Sin promo activa</h3>
+              <p class="promo-empty__text">Crea una promoción para atraer más clientes al changarro.</p>
+              <button class="cv2-btn cv2-btn-primary mobile-only" (click)="editing.set(true)">Crear promoción →</button>
+            </div>
+          }
 
-      <div class="promo-field" style="max-width:180px">
-        <label>Monedas bonus</label>
-        <input type="number" [(ngModel)]="bonusCoins" min="0" placeholder="0">
-      </div>
-
-      <!-- Live preview -->
-      @if (title) {
-        <div class="promo-preview">
-          <span class="promo-preview__label">Vista previa</span>
-          <div class="promo-preview__card">
-            <div class="cv2-promo-sticker promo-preview__sticker">
-              <div>
-                <div style="font-size:7px;font-weight:600">HOY</div>
-                <div style="font-size:11px">{{ label || '...' }}</div>
+          @if (editing()) {
+            <div class="promo-form cv2-card">
+              <h2 class="promo-form__heading">{{ activePromo() ? '✏️ Editar' : '🆕 Nueva' }} promoción</h2>
+              <div class="promo-field">
+                <label>Título de la promo</label>
+                <input [(ngModel)]="title" placeholder="Ej. 2x1 al pastor">
+              </div>
+              <div class="promo-row">
+                <div class="promo-field promo-field--half">
+                  <label>Etiqueta corta</label>
+                  <input [(ngModel)]="label" placeholder="2x1" maxlength="10">
+                </div>
+                <div class="promo-field promo-field--half">
+                  <label>Vigencia</label>
+                  <input [(ngModel)]="validUntil" placeholder="HOY HASTA 11PM">
+                </div>
+              </div>
+              <div class="promo-field">
+                <label>Nota para el cliente</label>
+                <input [(ngModel)]="note" placeholder="Ej. Menciona Changarro al pedir">
+              </div>
+              <div class="promo-field" style="max-width:180px">
+                <label>Monedas bonus</label>
+                <input type="number" [(ngModel)]="bonusCoins" min="0" placeholder="0">
+              </div>
+              @if (title) {
+                <div class="promo-preview">
+                  <span class="promo-preview__label">Vista previa</span>
+                  <div class="promo-preview__card">
+                    <div class="cv2-promo-sticker promo-preview__sticker">
+                      <div>
+                        <div style="font-size:7px;font-weight:600">HOY</div>
+                        <div style="font-size:11px">{{ label || '...' }}</div>
+                      </div>
+                    </div>
+                    <div>
+                      <strong>{{ title }}</strong><br>
+                      <small>{{ validUntil }}</small>
+                    </div>
+                  </div>
+                </div>
+              }
+              <div class="promo-form__actions">
+                <button class="cv2-btn cv2-btn-primary" [disabled]="saving() || !title.trim()" (click)="save()">
+                  {{ saving() ? 'Guardando...' : 'Guardar promoción →' }}
+                </button>
+                <button class="promo-form__cancel" (click)="cancel()">Cancelar</button>
               </div>
             </div>
-            <div>
-              <strong>{{ title }}</strong><br>
-              <small>{{ validUntil }}</small>
+          }
+        </div>
+
+        <!-- RIGHT: History sidebar -->
+        @if (promoHistory.length > 0 && !editing()) {
+          <div class="promo-layout__side">
+            <div class="promo-history">
+              <h3 class="promo-history__title">Historial de promos</h3>
+              @for (h of promoHistory; track h.title) {
+                <div class="promo-history-item cv2-card">
+                  <div class="promo-history-item__info">
+                    <span class="promo-history-item__name">{{ h.title }}</span>
+                    <span class="promo-history-item__when">{{ h.when }}</span>
+                  </div>
+                  <div class="promo-history-item__stat">
+                    <span class="promo-history-item__count">{{ h.redeemed }}</span>
+                    <span class="promo-history-item__label">canjeados</span>
+                  </div>
+                </div>
+              }
             </div>
           </div>
-        </div>
-      }
-
-      <div class="promo-form__actions">
-        <button class="cv2-btn cv2-btn-primary" [disabled]="saving() || !title.trim()" (click)="save()">
-          {{ saving() ? 'Guardando...' : 'Guardar promoción →' }}
-        </button>
-        <button class="promo-form__cancel" (click)="cancel()">Cancelar</button>
+        }
       </div>
     </div>
-  }
 
-  <!-- History -->
-  @if (promoHistory.length > 0 && !editing()) {
-    <div class="promo-history">
-      <h3 class="promo-history__title">Historial de promos</h3>
-      @for (h of promoHistory; track h.title) {
-        <div class="promo-history-item cv2-card">
-          <div class="promo-history-item__info">
-            <span class="promo-history-item__name">{{ h.title }}</span>
-            <span class="promo-history-item__when">{{ h.when }}</span>
-          </div>
-          <div class="promo-history-item__stat">
-            <span class="promo-history-item__count">{{ h.redeemed }}</span>
-            <span class="promo-history-item__label">canjeados</span>
-          </div>
-        </div>
-      }
-    </div>
-  }
+    <!-- ═══ MOBILE BOTTOM NAV ═══ -->
+    <nav class="biz-bottomnav mobile-only">
+      <a routerLink="/negocio" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Panel</span></a>
+      <a routerLink="/negocio/menu" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h12"/></svg><span>Menú</span></a>
+      <a routerLink="/negocio/promos" class="biz-bnav biz-bnav--active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 14.8 7 17.3 8 11.8 4 7.8l5.5-.8L12 2z"/></svg><span>Promos</span></a>
+      <a routerLink="/negocio/analytics" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span>Stats</span></a>
+      <a routerLink="/negocio/perfil" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Config</span></a>
+    </nav>
+  </main>
 </div>

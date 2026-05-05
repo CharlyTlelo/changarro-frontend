@@ -1,120 +1,146 @@
-<div class="biz-page">
-  <header class="biz-page__header">
-    <a routerLink="/negocio" class="biz-back">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-      Panel
-    </a>
-    <h1 class="cv2-serif biz-page__title">Datos del <span class="cv2-serif-i accent">negocio</span></h1>
-    <p class="biz-page__sub">Actualiza la información que ven tus clientes en el catálogo.</p>
-  </header>
-
-  <!-- Preview card -->
-  <div class="biz-preview">
-    <div class="biz-preview__visual" [style.background]="color">
-      <span class="biz-preview__emoji">{{ emoji }}</span>
+<div class="biz-screen">
+  <!-- ═══ SIDEBAR (tablet+) ═══ -->
+  <aside class="biz-sidebar tablet-only">
+    <div class="biz-sidebar__head">
+      <svg width="30" height="30" viewBox="0 0 32 32">
+        <path d="M4 12 Q8 8 12 12 Q16 8 20 12 Q24 8 28 12 L28 14 L4 14 Z" fill="#241510"/>
+        <rect x="6" y="14" width="20" height="14" stroke="#241510" stroke-width="2" fill="none"/>
+        <path d="M13 28 L13 20 L19 20 L19 28" stroke="#241510" stroke-width="2" fill="none"/>
+        <circle cx="26" cy="6" r="3" fill="#DD4D2A"/>
+      </svg>
+      <span class="cv2-serif biz-sidebar__brand">changarro</span>
     </div>
-    <div class="biz-preview__info">
-      <span class="biz-preview__name">{{ name }}</span>
-      <span class="biz-preview__cat">{{ categoryId }} · {{ neighborhood }}</span>
-      <span class="biz-preview__schedule">{{ schedule }}</span>
+    <div class="biz-identity">
+      <div class="biz-identity__emoji">{{ businessEmoji() }}</div>
+      <div class="biz-identity__info">
+        <span class="biz-identity__name">{{ businessName() }}</span>
+        <span class="biz-identity__badge">Verificado ✓</span>
+      </div>
     </div>
-  </div>
+    <span class="biz-sidebar__label">ADMINISTRAR</span>
+    <a routerLink="/negocio" class="biz-snav"><span class="biz-snav__dot" style="background:#DD4D2A"></span>Panel</a>
+    <a routerLink="/negocio/menu" class="biz-snav"><span class="biz-snav__dot" style="background:#4A8A3A"></span>Menú</a>
+    <a routerLink="/negocio/promos" class="biz-snav"><span class="biz-snav__dot" style="background:#F5B92E"></span>Promociones</a>
+    <a routerLink="/negocio/perfil" class="biz-snav biz-snav--active"><span class="biz-snav__dot" style="background:#2B6FA0"></span>Datos del negocio</a>
+    <a routerLink="/negocio/analytics" class="biz-snav"><span class="biz-snav__dot" style="background:#E8628E"></span>Analytics</a>
+    <div class="biz-sidebar__spacer"></div>
+    <div class="biz-live-badge"><span class="biz-live-badge__dot"></span><span>Tu negocio está <strong>activo</strong></span></div>
+    <a routerLink="/catalogo" class="biz-snav biz-snav--muted">← Ver como cliente</a>
+  </aside>
 
-  <!-- Form -->
-  <div class="biz-form">
-    <div class="form-section">
-      <h3 class="form-section__title">Identidad</h3>
-      <div class="form-row">
-        <div class="form-group form-group--grow">
-          <label>Nombre del negocio</label>
-          <input [(ngModel)]="name" placeholder="Ej. Taquería la Esquina">
-        </div>
-        <div class="form-group" style="width:80px">
-          <label>Emoji</label>
-          <input [(ngModel)]="emoji" placeholder="🌮" maxlength="4" style="text-align:center;font-size:22px">
-        </div>
+  <!-- ═══ MAIN ═══ -->
+  <main class="biz-main">
+    <header class="biz-topbar mobile-only">
+      <div class="biz-topbar__left">
+        <a routerLink="/negocio" class="biz-topbar__back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+        <span class="cv2-serif biz-topbar__name">{{ businessName() }}</span>
+      </div>
+      <span class="biz-topbar__verified">✓</span>
+    </header>
+
+    <div class="biz-content">
+      <div class="perfil-header">
+        <h1 class="cv2-serif perfil-header__title">Datos del <span class="cv2-serif-i accent">negocio</span></h1>
+        <p class="perfil-header__sub">Actualiza la información que ven tus clientes en el catálogo.</p>
       </div>
 
-      <div class="form-group">
-        <label>Categoría</label>
-        <div class="cat-pills">
-          @for (c of categories; track c.id) {
-            <button
-              class="cat-pill"
-              [class.cat-pill--active]="categoryId === c.id"
-              (click)="categoryId = c.id"
-            >
-              {{ c.emoji }} {{ c.label }}
+      <div class="perfil-layout">
+        <!-- LEFT: Preview sticky -->
+        <div class="perfil-layout__preview">
+          <div class="biz-preview">
+            <div class="biz-preview__visual" [style.background]="color">
+              <span class="biz-preview__emoji">{{ emoji }}</span>
+            </div>
+            <div class="biz-preview__info">
+              <span class="biz-preview__name">{{ name }}</span>
+              <span class="biz-preview__cat">{{ categoryId }} · {{ neighborhood }}</span>
+              <span class="biz-preview__schedule">{{ schedule }}</span>
+            </div>
+          </div>
+          <div class="perfil-quick tablet-only">
+            <div class="perfil-quick__row"><span class="perfil-quick__icon">📍</span><span>{{ address }}</span></div>
+            <div class="perfil-quick__row"><span class="perfil-quick__icon">📞</span><span>{{ phone }}</span></div>
+            <div class="perfil-quick__row"><span class="perfil-quick__icon">📸</span><span>{{ instagram }}</span></div>
+            <div class="perfil-quick__row"><span class="perfil-quick__icon">💳</span><span>{{ paymentMethod }}</span></div>
+            <div class="perfil-quick__row"><span class="perfil-quick__icon">💰</span><span>{{ priceRange }}</span></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Form -->
+        <div class="perfil-layout__form">
+          <div class="biz-form">
+            <div class="form-section">
+              <h3 class="form-section__title">Identidad</h3>
+              <div class="form-row">
+                <div class="form-group form-group--grow">
+                  <label>Nombre del negocio</label>
+                  <input [(ngModel)]="name" placeholder="Ej. Taquería la Esquina">
+                </div>
+                <div class="form-group" style="width:80px">
+                  <label>Emoji</label>
+                  <input [(ngModel)]="emoji" placeholder="🌮" maxlength="4" style="text-align:center;font-size:22px">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Categoría</label>
+                <div class="cat-pills">
+                  @for (c of categories; track c.id) {
+                    <button class="cat-pill" [class.cat-pill--active]="categoryId === c.id" (click)="categoryId = c.id">
+                      {{ c.emoji }} {{ c.label }}
+                    </button>
+                  }
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Descripción</label>
+                <textarea [(ngModel)]="description" rows="4" maxlength="600" placeholder="Qué ofreces, tu especialidad..."></textarea>
+                <span class="form-counter">{{ description.length }}/600</span>
+              </div>
+            </div>
+            <div class="form-section">
+              <h3 class="form-section__title">Ubicación</h3>
+              <div class="form-group"><label>Dirección</label><input [(ngModel)]="address" placeholder="Calle, número, colonia"></div>
+              <div class="form-group"><label>Colonia / Barrio</label><input [(ngModel)]="neighborhood" placeholder="Ej. Roma Norte"></div>
+            </div>
+            <div class="form-section">
+              <h3 class="form-section__title">Contacto y horario</h3>
+              <div class="form-row">
+                <div class="form-group form-group--grow"><label>Teléfono</label><input type="tel" [(ngModel)]="phone" placeholder="5512345678"></div>
+                <div class="form-group form-group--grow"><label>Instagram</label><input [(ngModel)]="instagram" placeholder="@tu_negocio"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group form-group--grow"><label>Horario</label><input [(ngModel)]="schedule" placeholder="Lun-Dom 12:00-23:00"></div>
+                <div class="form-group form-group--grow"><label>Método de pago</label><input [(ngModel)]="paymentMethod" placeholder="Efectivo, tarjeta"></div>
+              </div>
+            </div>
+            <div class="form-section">
+              <h3 class="form-section__title">Apariencia</h3>
+              <div class="form-row">
+                <div class="form-group" style="width:160px"><label>Rango de precio</label><input [(ngModel)]="priceRange" placeholder="$25-60"></div>
+                <div class="form-group" style="width:160px">
+                  <label>Color de tarjeta</label>
+                  <div class="color-field"><input [(ngModel)]="color" placeholder="#FFB57A" maxlength="7"><span class="color-swatch" [style.background]="color"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="biz-save">
+            <button class="cv2-btn cv2-btn-primary biz-save__btn" [disabled]="saving()" (click)="save()">
+              {{ saving() ? 'Guardando...' : 'Guardar cambios →' }}
             </button>
-          }
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Descripción</label>
-        <textarea [(ngModel)]="description" rows="4" maxlength="600" placeholder="Qué ofreces, tu especialidad..."></textarea>
-        <span class="form-counter">{{ description.length }}/600</span>
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="form-section__title">Ubicación</h3>
-      <div class="form-group">
-        <label>Dirección</label>
-        <input [(ngModel)]="address" placeholder="Calle, número, colonia">
-      </div>
-      <div class="form-group">
-        <label>Colonia / Barrio</label>
-        <input [(ngModel)]="neighborhood" placeholder="Ej. Roma Norte">
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="form-section__title">Contacto y horario</h3>
-      <div class="form-row">
-        <div class="form-group form-group--grow">
-          <label>Teléfono</label>
-          <input type="tel" [(ngModel)]="phone" placeholder="5512345678">
-        </div>
-        <div class="form-group form-group--grow">
-          <label>Instagram</label>
-          <input [(ngModel)]="instagram" placeholder="@tu_negocio">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group form-group--grow">
-          <label>Horario</label>
-          <input [(ngModel)]="schedule" placeholder="Lun-Dom 12:00-23:00">
-        </div>
-        <div class="form-group form-group--grow">
-          <label>Método de pago</label>
-          <input [(ngModel)]="paymentMethod" placeholder="Efectivo, tarjeta">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="form-section__title">Apariencia</h3>
-      <div class="form-row">
-        <div class="form-group" style="width:160px">
-          <label>Rango de precio</label>
-          <input [(ngModel)]="priceRange" placeholder="$25-60">
-        </div>
-        <div class="form-group" style="width:160px">
-          <label>Color de tarjeta</label>
-          <div class="color-field">
-            <input [(ngModel)]="color" placeholder="#FFB57A" maxlength="7">
-            <span class="color-swatch" [style.background]="color"></span>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Save -->
-  <div class="biz-save">
-    <button class="cv2-btn cv2-btn-primary biz-save__btn" [disabled]="saving()" (click)="save()">
-      {{ saving() ? 'Guardando...' : 'Guardar cambios →' }}
-    </button>
-  </div>
+    <nav class="biz-bottomnav mobile-only">
+      <a routerLink="/negocio" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Panel</span></a>
+      <a routerLink="/negocio/menu" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h12"/></svg><span>Menú</span></a>
+      <a routerLink="/negocio/promos" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 14.8 7 17.3 8 11.8 4 7.8l5.5-.8L12 2z"/></svg><span>Promos</span></a>
+      <a routerLink="/negocio/analytics" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span>Stats</span></a>
+      <a routerLink="/negocio/perfil" class="biz-bnav biz-bnav--active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Config</span></a>
+    </nav>
+  </main>
 </div>

@@ -1,8 +1,7 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
 
 export const routes: Routes = [
-  { path: '', component: Home },
+  { path: '', pathMatch: 'full', redirectTo: 'login' },
   { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login) },
   {
     path: 'registro',
@@ -32,23 +31,28 @@ export const routes: Routes = [
   // Business dashboard
   {
     path: 'negocio',
-    loadComponent: () => import('./pages/negocio/dashboard/dashboard').then(m => m.BizDashboard),
-  },
-  {
-    path: 'negocio/menu',
-    loadComponent: () => import('./pages/negocio/menu/biz-menu').then(m => m.BizMenu),
-  },
-  {
-    path: 'negocio/promos',
-    loadComponent: () => import('./pages/negocio/promos/biz-promos').then(m => m.BizPromos),
-  },
-  {
-    path: 'negocio/perfil',
-    loadComponent: () => import('./pages/negocio/perfil-negocio/biz-perfil').then(m => m.BizPerfil),
-  },
-  {
-    path: 'negocio/analytics',
-    loadComponent: () => import('./pages/negocio/analytics/biz-analytics').then(m => m.BizAnalytics),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/negocio/dashboard/dashboard').then(m => m.BizDashboard),
+      },
+      {
+        path: 'menu',
+        loadComponent: () => import('./pages/negocio/menu/biz-menu').then(m => m.BizMenu),
+      },
+      {
+        path: 'promos',
+        loadComponent: () => import('./pages/negocio/promos/biz-promos').then(m => m.BizPromos),
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./pages/negocio/perfil-negocio/biz-perfil').then(m => m.BizPerfil),
+      },
+      {
+        path: 'analytics',
+        loadComponent: () => import('./pages/negocio/analytics/biz-analytics').then(m => m.BizAnalytics),
+      },
+    ],
   },
 
   { path: '**', redirectTo: '' },

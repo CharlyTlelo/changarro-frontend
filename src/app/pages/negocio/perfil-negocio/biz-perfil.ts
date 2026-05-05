@@ -10,6 +10,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './biz-perfil.scss',
 })
 export class BizPerfil {
+  businessName = signal('Tacos Don Juan');
+  businessEmoji = signal('🌮');
   saving = signal(false);
 
   name = 'Tacos Don Juan';

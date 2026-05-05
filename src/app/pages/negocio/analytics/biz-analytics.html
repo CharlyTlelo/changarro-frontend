@@ -1,121 +1,158 @@
-<div class="biz-page">
-  <header class="biz-page__header">
-    <a routerLink="/negocio" class="biz-back">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-      Panel
-    </a>
-    <h1 class="cv2-serif biz-page__title">Tus <span class="cv2-serif-i accent">analytics</span></h1>
-    <p class="biz-page__sub">Métricas y tendencias de Tacos Don Juan</p>
-  </header>
-
-  <!-- ═══ KPIs ═══ -->
-  <div class="an-kpis">
-    @for (k of kpis; track k.label) {
-      <div class="an-kpi cv2-card">
-        <span class="an-kpi__icon">{{ k.icon }}</span>
-        <span class="an-kpi__value">{{ k.value }}</span>
-        <span class="an-kpi__label">{{ k.label }}</span>
-        @if (k.trend) {
-          <span class="an-kpi__trend" [class.an-kpi__trend--up]="k.trendUp">{{ k.trend }}</span>
-        }
+<div class="biz-screen">
+  <!-- ═══ SIDEBAR (tablet+) ═══ -->
+  <aside class="biz-sidebar tablet-only">
+    <div class="biz-sidebar__head">
+      <svg width="30" height="30" viewBox="0 0 32 32">
+        <path d="M4 12 Q8 8 12 12 Q16 8 20 12 Q24 8 28 12 L28 14 L4 14 Z" fill="#241510"/>
+        <rect x="6" y="14" width="20" height="14" stroke="#241510" stroke-width="2" fill="none"/>
+        <path d="M13 28 L13 20 L19 20 L19 28" stroke="#241510" stroke-width="2" fill="none"/>
+        <circle cx="26" cy="6" r="3" fill="#DD4D2A"/>
+      </svg>
+      <span class="cv2-serif biz-sidebar__brand">changarro</span>
+    </div>
+    <div class="biz-identity">
+      <div class="biz-identity__emoji">{{ businessEmoji() }}</div>
+      <div class="biz-identity__info">
+        <span class="biz-identity__name">{{ businessName() }}</span>
+        <span class="biz-identity__badge">Verificado ✓</span>
       </div>
-    }
-  </div>
+    </div>
+    <span class="biz-sidebar__label">ADMINISTRAR</span>
+    <a routerLink="/negocio" class="biz-snav"><span class="biz-snav__dot" style="background:#DD4D2A"></span>Panel</a>
+    <a routerLink="/negocio/menu" class="biz-snav"><span class="biz-snav__dot" style="background:#4A8A3A"></span>Menú</a>
+    <a routerLink="/negocio/promos" class="biz-snav"><span class="biz-snav__dot" style="background:#F5B92E"></span>Promociones</a>
+    <a routerLink="/negocio/perfil" class="biz-snav"><span class="biz-snav__dot" style="background:#2B6FA0"></span>Datos del negocio</a>
+    <a routerLink="/negocio/analytics" class="biz-snav biz-snav--active"><span class="biz-snav__dot" style="background:#E8628E"></span>Analytics</a>
+    <div class="biz-sidebar__spacer"></div>
+    <div class="biz-live-badge"><span class="biz-live-badge__dot"></span><span>Tu negocio está <strong>activo</strong></span></div>
+    <a routerLink="/catalogo" class="biz-snav biz-snav--muted">← Ver como cliente</a>
+  </aside>
 
-  <!-- ═══ WEEKLY CHART ═══ -->
-  <div class="an-section">
-    <h2 class="an-section__title">📅 Visitas esta semana</h2>
-    <div class="an-chart cv2-card">
-      <div class="an-bars">
-        @for (d of weeklyVisits; track d.day) {
-          <div class="an-bar-col">
-            <span class="an-bar-val">{{ d.value }}</span>
-            <div class="an-bar-track">
-              <div class="an-bar-fill" [style.height.%]="d.pct" [class.an-bar-fill--peak]="d.pct === 100"></div>
-            </div>
-            <span class="an-bar-day" [class.an-bar-day--peak]="d.pct === 100">{{ d.day }}</span>
+  <!-- ═══ MAIN ═══ -->
+  <main class="biz-main">
+    <header class="biz-topbar mobile-only">
+      <div class="biz-topbar__left">
+        <a routerLink="/negocio" class="biz-topbar__back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </a>
+        <span class="cv2-serif biz-topbar__name">{{ businessName() }}</span>
+      </div>
+      <span class="biz-topbar__verified">✓</span>
+    </header>
+
+    <div class="biz-content">
+      <header class="an-header">
+        <h1 class="cv2-serif an-header__title">Tus <span class="cv2-serif-i accent">analytics</span></h1>
+        <p class="an-header__sub">Métricas y tendencias de {{ businessName() }}</p>
+      </header>
+
+      <div class="an-kpis">
+        @for (k of kpis; track k.label) {
+          <div class="an-kpi cv2-card">
+            <span class="an-kpi__icon">{{ k.icon }}</span>
+            <span class="an-kpi__value">{{ k.value }}</span>
+            <span class="an-kpi__label">{{ k.label }}</span>
+            @if (k.trend) {
+              <span class="an-kpi__trend" [class.an-kpi__trend--up]="k.trendUp">{{ k.trend }}</span>
+            }
           </div>
         }
       </div>
-      <div class="an-chart__footer">
-        <span>Total: <strong>405</strong> visitas</span>
-        <span class="an-chart__trend">↑ +12% vs semana pasada</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- ═══ TWO-COL: PRODUCTS + RATING ═══ -->
-  <div class="an-two-col">
-    <!-- Top products -->
-    <div class="an-section">
-      <h2 class="an-section__title">🏆 Top productos</h2>
-      <div class="an-products cv2-card">
-        @for (p of topProducts; track p.name; let i = $index) {
-          <div class="an-product">
-            <span class="an-product__rank" [class.an-product__rank--gold]="i === 0">{{ i + 1 }}</span>
-            <span class="an-product__emoji">{{ p.emoji }}</span>
-            <div class="an-product__info">
-              <span class="an-product__name">{{ p.name }}</span>
-              <div class="an-product__bar-wrap">
-                <div class="an-product__bar" [style.width.%]="p.pct"></div>
+      <div class="an-section">
+        <h2 class="an-section__title">📅 Visitas esta semana</h2>
+        <div class="an-chart cv2-card">
+          <div class="an-bars">
+            @for (d of weeklyVisits; track d.day) {
+              <div class="an-bar-col">
+                <span class="an-bar-val">{{ d.value }}</span>
+                <div class="an-bar-track">
+                  <div class="an-bar-fill" [style.height.%]="d.pct" [class.an-bar-fill--peak]="d.pct === 100"></div>
+                </div>
+                <span class="an-bar-day" [class.an-bar-day--peak]="d.pct === 100">{{ d.day }}</span>
               </div>
-            </div>
-            <div class="an-product__stats">
-              <span class="an-product__orders">{{ p.orders }}</span>
-              <span class="an-product__rev">{{ p.revenue }}</span>
-            </div>
+            }
           </div>
-        }
-      </div>
-    </div>
-
-    <!-- Rating breakdown -->
-    <div class="an-section">
-      <h2 class="an-section__title">⭐ Distribución de rating</h2>
-      <div class="an-rating cv2-card">
-        <div class="an-rating__big">
-          <span class="an-rating__score cv2-serif">4.8</span>
-          <div class="an-rating__stars">★★★★★</div>
-          <span class="an-rating__total">234 reseñas</span>
+          <div class="an-chart__footer">
+            <span>Total: <strong>405</strong> visitas</span>
+            <span class="an-chart__trend">↑ +12% vs semana pasada</span>
+          </div>
         </div>
-        <div class="an-rating__breakdown">
-          @for (r of ratingBreakdown; track r.stars) {
-            <div class="an-rating__row">
-              <span class="an-rating__row-label">{{ r.stars }}★</span>
-              <div class="an-rating__row-bar">
-                <div class="an-rating__row-fill" [style.width.%]="r.pct"></div>
+      </div>
+
+      <div class="an-two-col">
+        <div class="an-section">
+          <h2 class="an-section__title">🏆 Top productos</h2>
+          <div class="an-products cv2-card">
+            @for (p of topProducts; track p.name; let i = $index) {
+              <div class="an-product">
+                <span class="an-product__rank" [class.an-product__rank--gold]="i === 0">{{ i + 1 }}</span>
+                <span class="an-product__emoji">{{ p.emoji }}</span>
+                <div class="an-product__info">
+                  <span class="an-product__name">{{ p.name }}</span>
+                  <div class="an-product__bar-wrap"><div class="an-product__bar" [style.width.%]="p.pct"></div></div>
+                </div>
+                <div class="an-product__stats">
+                  <span class="an-product__orders">{{ p.orders }}</span>
+                  <span class="an-product__rev">{{ p.revenue }}</span>
+                </div>
               </div>
-              <span class="an-rating__row-count">{{ r.count }}</span>
+            }
+          </div>
+        </div>
+        <div class="an-section">
+          <h2 class="an-section__title">⭐ Distribución de rating</h2>
+          <div class="an-rating cv2-card">
+            <div class="an-rating__big">
+              <span class="an-rating__score cv2-serif">4.8</span>
+              <div class="an-rating__stars">★★★★★</div>
+              <span class="an-rating__total">234 reseñas</span>
+            </div>
+            <div class="an-rating__breakdown">
+              @for (r of ratingBreakdown; track r.stars) {
+                <div class="an-rating__row">
+                  <span class="an-rating__row-label">{{ r.stars }}★</span>
+                  <div class="an-rating__row-bar"><div class="an-rating__row-fill" [style.width.%]="r.pct"></div></div>
+                  <span class="an-rating__row-count">{{ r.count }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="an-section">
+        <h2 class="an-section__title">💬 Últimas reseñas</h2>
+        <div class="an-reviews">
+          @for (r of recentReviews; track r.name) {
+            <div class="an-review cv2-card">
+              <div class="an-review__top">
+                <div class="an-review__user">
+                  <span class="an-review__avatar">{{ r.emoji }}</span>
+                  <span class="an-review__name">{{ r.name }}</span>
+                </div>
+                <div class="an-review__right">
+                  <span class="an-review__stars">
+                    @for (s of starsArray(r.rating); track $index) {
+                      <span [class]="s ? 'star-on' : 'star-off'">★</span>
+                    }
+                  </span>
+                  <span class="an-review__when">{{ r.when }}</span>
+                </div>
+              </div>
+              <p class="an-review__text">{{ r.text }}</p>
             </div>
           }
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ REVIEWS ═══ -->
-  <div class="an-section">
-    <h2 class="an-section__title">💬 Últimas reseñas</h2>
-    <div class="an-reviews">
-      @for (r of recentReviews; track r.name) {
-        <div class="an-review cv2-card">
-          <div class="an-review__top">
-            <div class="an-review__user">
-              <span class="an-review__avatar">{{ r.emoji }}</span>
-              <span class="an-review__name">{{ r.name }}</span>
-            </div>
-            <div class="an-review__right">
-              <span class="an-review__stars">
-                @for (s of starsArray(r.rating); track $index) {
-                  <span [class]="s ? 'star-on' : 'star-off'">★</span>
-                }
-              </span>
-              <span class="an-review__when">{{ r.when }}</span>
-            </div>
-          </div>
-          <p class="an-review__text">{{ r.text }}</p>
-        </div>
-      }
-    </div>
-  </div>
+    <nav class="biz-bottomnav mobile-only">
+      <a routerLink="/negocio" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Panel</span></a>
+      <a routerLink="/negocio/menu" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h12"/></svg><span>Menú</span></a>
+      <a routerLink="/negocio/promos" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 14.8 7 17.3 8 11.8 4 7.8l5.5-.8L12 2z"/></svg><span>Promos</span></a>
+      <a routerLink="/negocio/analytics" class="biz-bnav biz-bnav--active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span>Stats</span></a>
+      <a routerLink="/negocio/perfil" class="biz-bnav"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Config</span></a>
+    </nav>
+  </main>
 </div>
