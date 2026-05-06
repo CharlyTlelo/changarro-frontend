@@ -4,6 +4,18 @@
   min-height: 100dvh;
 }
 
+/* Spacing scale (keeps mobile/tablet symmetric) */
+:host {
+  --login-pad-x-mobile: 20px;
+  --login-pad-x-mobile-max: 24px;
+  --login-pad-y-mobile: 24px;
+  --login-pad-y-mobile-bottom: 28px;
+  /* Mobile rhythm */
+  --login-gap-sm: 14px;
+  --login-gap-md: 18px;
+  --login-gap-lg: 26px;
+}
+
 .screen {
   max-width: 430px;
   margin: 0 auto;
@@ -84,7 +96,10 @@
   border-radius: 28px 28px 0 0;
   position: relative;
   z-index: 2;
-  padding: 24px clamp(16px, 5vw, 24px) 28px;
+  padding:
+    var(--login-pad-y-mobile)
+    clamp(var(--login-pad-x-mobile), 5vw, var(--login-pad-x-mobile-max))
+    var(--login-pad-y-mobile-bottom);
   display: flex;
   flex-direction: column;
 }
@@ -93,6 +108,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: var(--login-gap-md);
 }
 
 .sheet-title {
@@ -107,7 +123,7 @@
 .sheet-sub {
   font-size: 13px;
   color: var(--ink-2);
-  margin: 6px 0 14px;
+  margin: 8px 0 0;
   line-height: 1.4;
 }
 
@@ -115,7 +131,7 @@
 .benefits {
   display: flex;
   gap: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 .benefit {
@@ -181,7 +197,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 16px 0;
+  margin: 0;
 }
 
 .divider-line { flex: 1; height: 1px; background: rgba(36,21,16,0.12); }
@@ -197,10 +213,10 @@
 .form-fields {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--login-gap-sm);
 }
 
-.field-group { margin-bottom: -6px; }
+.field-group { margin-bottom: 0; }
 
 .field-label {
   font-size: 12px;
@@ -212,7 +228,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: -6px;
+  margin-bottom: 6px;
 }
 
 .forgot-link-inline {
@@ -258,7 +274,7 @@
 
 .forgot-link {
   text-align: right;
-  margin-top: 8px;
+  margin-top: 0;
   font-size: 12px;
   color: var(--terracota);
   font-weight: 600;
@@ -270,7 +286,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 14px 0 22px;
+  margin: 0;
 }
 
 .remember-check {
@@ -295,16 +311,16 @@
   width: 100%;
   padding: 15px;
   font-size: 15px;
-  margin-top: 14px;
+  margin-top: 0;
 }
 
 .signup-cta {
-  margin-top: 20px;
+  margin-top: 0;
   padding: 14px 14px 16px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: var(--login-gap-sm);
   text-align: center;
   background: #FCF7EC;
   border: 2px solid rgba(36, 21, 16, 0.12);
@@ -349,7 +365,7 @@
 .guest-link {
   display: block;
   text-align: center;
-  margin-top: 14px;
+  margin-top: 0;
   font-size: 12px;
   color: var(--ink-3);
   font-weight: 500;
@@ -565,17 +581,22 @@
 
 // Form eyebrow + title (tablet)
 .form-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 12px;
   font-weight: 700;
   color: var(--terracota);
   letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .form-title {
   font-size: 42px;
-  line-height: 1.05;
+  line-height: 1.03;
   margin: 8px 0 8px;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .form-sub {
@@ -583,6 +604,7 @@
   color: var(--ink-2);
   margin: 0 0 28px;
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
 
@@ -590,6 +612,13 @@
 // TABLET+ BREAKPOINT (768px+)
 // ══════════════════════════════════════════
 @media (min-width: 768px) {
+  :host {
+    /* Tablet rhythm */
+    --login-gap-sm: 12px;
+    --login-gap-md: 18px;
+    --login-gap-lg: 26px;
+  }
+
   .mobile-only { display: none !important; }
 
   /* `initial` rompe layout en divs (inline) y anula flex del panel; usamos block + excepciones */
@@ -632,7 +661,9 @@
     flex: 1;
     margin-top: 0;
     border-radius: 0;
-    padding: 40px 80px;
+    padding:
+      clamp(28px, 5vh, 56px)
+      clamp(24px, 4vw, 56px);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -646,13 +677,14 @@
     max-width: 420px;
     margin: 0 auto;
     width: 100%;
+    text-align: center;
   }
 
   // Social buttons in a row
   .social-row {
     flex-direction: row;
     gap: 10px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .social-btn {
@@ -664,9 +696,9 @@
   .social-label-full { display: none; }
   .social-label-short { display: inline; }
 
-  .divider { margin: 18px 0; }
+  .divider { margin: 1px 0; }
 
-  .form-fields { gap: 6px; }
+  .form-fields { gap: var(--login-gap-sm); }
 
   .login-btn {
     padding: 16px;
