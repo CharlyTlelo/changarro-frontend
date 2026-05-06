@@ -2,14 +2,14 @@
   <!-- Tablet: panel izquierdo -->
   <aside class="b-left" aria-hidden="true">
     <div class="b-confetti b-confetti--t">
-      <div class="confetti-dot" style="left:12%;top:18%;background:#F5B92E;transform:rotate(-20deg)"></div>
-      <div class="confetti-dot" style="right:18%;top:22%;background:#4A8A3A;transform:rotate(15deg)"></div>
-      <div class="confetti-dot" style="left:20%;top:45%;background:#E8628E;transform:rotate(10deg)"></div>
-      <div class="confetti-dot" style="right:14%;bottom:38%;background:#FCF7EC;transform:rotate(25deg)"></div>
-      <div class="confetti-dot" style="left:8%;bottom:28%;background:#2B6FA0;transform:rotate(30deg)"></div>
-      <div class="confetti-dot" style="right:22%;top:52%;background:#F5B92E;transform:rotate(-10deg)"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:12%;top:18%;background:#F5B92E;transform:rotate(-20deg)"></div>
+      <div class="confetti-dot confetti-dot--drift" style="right:18%;top:22%;background:#4A8A3A;transform:rotate(15deg);animation-delay:0.15s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:20%;top:45%;background:#E8628E;transform:rotate(10deg);animation-delay:0.28s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="right:14%;bottom:38%;background:#FCF7EC;transform:rotate(25deg);animation-delay:0.08s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:8%;bottom:28%;background:#2B6FA0;transform:rotate(30deg);animation-delay:0.35s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="right:22%;top:52%;background:#F5B92E;transform:rotate(-10deg);animation-delay:0.22s"></div>
     </div>
-    <svg class="b-banderines" viewBox="0 0 520 48" preserveAspectRatio="xMidYMid slice">
+    <svg class="b-banderines b-banderines--wave" viewBox="0 0 520 48" preserveAspectRatio="xMidYMid slice">
       <path d="M0 6 Q48 24 96 6 T192 6 T288 6 T384 6 T480 6 T520 6" stroke="#FCF7EC" stroke-width="1" fill="none" opacity="0.45"/>
       <g transform="translate(36,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#F5B92E" opacity="0.92"/></g>
       <g transform="translate(96,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#4A8A3A" opacity="0.92"/></g>
@@ -19,56 +19,80 @@
       <g transform="translate(336,14) rotate(4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#F5B92E" opacity="0.92"/></g>
       <g transform="translate(396,14) rotate(-4)"><path d="M-8 0 L8 0 L0 18 Z" fill="#4A8A3A" opacity="0.92"/></g>
     </svg>
-    <div class="b-left-inner">
+    <div class="b-left-inner anim-left-reveal">
       <span class="cv2-serif b-left-brand">changarro</span>
       <p class="b-left-tagline">Lo bueno,<br><span class="cv2-serif-i">a la vuelta</span></p>
+      <p class="b-left-cheer">¡Qué bueno verte por aquí!</p>
     </div>
   </aside>
 
   <div class="b-main">
     <!-- Móvil: confetti sobre el degradado -->
     <div class="b-confetti b-confetti--m">
-      <div class="confetti-dot" style="left:40px;top:80px;background:#F5B92E;transform:rotate(-20deg)"></div>
-      <div class="confetti-dot" style="left:320px;top:100px;background:#4A8A3A;transform:rotate(15deg)"></div>
-      <div class="confetti-dot" style="left:60px;top:170px;background:#E8628E;transform:rotate(10deg)"></div>
-      <div class="confetti-dot" style="right:50px;top:180px;background:#FCF7EC;transform:rotate(25deg)"></div>
-      <div class="confetti-dot" style="left:100px;top:240px;background:#2B6FA0;transform:rotate(30deg)"></div>
-      <div class="confetti-dot" style="right:110px;top:260px;background:#F5B92E;transform:rotate(-10deg)"></div>
-      <div class="confetti-dot" style="left:200px;top:90px;background:#FCF7EC;transform:rotate(8deg)"></div>
-      <div class="confetti-dot" style="left:30px;top:280px;background:#E8628E;transform:rotate(-25deg)"></div>
-      <div class="confetti-dot" style="right:40px;top:320px;background:#4A8A3A;transform:rotate(18deg)"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:40px;top:80px;background:#F5B92E;transform:rotate(-20deg)"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:320px;top:100px;background:#4A8A3A;transform:rotate(15deg);animation-delay:0.12s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:60px;top:170px;background:#E8628E;transform:rotate(10deg);animation-delay:0.24s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="right:50px;top:180px;background:#FCF7EC;transform:rotate(25deg);animation-delay:0.06s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:100px;top:240px;background:#2B6FA0;transform:rotate(30deg);animation-delay:0.3s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="right:110px;top:260px;background:#F5B92E;transform:rotate(-10deg);animation-delay:0.18s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:200px;top:90px;background:#FCF7EC;transform:rotate(8deg);animation-delay:0.36s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="left:30px;top:280px;background:#E8628E;transform:rotate(-25deg);animation-delay:0.2s"></div>
+      <div class="confetti-dot confetti-dot--drift" style="right:40px;top:320px;background:#4A8A3A;transform:rotate(18deg);animation-delay:0.14s"></div>
     </div>
 
     <div class="content">
       <div class="celebration">
-        <div class="cv2-bounce party-emoji">🎉</div>
-        <h1 class="cv2-serif welcome-title">
-          ¡Listo, María!<br>
-          <span class="cv2-serif-i welcome-title-accent">eres del barrio</span>
-        </h1>
-        <p class="welcome-sub">Tu cuenta está lista. Aquí tienes tus primeros regalos:</p>
+        <div class="emoji-stage" aria-hidden="true">
+          <span class="pulse-ring pulse-ring--a"></span>
+          <span class="pulse-ring pulse-ring--b"></span>
+          <span class="pulse-ring pulse-ring--c"></span>
+          <div class="party-emoji">🎉</div>
+          <span class="sparkle sparkle--1">✦</span>
+          <span class="sparkle sparkle--2">✦</span>
+          <span class="sparkle sparkle--3">✦</span>
+        </div>
 
-        <div class="rewards">
-          @for (r of rewards; track r.label) {
-            <div class="reward-card">
+        <p class="welcome-kicker anim-rise anim-rise--1">
+          <span class="kicker-dot" aria-hidden="true"></span>
+          Cuenta lista · ya eres parte del changarro
+        </p>
+
+        <h1 class="cv2-serif welcome-title anim-rise anim-rise--2">
+          ¡Bravo, María!<br>
+          <span class="cv2-serif-i welcome-title-accent welcome-title-shine">eres del barrio</span>
+        </h1>
+
+        <p class="welcome-sub anim-rise anim-rise--3">
+          Eso sí que vale la pena: desbloqueaste regalitos solo por registrarte. Revisa lo que ya tienes en tu mochila digital:
+        </p>
+
+        <div class="rewards" role="list">
+          @for (r of rewards; track r.label; let i = $index) {
+            <div
+              class="reward-card anim-card-pop"
+              role="listitem"
+              [style.animation-delay]="(0.42 + i * 0.09) + 's'"
+            >
               @if (r.isCoin) {
                 <div class="cv2-coin reward-coin">$</div>
               } @else {
-                <div class="reward-icon" [style.background]="r.color" [style.color]="r.textColor || 'var(--ink)'">{{ r.emoji }}</div>
+                <div class="reward-icon reward-icon--pop" [style.background]="r.color" [style.color]="r.textColor || 'var(--ink)'">{{ r.emoji }}</div>
               }
               <div class="reward-info">
                 <div class="cv2-serif reward-label">{{ r.label }}</div>
                 <div class="reward-sub">{{ r.sub }}</div>
               </div>
+              <span class="reward-check" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path class="reward-check-path" d="M3 8l3 3 7-7"/></svg>
+              </span>
             </div>
           }
         </div>
       </div>
 
-      <div class="bottom-actions">
-        <a routerLink="/catalogo" class="explore-btn">Empezar a explorar →</a>
-        <a routerLink="/registro/tipo" class="biz-link">
-          ¿Tienes un negocio? <strong class="biz-link-strong">Regístralo aquí</strong>
+      <div class="bottom-actions anim-rise anim-rise--5">
+        <a routerLink="/catalogo" class="explore-btn explore-btn--glow">
+          Ir al catálogo →
         </a>
       </div>
     </div>
