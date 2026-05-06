@@ -203,7 +203,7 @@
    ═══════════════════════════════ */
 .promo-header {
   padding: 20px 0 0;
-  margin-bottom: 16px;
+  margin-bottom: 22px;
 }
 
 .promo-header__title { font-size: 30px; margin: 0 0 4px; line-height: 1; }
@@ -213,7 +213,7 @@
 .promo-layout {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
 }
 
 .promo-layout__main { min-width: 0; }
@@ -346,14 +346,19 @@
 
 /* ═══ FORM ═══ */
 .promo-form {
-  padding: 22px;
+  padding: 26px;
   margin-bottom: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(36, 21, 16, 0.08);
+  box-shadow:
+    0 1px 2px rgba(36, 21, 16, 0.04),
+    0 14px 36px rgba(36, 21, 16, 0.06);
 }
 
-.promo-form__heading { font-size: 17px; font-weight: 800; margin: 0 0 18px; }
+.promo-form__heading { font-size: 28px; font-weight: 800; margin: 0 0 22px; letter-spacing: -0.02em; }
 
 .promo-field {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 
   label {
     display: block;
@@ -367,7 +372,7 @@
 
   input {
     width: 100%;
-    padding: 10px 14px;
+    padding: 12px 14px;
     border: 1px solid rgba(36,21,16,0.12);
     border-radius: 10px;
     font-size: 14px;
@@ -380,11 +385,49 @@
 
 .promo-field--half { flex: 1; min-width: 0; }
 
-.promo-row { display: flex; gap: 12px; }
+.promo-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.9fr) minmax(320px, 1.1fr);
+  gap: 14px;
+  align-items: end;
+}
+
+.promo-validity {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.promo-validity__input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid rgba(36,21,16,0.12);
+  border-radius: 10px;
+}
+
+.promo-validity__icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.promo-validity input {
+  width: 100%;
+  min-width: 0;
+  border: none !important;
+  background: transparent !important;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  padding: 11px 0 !important;
+  outline: none;
+}
 
 /* Preview */
 .promo-preview {
-  margin: 18px 0 6px;
+  margin: 20px 0 8px;
 }
 
 .promo-preview__label {
@@ -400,10 +443,10 @@
 .promo-preview__card {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   background: var(--ink);
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 16px;
+  padding: 16px 18px;
   color: var(--paper);
   font-size: 14px;
 
@@ -424,7 +467,9 @@
 .promo-form__actions {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 22px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .promo-form__cancel {
@@ -519,12 +564,12 @@
     min-width: 0;
     overflow-y: auto;
     display: flex;
-    justify-content: center; /* CENTRADO en tablet */
+    justify-content: center;
   }
 
   .biz-content {
-    padding: 32px 32px 60px;
-    max-width: 860px;
+    padding: 30px 38px 68px;
+    max-width: 1320px;
     width: 100%;
     margin: 0 auto;
   }
@@ -535,7 +580,8 @@
     justify-content: space-between;
     align-items: flex-end;
     padding: 0;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    gap: 20px;
   }
 
   .promo-header__title { font-size: 36px; }
@@ -544,12 +590,24 @@
   /* Two-col layout for promo + history */
   .promo-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.75fr);
     align-items: start;
-    gap: 18px;
+    gap: 24px;
   }
 
   .promo-history { margin-top: 0; }
+
+  .promo-live__banner {
+    padding: 26px 24px;
+  }
+
+  .promo-live__title {
+    font-size: 30px;
+  }
+
+  .promo-field label {
+    font-size: 11px;
+  }
 }
 
 /* ═══════════════════════════════
@@ -557,12 +615,25 @@
    ═══════════════════════════════ */
 @media (min-width: 1024px) {
   .biz-content {
-    padding: 36px 48px 60px;
-    max-width: 1000px;
+    padding: 36px 44px 72px;
+    max-width: 1360px;
   }
 
   .promo-layout {
-    grid-template-columns: minmax(0, 1fr) 360px;
-    gap: 20px;
+    grid-template-columns: minmax(720px, 1.5fr) minmax(320px, 0.7fr);
+    gap: 28px;
+  }
+
+  .promo-form {
+    padding: 30px;
+  }
+
+  .promo-row {
+    grid-template-columns: minmax(220px, 0.9fr) minmax(420px, 1.1fr);
+    gap: 16px;
+  }
+
+  .promo-form__actions {
+    justify-content: flex-start;
   }
 }

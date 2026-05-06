@@ -1,7 +1,27 @@
-import { Component, signal, inject } from '@angular/core';
+﻿import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, OnDestroy, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
+
+interface DayConfig {
+  key: string;
+  label: string;
+  abbrev: string;
+  order: string;
+}
+
+interface DaySchedule {
+  isOpen: boolean;
+  openTime: string;
+  openPeriod: 'AM' | 'PM';
+  closeTime: string;
+  closePeriod: 'AM' | 'PM';
+}
+
+interface TimeOption {
+  value: string;
+}
 
 @Component({
   selector: 'app-biz-perfil',
@@ -10,8 +30,12 @@ import { AuthService } from '../../../shared/services/auth.service';
   templateUrl: './biz-perfil.html',
   styleUrl: './biz-perfil.scss',
 })
-export class BizPerfil {
+export class BizPerfil implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly doc = inject(DOCUMENT);
+  private previousHtmlOverflow = '';
+  private previousBodyOverflow = '';
 
   businessName = signal('Tacos Don Juan');
   businessEmoji = signal('🌮');
@@ -20,15 +44,47 @@ export class BizPerfil {
 
   name = 'Tacos Don Juan';
   emoji = '🌮';
+  showEmojiCatalog = false;
   categoryId = 'comida';
   description = 'Los mejores tacos al pastor de la Roma Norte. Tortillas hechas a mano, salsas de la casa y ambiente familiar. Desde 1998.';
   address = 'Av. Álvaro Obregón 145';
   neighborhood = 'Roma Norte';
-  phone = '55 1234 5678';
+  whatsapp = '55 1234 5678';
+  facebook = 'facebook.com/tacosdonjuan';
+  tiktok = '@tacosdonjuan';
   instagram = '@tacosdonjuan';
-  schedule = 'Lun-Dom 12:00-23:00';
-  paymentMethod = 'Solo efectivo';
-  priceRange = '$25-60';
+  youtube = 'youtube.com/@tacosdonjuan';
+  readonly days: DayConfig[] = [
+    { key: 'lunes', label: 'Lunes', abbrev: 'L', order: '1' },
+    { key: 'martes', label: 'Martes', abbrev: 'M', order: '2' },
+    { key: 'miercoles', label: 'Miércoles', abbrev: 'X', order: '3' },
+    { key: 'jueves', label: 'Jueves', abbrev: 'J', order: '4' },
+    { key: 'viernes', label: 'Viernes', abbrev: 'V', order: '5' },
+    { key: 'sabado', label: 'Sábado', abbrev: 'S', order: '6' },
+    { key: 'domingo', label: 'Domingo', abbrev: 'D', order: '7' },
+  ];
+
+  readonly fullTimeOptions: TimeOption[] = [
+    { value: '6:00' }, { value: '6:30' }, { value: '7:00' }, { value: '7:30' },
+    { value: '8:00' }, { value: '8:30' }, { value: '9:00' }, { value: '9:30' },
+    { value: '10:00' }, { value: '10:30' }, { value: '11:00' }, { value: '11:30' },
+    { value: '12:00' },
+  ];
+
+  weeklySchedule: Record<string, DaySchedule> = {
+    lunes: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
+    martes: { isOpen: true, openTime: '6:30', openPeriod: 'AM', closeTime: '11:00', closePeriod: 'PM' },
+    miercoles: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
+    jueves: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
+    viernes: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
+    sabado: { isOpen: false, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
+    domingo: { isOpen: false, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
+  };
+  paymentOptions = {
+    efectivo: true,
+    tarjetas: false,
+    transferencia: false,
+  };
   color = '#FFB57A';
   businessPhotos: string[] = [];
 
@@ -39,6 +95,72 @@ export class BizPerfil {
     { id: 'entrete', label: 'Diversión', emoji: '🎉' },
     { id: 'salud', label: 'Salud', emoji: '⚕️' },
   ];
+
+  emojiCatalog = [
+    '🌮', '🍔', '🍕', '🌭', '🥗', '🍜', '🍣', '🧁',
+    '☕', '🍺', '🛍️', '👕', '💄', '💐', '📱', '💻',
+    '🔧', '🧰', '✂️', '💈', '🧼', '🧽', '🏥', '💊',
+    '🎉', '🎁', '🎵', '🎮', '🚗', '🏍️', '📚', '🧸',
+  ];
+
+  ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const html = this.doc.documentElement;
+    const body = this.doc.body;
+    this.previousHtmlOverflow = html.style.overflow;
+    this.previousBodyOverflow = body.style.overflow;
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+  }
+
+  ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.doc.documentElement.style.overflow = this.previousHtmlOverflow;
+    this.doc.body.style.overflow = this.previousBodyOverflow;
+  }
+
+  get paymentSummary(): string {
+    const selected: string[] = [];
+    if (this.paymentOptions.efectivo) selected.push('Efectivo');
+    if (this.paymentOptions.tarjetas) selected.push('Tarjetas');
+    if (this.paymentOptions.transferencia) selected.push('Transferencia');
+    return selected.length ? selected.join(', ') : 'Sin método seleccionado';
+  }
+
+  get scheduleSummary(): string {
+    const openDays = this.days
+      .map((d) => this.weeklySchedule[d.key])
+      .filter((d) => d.isOpen);
+    if (!openDays.length) return 'Sin horario disponible';
+    const sample = openDays[0];
+    if (openDays.length === 7) return `Lun-Dom ${sample.openTime} ${sample.openPeriod} - ${sample.closeTime} ${sample.closePeriod}`;
+    return `${openDays.length} días abiertos`;
+  }
+
+  toggleEmojiCatalog(): void {
+    this.showEmojiCatalog = !this.showEmojiCatalog;
+  }
+
+  selectEmoji(emoji: string): void {
+    this.emoji = emoji;
+    this.showEmojiCatalog = false;
+  }
+
+  get openDaysCount(): number {
+    return this.days.filter((d) => this.weeklySchedule[d.key].isOpen).length;
+  }
+
+  isWeekend(key: string): boolean {
+    return key === 'sabado' || key === 'domingo';
+  }
+
+  toggleDay(key: string): void {
+    this.weeklySchedule[key].isOpen = !this.weeklySchedule[key].isOpen;
+  }
+
+  togglePeriod(key: string, field: 'openPeriod' | 'closePeriod'): void {
+    this.weeklySchedule[key][field] = this.weeklySchedule[key][field] === 'AM' ? 'PM' : 'AM';
+  }
 
   save() {
     this.saving.set(true);
@@ -105,3 +227,5 @@ function readFileAsDataUrl(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
+
+

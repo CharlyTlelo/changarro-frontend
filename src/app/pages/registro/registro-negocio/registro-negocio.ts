@@ -30,6 +30,8 @@ export class RegistroNegocio {
   descripcion = '';
   password = '';
   passwordRepeat = '';
+  showPassword = false;
+  showPasswordRepeat = false;
 
   businessPhotos: string[] = [];
 
@@ -47,6 +49,25 @@ export class RegistroNegocio {
 
   hasValidPassword(): boolean {
     return this.password.length >= 8 && this.password === this.passwordRepeat;
+  }
+
+  get passwordBlockReason(): string {
+    const pass = this.password.trim();
+    const repeat = this.passwordRepeat.trim();
+
+    if (!pass || !repeat) {
+      return 'No puedes dar siguiente: escribe y confirma tu contraseña.';
+    }
+
+    if (pass.length < 8) {
+      return 'No puedes dar siguiente: la contraseña debe tener al menos 8 caracteres.';
+    }
+
+    if (pass !== repeat) {
+      return 'No puedes dar siguiente: las contraseñas no coinciden.';
+    }
+
+    return '';
   }
 
   private getStepIndex(key: StepKey): number {

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+﻿import { AfterViewInit, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -8,9 +8,10 @@ import { RouterLink } from '@angular/router';
   templateUrl: './biz-analytics.html',
   styleUrl: './biz-analytics.scss',
 })
-export class BizAnalytics {
+export class BizAnalytics implements AfterViewInit {
   businessName = signal('Tacos Don Juan');
   businessEmoji = signal('🌮');
+
   kpis = [
     { value: '1,247', label: 'Visitas', icon: '🚶', trend: '+12%', trendUp: true },
     { value: '234', label: 'Reseñas', icon: '✍️', trend: '+8', trendUp: true },
@@ -53,7 +54,15 @@ export class BizAnalytics {
     { name: 'Carlos M.', emoji: '🎸', rating: 5, text: 'Siempre vengo por las gringas. Las mejores.', when: 'hace 3 sem' },
   ];
 
+  ngAfterViewInit(): void {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    const main = document.querySelector('.biz-main') as HTMLElement | null;
+    if (main) {
+      main.scrollTop = 0;
+    }
+  }
+
   starsArray(n: number): number[] {
-    return Array.from({ length: 5 }, (_, i) => i < n ? 1 : 0);
+    return Array.from({ length: 5 }, (_, i) => (i < n ? 1 : 0));
   }
 }
