@@ -20,16 +20,20 @@
       <!-- Avatar section -->
       <div class="avatar-section mobile-only">
         <div class="avatar-wrapper">
-          <div class="avatar">
+          <div
+            class="avatar"
+            [class.avatar--placeholder]="!profilePhotoUrl"
+            [style.background]="profilePhotoUrl ? 'transparent' : avatarPlaceholderGradient()"
+          >
             @if (profilePhotoUrl) {
               <img [src]="profilePhotoUrl" alt="" class="avatar-img" />
             } @else {
-              <span class="cv2-serif avatar-letter">{{ avatarLetter }}</span>
+              <span class="cv2-serif avatar-initials">{{ avatarInitials }}</span>
             }
           </div>
           <div class="avatar-level">Lvl 4</div>
         </div>
-        <h1 class="cv2-serif user-name">María Hernández</h1>
+        <h1 class="cv2-serif user-name">{{ displayName }}</h1>
         <div class="user-info">👑 Embajadora del barrio · Roma Norte</div>
       </div>
 
@@ -51,11 +55,15 @@
         } @else {
           <div class="edit-card cv2-sticker">
             <div class="edit-photo-block">
-              <div class="edit-photo-preview">
+              <div
+                class="edit-photo-preview"
+                [class.edit-photo-preview--placeholder]="!profilePhotoUrl"
+                [style.background]="profilePhotoUrl ? 'transparent' : avatarPlaceholderGradient()"
+              >
                 @if (profilePhotoUrl) {
                   <img [src]="profilePhotoUrl" alt="" class="edit-photo-img" />
                 } @else {
-                  <span class="cv2-serif edit-photo-letter">{{ avatarLetter }}</span>
+                  <span class="cv2-serif edit-photo-initials">{{ avatarInitials }}</span>
                 }
                 <button type="button" class="edit-photo-badge" (click)="profilePhotoFile.click()" aria-label="Elegir imagen desde el dispositivo">
                   📷
@@ -64,7 +72,7 @@
               <div class="edit-photo-copy">
                 <span class="edit-photo-title">Foto de perfil</span>
                 @if (!profilePhotoUrl) {
-                  <span class="edit-photo-hint">Aún no tienes foto. Súbela para que el barrio te reconozca.</span>
+                  <span class="edit-photo-hint">Sin foto: mostramos tus iniciales con un color único. Puedes subir una cuando quieras.</span>
                   <button type="button" class="edit-photo-primary-btn" (click)="profilePhotoFile.click()">📷 Subir foto</button>
                 } @else {
                   <span class="edit-photo-hint">JPG, PNG o WebP. Puedes sustituirla o quitarla.</span>
@@ -142,15 +150,19 @@
             <!-- Profile card -->
             <div class="t-profile-card cv2-card">
               <div class="t-profile-top">
-                <div class="t-avatar">
+                <div
+                  class="t-avatar"
+                  [class.t-avatar--placeholder]="!profilePhotoUrl"
+                  [style.background]="profilePhotoUrl ? 'transparent' : avatarPlaceholderGradient()"
+                >
                   @if (profilePhotoUrl) {
                     <img [src]="profilePhotoUrl" alt="" class="t-avatar-img" />
                   } @else {
-                    <span class="cv2-serif t-avatar-letter">{{ avatarLetter }}</span>
+                    <span class="cv2-serif t-avatar-initials">{{ avatarInitials }}</span>
                   }
                 </div>
                 <div class="t-profile-info">
-                  <h2 class="cv2-serif t-profile-name">María Hernández</h2>
+                  <h2 class="cv2-serif t-profile-name">{{ displayName }}</h2>
                   <div class="t-profile-level">👑 Embajadora del barrio</div>
                   <div class="t-profile-meta">Roma Norte · Desde 2024</div>
                 </div>
@@ -181,17 +193,21 @@
               @if (!editing) {
                 <div class="t-info-rows">
                   <div class="t-info-row t-info-row--photo">
-                    <div class="t-photo-thumb-wrap">
+                    <div
+                      class="t-photo-thumb-wrap"
+                      [class.t-photo-thumb-wrap--placeholder]="!profilePhotoUrl"
+                      [style.background]="profilePhotoUrl ? 'transparent' : avatarPlaceholderGradient()"
+                    >
                       @if (profilePhotoUrl) {
                         <img [src]="profilePhotoUrl" alt="" class="t-photo-thumb" />
                       } @else {
-                        <span class="cv2-serif t-photo-thumb-letter">{{ avatarLetter }}</span>
+                        <span class="cv2-serif t-photo-thumb-initials">{{ avatarInitials }}</span>
                       }
                     </div>
                     <div class="t-info-content">
                       <div class="t-info-label">Foto de perfil</div>
                       @if (!profilePhotoUrl) {
-                        <div class="t-info-value t-info-value--muted">Sin foto · Visible tu inicial en el barrio</div>
+                        <div class="t-info-value t-info-value--muted">Sin foto · Avatar con tus iniciales en el barrio</div>
                       } @else {
                         <div class="t-info-value t-info-value--muted">Visible en tu perfil del barrio</div>
                       }
@@ -208,25 +224,29 @@
                     <span class="t-info-icon">👤</span>
                     <div class="t-info-content">
                       <div class="t-info-label">Nombre</div>
-                      <div class="t-info-value">María Hernández</div>
+                      <div class="t-info-value">{{ displayName }}</div>
                     </div>
                   </div>
                   <div class="t-info-row">
                     <span class="t-info-icon">📱</span>
                     <div class="t-info-content">
                       <div class="t-info-label">WhatsApp</div>
-                      <div class="t-info-value">55 1234 5678</div>
+                      <div class="t-info-value">{{ editPhone }}</div>
                     </div>
                   </div>
                   
                 </div>
               } @else {
                 <div class="t-photo-editor">
-                  <div class="t-photo-editor-preview">
+                  <div
+                    class="t-photo-editor-preview"
+                    [class.t-photo-editor-preview--placeholder]="!profilePhotoUrl"
+                    [style.background]="profilePhotoUrl ? 'transparent' : avatarPlaceholderGradient()"
+                  >
                     @if (profilePhotoUrl) {
                       <img [src]="profilePhotoUrl" alt="" class="t-photo-editor-img" />
                     } @else {
-                      <span class="cv2-serif t-photo-editor-letter">{{ avatarLetter }}</span>
+                      <span class="cv2-serif t-photo-editor-initials">{{ avatarInitials }}</span>
                     }
                     <button type="button" class="t-photo-editor-badge" (click)="profilePhotoFile.click()" aria-label="Elegir imagen">
                       📷

@@ -1,39 +1,57 @@
-<div class="screen">
-  <div class="header">
-    <a routerLink="/login" class="back-btn" aria-label="Volver al inicio de sesión">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
-    </a>
-  </div>
+<div class="screen rt-screen">
+  <aside class="rt-left tablet-only" aria-hidden="true">
+    <div class="rt-left-inner">
+      <span class="cv2-serif rt-brand">changarro</span>
+      <p class="rt-kicker">CREAR CUENTA</p>
+      <h2 class="cv2-serif rt-headline">
+        Elegí tu camino<br>
+        <span class="cv2-serif-i">y arrancamos</span>
+      </h2>
+      <ul class="rt-bullets">
+        <li><span class="rt-bull">⚡</span>2 pasos, sin vueltas</li>
+        <li><span class="rt-bull">📍</span>Ubicación con Google Maps</li>
+        <li><span class="rt-bull">📷</span>Fotos opcionales</li>
+      </ul>
+    </div>
+  </aside>
 
-  <div class="content">
-    <span class="eyebrow">CREAR CUENTA</span>
-    <h1 class="cv2-serif title">
-      ¿Te registras como<br>
-      <span class="cv2-serif-i accent">usuario o negocio?</span>
-    </h1>
-    <p class="sub">Elige una opción para continuar con el formulario adecuado.</p>
+  <main class="rt-main">
+    <div class="header rt-header">
+      <a routerLink="/login" class="back-btn" aria-label="Volver al inicio de sesión">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#241510" stroke-width="2.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+      </a>
+    </div>
 
-    <a routerLink="/registro/usuario" class="choice choice-user">
-      <span class="choice-emoji" aria-hidden="true">👤</span>
-      <span class="choice-body">
-        <span class="choice-title">Soy usuario</span>
-        <span class="choice-desc">Explora changarros, sellos, monedas y promos guardadas.</span>
-      </span>
-      <span class="choice-arrow" aria-hidden="true">→</span>
-    </a>
+    <div class="content rt-content">
+      <span class="eyebrow">CREAR CUENTA</span>
+      <h1 class="cv2-serif title">
+        ¿Te registras como<br>
+        <span class="cv2-serif-i accent">usuario o negocio?</span>
+      </h1>
+      <p class="sub">Elige una opción para continuar con el formulario adecuado.</p>
 
-    <a routerLink="/registro/negocio" class="choice choice-business">
-      <span class="choice-emoji" aria-hidden="true">🏪</span>
-      <span class="choice-body">
-        <span class="choice-title">Soy negocio</span>
-        <span class="choice-desc">Da de alta tu changarro y conecta con el barrio.</span>
-      </span>
-      <span class="choice-arrow" aria-hidden="true">→</span>
-    </a>
+      <a routerLink="/registro/usuario" class="choice choice-user">
+        <span class="choice-emoji" aria-hidden="true">👤</span>
+        <span class="choice-body">
+          <span class="choice-title">Soy usuario</span>
+          <span class="choice-desc">Explora changarros, sellos, monedas y promos guardadas.</span>
+        </span>
+        <span class="choice-arrow" aria-hidden="true">→</span>
+      </a>
 
-    <p class="hint">
-      ¿Ya tienes cuenta?
-      <a routerLink="/login" class="link-login">Inicia sesión</a>
-    </p>
-  </div>
+      <a routerLink="/registro/negocio" class="choice choice-business">
+        <span class="choice-emoji" aria-hidden="true">🏪</span>
+        <span class="choice-body">
+          <span class="choice-title">Soy negocio</span>
+          <span class="choice-desc">Da de alta tu changarro y conecta con el barrio.</span>
+        </span>
+        <span class="choice-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <p class="hint">
+        ¿Ya tienes cuenta?
+        <a routerLink="/login" class="link-login">Inicia sesión</a>
+      </p>
+    </div>
+  </main>
 </div>

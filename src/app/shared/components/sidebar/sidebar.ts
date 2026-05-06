@@ -1,6 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CATEGORIES } from '../../data/mock-data';
+import { AuthService } from '../../services/auth.service';
+import { gradientFromName, initialsFromDisplayName } from '../../utils/avatar-placeholder';
 
 interface SubCategory {
   label: string;
@@ -73,9 +75,9 @@ interface SubCategory {
 
       <!-- User mini profile -->
       <div class="user-card" routerLink="/perfil">
-        <div class="user-avatar cv2-serif">M</div>
+        <div class="user-avatar cv2-serif" [style.background]="sidebarAvatarGradient()">{{ sidebarInitials() }}</div>
         <div class="user-info">
-          <div class="user-name">Maria Hernandez</div>
+          <div class="user-name">{{ sidebarDisplayName() }}</div>
           <div class="user-level">&#x1f451; Lvl 4 &middot; 1,240 &#x1fa99;</div>
         </div>
       </div>
@@ -277,13 +279,15 @@ interface SubCategory {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #F5B92E, #DD4D2A);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 17px;
-      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      color: #fcf7ec;
       flex-shrink: 0;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+      letter-spacing: -0.03em;
     }
 
     .user-info { flex: 1; min-width: 0; }
@@ -292,8 +296,24 @@ interface SubCategory {
   `]
 })
 export class Sidebar {
+  readonly auth = inject(AuthService);
   active = input<string>('cat');
   categories = CATEGORIES;
+
+  sidebarDisplayName(): string {
+    return this.auth.user()?.name?.trim() || 'Vecino del barrio';
+  }
+
+  sidebarInitials(): string {
+    const raw = this.auth.user()?.name?.trim();
+    return initialsFromDisplayName(raw || 'Vecino');
+  }
+
+  sidebarAvatarGradient(): string {
+    const raw = this.auth.user()?.name?.trim();
+    return gradientFromName(raw || 'Vecino');
+  }
+
   expandedCat: string | null = null;
 
   navItems = [

@@ -12,6 +12,20 @@ export class BizDashboard {
   userName = signal('Don Juan');
   businessName = signal('Tacos Don Juan');
   businessEmoji = signal('🌮');
+  // Perfil (placeholder hasta conectar backend)
+  profileChecks = signal({
+    basics: true, // nombre + contacto
+    location: false,
+    photos: false,
+    menu: true,
+  });
+
+  profileCompletion(): number {
+    const c = this.profileChecks();
+    const total = 4;
+    const done = [c.basics, c.location, c.photos, c.menu].filter(Boolean).length;
+    return Math.round((done / total) * 100);
+  }
 
   stats = [
     { value: '1,247', label: 'Visitas', icon: '🚶', trend: '+12%', color: '#DD4D2A' },

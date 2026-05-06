@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CHANGARRO_PROFILE_NAME_DRAFT_KEY } from '../../shared/utils/avatar-placeholder';
 
 export interface BienvenidaReward {
   label: string;
@@ -17,7 +18,9 @@ export interface BienvenidaReward {
   templateUrl: './bienvenida.html',
   styleUrl: './bienvenida.scss',
 })
-export class Bienvenida {
+export class Bienvenida implements OnInit {
+  welcomeFirstName = 'María';
+
   rewards: BienvenidaReward[] = [
     {
       emoji: '🏅',
@@ -40,4 +43,12 @@ export class Bienvenida {
       textColor: '#FCF7EC',
     },
   ];
+
+  ngOnInit(): void {
+    const draft = sessionStorage.getItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY)?.trim();
+    if (!draft) return;
+    const first = draft.split(/\s+/)[0];
+    if (!first) return;
+    this.welcomeFirstName = first.charAt(0).toLocaleUpperCase('es') + first.slice(1).toLocaleLowerCase('es');
+  }
 }

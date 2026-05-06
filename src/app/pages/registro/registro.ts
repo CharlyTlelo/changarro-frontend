@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import {
+  CHANGARRO_PROFILE_AVATAR_DRAFT_KEY,
+  CHANGARRO_PROFILE_NAME_DRAFT_KEY,
+  CHANGARRO_PROFILE_PHONE_DRAFT_KEY,
+  gradientFromName,
+  initialsFromDisplayName,
+} from '../../shared/utils/avatar-placeholder';
 
 interface RegistroField {
   label: string;
@@ -13,22 +21,20 @@ interface RegistroField {
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   templateUrl: './registro.html',
   styleUrl: './registro.scss',
 })
 export class Registro {
+  private readonly router = inject(Router);
+
+  nombreRegistro = '';
+  apellidoRegistro = '';
+  whatsappRegistro = '';
+
+  registrationPhotoUrl: string | null = null;
+
   fields: RegistroField[] = [
-    { label: 'Nombre', placeholder: '¿Cómo te llamas?', icon: '' },
-    { label: 'Apellido', placeholder: '¿Cómo te apellidas?', icon: '' },
-    {
-      label: 'WhatsApp',
-      placeholder: 'Ej. 5512345678',
-      icon: '📱',
-      type: 'tel',
-      inputmode: 'tel',
-      autocomplete: 'tel-national',
-    },
     {
       label: 'Crea una contraseña',
       placeholder: 'Mínimo 8 caracteres',
@@ -44,4 +50,46 @@ export class Registro {
       autocomplete: 'new-password',
     },
   ];
+
+  get registrationInitials(): string {
+    return initialsFromDisplayName(`${this.nombreRegistro} ${this.apellidoRegistro}`);
+  }
+
+  registrationAvatarGradient(): string {
+    return gradientFromName(`${this.nombreRegistro}${this.apellidoRegistro}`);
+  }
+
+  onRegPhotoSelect(ev: Event): void {
+    const input = ev.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file?.type.startsWith('image/')) {
+      input.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.registrationPhotoUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  clearRegPhoto(): void {
+    this.registrationPhotoUrl = null;
+  }
+
+  continuar(): void {
+    const fullName = `${this.nombreRegistro.trim()} ${this.apellidoRegistro.trim()}`.trim();
+    if (fullName) {
+      sessionStorage.setItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY, fullName);
+    }
+    const phone = this.whatsappRegistro.replace(/\s+/g, '').trim();
+    if (phone) {
+      sessionStorage.setItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY, phone);
+    }
+    if (this.registrationPhotoUrl) {
+      sessionStorage.setItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY, this.registrationPhotoUrl);
+    }
+    void this.router.navigate(['/bienvenida']);
+  }
 }

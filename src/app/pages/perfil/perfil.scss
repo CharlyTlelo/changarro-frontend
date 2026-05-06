@@ -67,9 +67,12 @@
   box-shadow: 0 6px 0 var(--ink);
 }
 
-.avatar-letter {
-  font-size: 50px;
-  color: var(--ink);
+.avatar--placeholder .avatar-initials {
+  font-size: clamp(36px, 10vw, 44px);
+  font-weight: 700;
+  color: #fcf7ec;
+  letter-spacing: -0.03em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
 }
 
 .avatar-img {
@@ -190,9 +193,11 @@
   object-fit: cover;
 }
 
-.edit-photo-letter {
-  font-size: 32px;
-  color: var(--ink);
+.edit-photo-preview--placeholder .edit-photo-initials {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fcf7ec;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .edit-photo-badge {
@@ -734,9 +739,12 @@
     flex-shrink: 0;
   }
 
-  .t-avatar-letter {
-    font-size: 28px;
-    color: var(--ink);
+  .t-avatar--placeholder .t-avatar-initials {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fcf7ec;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+    letter-spacing: -0.02em;
   }
 
   .t-avatar-img {
@@ -809,9 +817,12 @@
     object-fit: cover;
   }
 
-  .t-photo-thumb-letter {
-    font-size: 20px;
-    color: var(--ink);
+  .t-photo-thumb-wrap--placeholder .t-photo-thumb-initials {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fcf7ec;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+    letter-spacing: -0.02em;
   }
 
   .t-info-value--muted {
@@ -851,9 +862,12 @@
     object-fit: cover;
   }
 
-  .t-photo-editor-letter {
-    font-size: 38px;
-    color: var(--ink);
+  .t-photo-editor-preview--placeholder .t-photo-editor-initials {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fcf7ec;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    letter-spacing: -0.03em;
   }
 
   .t-photo-editor-badge {

@@ -576,11 +576,15 @@
     flex: 1;
     min-width: 0;
     overflow-y: auto;
+    display: flex;
+    justify-content: center; /* CENTRADO en tablet */
   }
 
   .biz-content {
     padding: 32px 32px 60px;
     max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
   }
 
   .an-header {
