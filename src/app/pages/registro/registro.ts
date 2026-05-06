@@ -1,6 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+interface RegistroField {
+  label: string;
+  placeholder: string;
+  icon: string;
+  type?: string;
+  inputmode?: string;
+  autocomplete?: string;
+}
+
 @Component({
   selector: 'app-registro',
   standalone: true,
@@ -9,10 +18,30 @@ import { RouterLink } from '@angular/router';
   styleUrl: './registro.scss',
 })
 export class Registro {
-  fields = [
-    { label: 'Nombre', value: '', placeholder: '¿Cómo te llamas?', icon: '' },
-    { label: 'Apellido', value: '', placeholder: '¿Cómo te apellidas?', icon: '' },
-    { label: 'Whatsapp', value: '', placeholder: 'tu numero de whats ', icon: '📞' },
-    { label: 'Crea una contraseña', value: '', placeholder: 'Mínimo 8 caracteres', icon: '🔒', type: 'password' },
+  fields: RegistroField[] = [
+    { label: 'Nombre', placeholder: '¿Cómo te llamas?', icon: '' },
+    { label: 'Apellido', placeholder: '¿Cómo te apellidas?', icon: '' },
+    {
+      label: 'WhatsApp',
+      placeholder: 'Ej. 5512345678',
+      icon: '📱',
+      type: 'tel',
+      inputmode: 'tel',
+      autocomplete: 'tel-national',
+    },
+    {
+      label: 'Crea una contraseña',
+      placeholder: 'Mínimo 8 caracteres',
+      icon: '🔒',
+      type: 'password',
+      autocomplete: 'new-password',
+    },
+    {
+      label: 'Repetir contraseña',
+      placeholder: 'Vuelve a escribir',
+      icon: '🔒',
+      type: 'password',
+      autocomplete: 'new-password',
+    },
   ];
 }
