@@ -1,8 +1,15 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { TabBar } from '../../shared/components/tab-bar/tab-bar';
 import { Sidebar } from '../../shared/components/sidebar/sidebar';
+import { AuthService } from '../../shared/services/auth.service';
+import {
+  CHANGARRO_PROFILE_AVATAR_DRAFT_KEY,
+  CHANGARRO_PROFILE_NAME_DRAFT_KEY,
+  CHANGARRO_PROFILE_PHONE_DRAFT_KEY,
+  gradientFromName,
+  initialsFromDisplayName,
+} from '../../shared/utils/avatar-placeholder';
 import { COLLECTION, SELLOS } from '../../shared/data/mock-data';
 
 @Component({
@@ -12,8 +19,8 @@ import { COLLECTION, SELLOS } from '../../shared/data/mock-data';
   templateUrl: './perfil.html',
   styleUrl: './perfil.scss',
 })
-export class Perfil {
-  private readonly router = inject(Router);
+export class Perfil implements OnInit {
+  private readonly auth = inject(AuthService);
 
   collection = COLLECTION;
   sellos = SELLOS;
@@ -21,23 +28,65 @@ export class Perfil {
   stats = [
     { v: '47', l: 'Visitados', emoji: '🚶' },
     { v: '13', l: 'Favoritos', emoji: '♥' },
-    { v: '21', l: 'Reseñas',   emoji: '✍️' },
-    { v: '4',  l: 'Sellos',    emoji: '🏆' },
+    { v: '21', l: 'Reseñas', emoji: '✍️' },
+    { v: '4', l: 'Sellos', emoji: '🏆' },
   ];
 
   tabs = ['Mi colección', 'Reseñas', 'Listas'];
   activeTab = 'Mi colección';
 
-  // Edit state
   editing = false;
   editName = 'María Hernández';
   editPhone = '55 1234 5678';
   profilePhotoUrl: string | null = null;
   private editPhotoSnapshot: string | null = null;
 
-  get avatarLetter(): string {
-    const n = this.editName.trim();
-    return n ? n.charAt(0).toUpperCase() : '?';
+  private savedName = 'María Hernández';
+  private savedPhone = '55 1234 5678';
+
+  ngOnInit(): void {
+    const draftAvatar = sessionStorage.getItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY);
+    if (draftAvatar) {
+      this.profilePhotoUrl = draftAvatar;
+      sessionStorage.removeItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY);
+    }
+
+    const draftName = sessionStorage.getItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY)?.trim();
+    if (draftName) {
+      this.editName = draftName;
+      sessionStorage.removeItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY);
+    } else {
+      const u = this.auth.user();
+      if (u?.name?.trim()) {
+        this.editName = u.name.trim();
+      }
+    }
+
+    const draftPhone = sessionStorage.getItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY)?.trim();
+    if (draftPhone) {
+      const formatted =
+        draftPhone.length >= 10
+          ? `${draftPhone.slice(0, 2)} ${draftPhone.slice(2, 6)} ${draftPhone.slice(6)}`
+          : draftPhone;
+      this.editPhone = formatted;
+      sessionStorage.removeItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY);
+    }
+
+    this.savedName = this.editName;
+    this.savedPhone = this.editPhone;
+  }
+
+  get displayName(): string {
+    const t = this.editName.trim();
+    return t || 'Vecino del barrio';
+  }
+
+  get avatarInitials(): string {
+    return initialsFromDisplayName(this.editName);
+  }
+
+  avatarPlaceholderGradient(): string {
+    return gradientFromName(this.editName);
   }
 
   onProfilePhotoSelect(ev: Event): void {
@@ -62,11 +111,9 @@ export class Perfil {
     this.profilePhotoUrl = null;
   }
 
-  // Delete modal
   showDeleteModal = false;
   deleteConfirmText = '';
 
-  // Activity items for tablet
   activity = [
     { emoji: '🌮', text: 'Visitaste Tacos Don Juan', when: 'Hace 2h', coins: '+20' },
     { emoji: '⭐', text: 'Reseña en Café Avellaneda', when: 'Hace 1 día', coins: '+50' },
@@ -82,13 +129,22 @@ export class Perfil {
 
   cancelEditing() {
     this.editing = false;
-    this.editName = 'María Hernández';
-    this.editPhone = '55 1234 5678';
+    this.editName = this.savedName;
+    this.editPhone = this.savedPhone;
     this.profilePhotoUrl = this.editPhotoSnapshot;
   }
 
   saveProfile() {
-    // TODO: call backend PATCH /api/users/me
+    const n = this.editName.trim();
+    const p = this.editPhone.trim();
+    if (n) {
+      this.savedName = n;
+      this.editName = n;
+    }
+    if (p) {
+      this.savedPhone = p;
+      this.editPhone = p;
+    }
     this.editing = false;
   }
 
@@ -104,13 +160,11 @@ export class Perfil {
 
   confirmDelete() {
     if (this.deleteConfirmText === 'ELIMINAR') {
-      // TODO: call backend DELETE /api/users/me
       this.showDeleteModal = false;
     }
   }
 
   cerrarSesion(): void {
-    // TODO: llamar POST /auth/logout y borrar tokens almacenados
-    void (['/login']);
+    this.auth.logout();
   }
 }

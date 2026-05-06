@@ -61,6 +61,15 @@
     </div>
 
     <div class="scroll-content">
+      <input
+        #regPhotoInput
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        class="reg-photo-file-input"
+        (change)="onRegPhotoSelect($event)"
+        tabindex="-1"
+        aria-hidden="true"
+      />
       <div class="form-center">
         <span class="step-label mobile-only">USUARIO · PASO 1 DE 3</span>
 
@@ -93,7 +102,80 @@
           <div class="reg-divider-line"></div>
         </div>
 
+        <div class="field-group">
+          <label class="field-label" for="reg-nombre">Nombre</label>
+          <div class="field-input">
+            <input
+              id="reg-nombre"
+              class="field-text"
+              [(ngModel)]="nombreRegistro"
+              placeholder="¿Cómo te llamas?"
+              autocomplete="given-name"
+              name="regNombre"
+            />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="reg-apellido">Apellido</label>
+          <div class="field-input">
+            <input
+              id="reg-apellido"
+              class="field-text"
+              [(ngModel)]="apellidoRegistro"
+              placeholder="¿Cómo te apellidas?"
+              autocomplete="family-name"
+              name="regApellido"
+            />
+          </div>
+        </div>
 
+        <div class="reg-avatar-opt">
+          <div class="reg-avatar-label-row">
+            <span class="field-label reg-avatar-label">Foto de perfil</span>
+            <span class="optional-pill">opcional</span>
+          </div>
+          <p class="reg-avatar-hint">Si la omites, tu perfil usará un color y tus iniciales automáticamente.</p>
+          <div class="reg-avatar-row">
+            <button
+              type="button"
+              class="reg-avatar-preview"
+              (click)="regPhotoInput.click()"
+              [style.background]="registrationPhotoUrl ? 'transparent' : registrationAvatarGradient()"
+              aria-label="Elegir foto de perfil, opcional"
+            >
+              @if (registrationPhotoUrl) {
+                <img [src]="registrationPhotoUrl" alt="" class="reg-avatar-img" />
+              } @else {
+                <span class="cv2-serif reg-avatar-initials">{{ registrationInitials }}</span>
+              }
+            </button>
+            <div class="reg-avatar-actions">
+              @if (!registrationPhotoUrl) {
+                <button type="button" class="reg-avatar-btn" (click)="regPhotoInput.click()">📷 Añadir foto</button>
+              } @else {
+                <button type="button" class="reg-avatar-btn" (click)="regPhotoInput.click()">Cambiar foto</button>
+                <button type="button" class="reg-avatar-btn reg-avatar-btn--ghost" (click)="clearRegPhoto()">Quitar</button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="reg-wa">WhatsApp</label>
+          <div class="field-input">
+            <span class="field-icon">📱</span>
+            <input
+              id="reg-wa"
+              class="field-text"
+              [(ngModel)]="whatsappRegistro"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel-national"
+              placeholder="Ej. 5512345678"
+              name="regWa"
+            />
+          </div>
+        </div>
 
         @for (f of fields; track f.label) {
           <div class="field-group">
@@ -122,9 +204,7 @@
           </div>
         </div>
 
-        <a routerLink="/bienvenida">
-          <button type="button" class="cv2-btn cv2-btn-primary submit-btn">Siguiente →</button>
-        </a>
+        <button type="button" class="cv2-btn cv2-btn-primary submit-btn" (click)="continuar()">Siguiente →</button>
       </div>
     </div>
   </div>

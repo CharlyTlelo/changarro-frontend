@@ -55,115 +55,187 @@
       </h1>
       <p class="page-sub">Nombre, teléfono, ubicación con Google Maps o dirección completa, descripción y fotos opcionales.</p>
 
-      <div class="rn-two-col">
-        @for (f of fields; track f.label) {
-          <div class="field-group">
-            <label class="field-label">{{ f.label }}</label>
-            <div class="field-input">
-              @if (f.icon) {
-                <span class="field-icon">{{ f.icon }}</span>
+      <div class="rn-wiz" [attr.data-step]="currentStep">
+        <div class="rn-wiz-top">
+          <div class="rn-wiz-kicker">
+            <span class="rn-wiz-step">Paso {{ stepNumberLabel }}</span>
+            <span class="rn-wiz-title">
+              @switch (currentStep) {
+                @case ('enganche') { Tu changarro }
+                @case ('ubicacion') { Ubicación }
+                @default { Ubicación }
               }
-              <input [type]="f.type || 'text'" class="field-text" [placeholder]="f.placeholder">
-            </div>
+            </span>
           </div>
-        }
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="biz-ubicacion">Ubicación (Google Maps o dirección)</label>
-        <div class="field-input field-input--stack">
-          <span class="field-icon" aria-hidden="true">📍</span>
-          <textarea
-            id="biz-ubicacion"
-            class="field-textarea"
-            [(ngModel)]="ubicacion"
-            rows="4"
-            autocomplete="street-address"
-            placeholder="Pegá el enlace de Google Maps (maps.app.goo.gl, goo.gl/maps, etc.) o escribí calle, número, colonia y ciudad."
-          ></textarea>
-        </div>
-        <p class="field-hint">Tip: en Google Maps tocá “Compartir” y pegá el enlace aquí.</p>
-      </div>
-
-      <div class="rn-split-desc-photo">
-        <div class="field-group rn-split-desc-photo__desc">
-          <label class="field-label" for="biz-descripcion">Descripción del negocio</label>
-          <div class="field-input field-input--stack">
-            <span class="field-icon field-icon--textarea" aria-hidden="true">✏️</span>
-            <textarea
-              id="biz-descripcion"
-              class="field-textarea field-textarea--tall"
-              [(ngModel)]="descripcion"
-              rows="5"
-              maxlength="600"
-              placeholder="Qué ofrecés, horarios aproximados, especialidad… Máx. 600 caracteres."
-            ></textarea>
+          <div class="rn-wiz-progress" role="progressbar" [attr.aria-valuenow]="progressPercent" aria-valuemin="0" aria-valuemax="100">
+            <div class="rn-wiz-progress-bar" [style.width.%]="progressPercent"></div>
           </div>
-          <p class="field-hint field-hint--count">{{ descripcion.length }}/600</p>
         </div>
 
-        <div class="biz-photo-block rn-split-desc-photo__photos">
-          <div class="biz-photo-head">
-            <span class="field-label biz-photo-title">Fotos del negocio</span>
-            <span class="biz-photo-optional">Opcional · hasta {{ maxPhotos }}</span>
-          </div>
-          <input
-            #bizPhotosInput
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-            class="biz-photo-input"
-            (change)="onPhotosSelected($event)"
-            aria-hidden="true"
-            tabindex="-1"
-          />
-          <button type="button" class="biz-photo-add-btn" (click)="triggerPhotoInput(bizPhotosInput)" [disabled]="businessPhotos.length >= maxPhotos">
-            📷 Añadir fotos
-          </button>
-          @if (businessPhotos.length > 0) {
-            <div class="biz-photo-grid" aria-live="polite">
-              @for (src of businessPhotos; track $index) {
-                <div class="biz-photo-tile">
-                  <img [src]="src" alt="" class="biz-photo-img" />
-                  <button type="button" class="biz-photo-remove" (click)="removePhoto($index)" [attr.aria-label]="'Quitar foto ' + ($index + 1)">✕</button>
+        <div class="rn-wiz-card">
+          @switch (currentStep) {
+            @case ('enganche') {
+              <p class="rn-wiz-hint">Poné lo esencial para que tu changarro se vea bien desde el primer vistazo.</p>
+              <div class="rn-wiz-two">
+                <div class="rn-two-col">
+                  @for (f of fields; track f.label) {
+                    <div class="field-group">
+                      <label class="field-label">{{ f.label }}</label>
+                      <div class="field-input">
+                        @if (f.icon) {
+                          <span class="field-icon">{{ f.icon }}</span>
+                        }
+                        <input [type]="f.type || 'text'" class="field-text" [placeholder]="f.placeholder" [(ngModel)]="f.value">
+                      </div>
+                    </div>
+                  }
                 </div>
-              }
-            </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="biz-descripcion">Descripción (corta y clara)</label>
+                  <div class="field-input field-input--stack">
+                    <span class="field-icon field-icon--textarea" aria-hidden="true">✏️</span>
+                    <textarea
+                      id="biz-descripcion"
+                      class="field-textarea field-textarea--tall"
+                      [(ngModel)]="descripcion"
+                      rows="4"
+                      maxlength="600"
+                      placeholder="Qué ofrecés y por qué te eligen. Ej: ‘Tacos al pastor y gringas, 6–11pm’."
+                    ></textarea>
+                  </div>
+                  <p class="field-hint field-hint--count">{{ descripcion.length }}/600</p>
+                </div>
+
+                <div class="biz-photo-block">
+                  <div class="biz-photo-head">
+                    <span class="field-label biz-photo-title">Fotos (opcional)</span>
+                    <span class="biz-photo-optional">hasta {{ maxPhotos }}</span>
+                  </div>
+                  <input
+                    #bizPhotosInput
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    class="biz-photo-input"
+                    (change)="onPhotosSelected($event)"
+                    aria-hidden="true"
+                    tabindex="-1"
+                  />
+                  <button type="button" class="biz-photo-add-btn" (click)="triggerPhotoInput(bizPhotosInput)" [disabled]="businessPhotos.length >= maxPhotos">
+                    📷 Añadir fotos
+                  </button>
+                  @if (businessPhotos.length > 0) {
+                    <div class="biz-photo-grid" aria-live="polite">
+                      @for (src of businessPhotos; track $index) {
+                        <div class="biz-photo-tile">
+                          <img [src]="src" alt="" class="biz-photo-img" />
+                          <button type="button" class="biz-photo-remove" (click)="removePhoto($index)" [attr.aria-label]="'Quitar foto ' + ($index + 1)">✕</button>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="rn-two-col rn-password-row">
+                  <div class="field-group">
+                    <label class="field-label" for="biz-password">Contraseña</label>
+                    <div class="field-input">
+                      <span class="field-icon">🔒</span>
+                      <input id="biz-password" name="bizPassword" type="password" class="field-text" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                    </div>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label" for="biz-password2">Repetir contraseña</label>
+                    <div class="field-input">
+                      <span class="field-icon">🔒</span>
+                      <input id="biz-password2" name="bizPassword2" type="password" class="field-text" [(ngModel)]="passwordRepeat" placeholder="Igual que la anterior" autocomplete="new-password">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('ubicacion') {
+              <p class="rn-wiz-hint">Pegá el link de Maps o la dirección. Con eso ya estás.</p>
+              <div class="field-group rn-location-block">
+                <label class="field-label" for="biz-ubicacion">Ubicación (Google Maps o dirección)</label>
+                <div class="field-input field-input--stack">
+                  <span class="field-icon" aria-hidden="true">📍</span>
+                  <textarea
+                    id="biz-ubicacion"
+                    name="bizUbicacion"
+                    class="field-textarea"
+                    [(ngModel)]="ubicacion"
+                    rows="2"
+                    autocomplete="street-address"
+                    placeholder="Pegá el enlace de Google Maps o escribí la dirección."
+                  ></textarea>
+                </div>
+                <div class="rn-maps-actions">
+                  <button type="button" class="rn-maps-btn rn-maps-btn--primary" (click)="openGoogleMapsExplore()">
+                    <span class="rn-maps-btn__ico" aria-hidden="true">🗺️</span>
+                    Abrir Google Maps
+                  </button>
+                  <button type="button" class="rn-maps-btn rn-maps-btn--secondary" (click)="openGoogleMapsFromField()">
+                    <span class="rn-maps-btn__ico" aria-hidden="true">🔎</span>
+                    {{ looksLikeMapsUrl(ubicacion) ? 'Abrir este enlace en Maps' : 'Buscar en Maps lo que escribiste' }}
+                  </button>
+                </div>
+                <details class="rn-maps-help">
+                  <summary>¿Cómo saco el enlace?</summary>
+                  <ol class="rn-maps-steps">
+                    <li>Abrí Maps (o buscá lo que escribiste).</li>
+                    <li>Confirmá el pin → <strong>Compartir</strong> → <strong>Copiar enlace</strong>.</li>
+                    <li>Volvé y <strong>pegá el enlace</strong> (o dejá la dirección).</li>
+                  </ol>
+                </details>
+              </div>
+
+              <div class="terms-box rn-wiz-terms">
+                <div class="terms-check">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#FCF7EC" stroke-width="3" stroke-linecap="round"><path d="M3 8l3 3 7-7"/></svg>
+                </div>
+                <div class="terms-text">
+                  Acepto los <strong class="terms-link">términos de servicio</strong> y la <strong class="terms-link">política de privacidad</strong> de Changarro.
+                </div>
+              </div>
+
+              
+
+              <div class="coins-hint rn-wiz-final-hint">
+                Los negocios verificados acceden a <strong class="accent">herramientas y estadísticas</strong> del barrio
+              </div>
+            }
+
+            @default { }
           }
         </div>
-      </div>
 
-      <div class="field-group">
-        <label class="field-label" for="biz-password">Contraseña</label>
-        <div class="field-input">
-          <span class="field-icon">🔒</span>
-          <input id="biz-password" type="password" class="field-text" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        <div class="rn-wiz-nav">
+          <button type="button" class="ghost-btn rn-wiz-back" (click)="goBack()" [disabled]="currentStep === 'enganche'">← Atrás</button>
+          <div class="rn-wiz-nav-right">
+            @if (currentStep === 'ubicacion') {
+              <a routerLink="/negocio" class="rn-cta-link">
+                <button type="button" class="cv2-btn cv2-btn-primary rn-wiz-next" [disabled]="!canGoNext">
+                  Finalizar →
+                </button>
+              </a>
+            } @else {
+              <button type="button" class="cv2-btn cv2-btn-primary rn-wiz-next" (click)="goNext()" [disabled]="!canGoNext">
+                Siguiente →
+              </button>
+            }
+          </div>
         </div>
-      </div>
 
-      <div class="field-group">
-        <label class="field-label" for="biz-password">Repetir Contraseña</label>
-        <div class="field-input">
-          <span class="field-icon">🔒</span>
-          <input id="biz-password" type="password" class="field-text" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+        <div class="rn-wiz-mot" aria-live="polite">
+          @if (canGoNext && currentStep !== 'ubicacion') {
+            <span class="rn-wiz-mot-pill">Listo. Dale “Siguiente”.</span>
+          } @else if (!canGoNext && currentStep !== 'ubicacion') {
+            <span class="rn-wiz-mot-sub">Completa este paso para seguir.</span>
+          }
         </div>
-      </div>
-
-      <div class="terms-box">
-        <div class="terms-check">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#FCF7EC" stroke-width="3" stroke-linecap="round"><path d="M3 8l3 3 7-7"/></svg>
-        </div>
-        <div class="terms-text">
-          Acepto los <strong class="terms-link">términos de servicio</strong> y la <strong class="terms-link">política de privacidad</strong> de Changarro.
-        </div>
-      </div>
-
-      <a routerLink="/bienvenida">
-        <button class="cv2-btn cv2-btn-primary submit-btn">Siguiente — datos del negocio →</button>
-      </a>
-
-      <div class="coins-hint">
-        Los negocios verificados acceden a <strong class="accent">herramientas y estadísticas</strong> del barrio
       </div>
     </div>
   </div>
