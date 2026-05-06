@@ -133,31 +133,17 @@
             </div>
             <div class="form-section form-section--contact">
               <h3 class="form-section__title">Contacto y horario</h3>
-              <div class="contact-top">
+              <div class="contact-block">
+                <h4 class="contact-block__title">Contacto</h4>
                 <div class="form-group form-group--grow">
                   <label>WhatsApp</label>
                   <input type="tel" [(ngModel)]="whatsapp" placeholder="5512345678">
                 </div>
-                <div class="form-group form-group--grow">
-                  <label>Método de pago</label>
-                  <div class="pay-checks">
-                    <label class="pay-check">
-                      <input type="checkbox" [(ngModel)]="paymentOptions.efectivo">
-                      <span>Efectivo</span>
-                    </label>
-                    <label class="pay-check">
-                      <input type="checkbox" [(ngModel)]="paymentOptions.tarjetas">
-                      <span>Tarjetas</span>
-                    </label>
-                    <label class="pay-check">
-                      <input type="checkbox" [(ngModel)]="paymentOptions.transferencia">
-                      <span>Transferencia</span>
-                    </label>
-                  </div>
-                </div>
               </div>
-              <div class="form-group form-group--schedule">
-                <label>Horario semanal</label>
+              <div class="contact-block contact-block--schedule">
+                <h4 class="contact-block__title">Horario</h4>
+                <div class="form-group form-group--schedule">
+                  <label>Horario semanal</label>
                 <div class="weekly-schedule-v2">
                   @for (day of days; track day.key) {
                     <div
@@ -234,6 +220,27 @@
                     }
                   </div>
                   <span class="weekly-schedule-v2__meta"><strong>{{ openDaysCount }}</strong> de 7 días activos</span>
+                </div>
+                </div>
+              </div>
+              <div class="contact-block contact-block--payment">
+                <h4 class="contact-block__title">Método de pago</h4>
+                <div class="form-group form-group--payment-card">
+                  <label>Selecciona tus métodos</label>
+                  <div class="pay-checks">
+                    <label class="pay-check">
+                      <input type="checkbox" [(ngModel)]="paymentOptions.efectivo">
+                      <span>Efectivo</span>
+                    </label>
+                    <label class="pay-check">
+                      <input type="checkbox" [(ngModel)]="paymentOptions.tarjetas">
+                      <span>Tarjetas</span>
+                    </label>
+                    <label class="pay-check">
+                      <input type="checkbox" [(ngModel)]="paymentOptions.transferencia">
+                      <span>Transferencia</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
