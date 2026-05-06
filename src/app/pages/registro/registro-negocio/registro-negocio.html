@@ -53,7 +53,7 @@
         </span>
         <span class="rn-title-tablet">Datos de tu <span class="cv2-serif-i accent">negocio</span></span>
       </h1>
-      <p class="page-sub">Nombre, teléfono, ubicación con Google Maps o dirección completa, descripción y fotos opcionales.</p>
+      <p class="page-sub">Nombre, Whatsapp, ubicación con Google Maps o dirección completa, descripción y fotos opcionales.</p>
 
       <div class="rn-wiz" [attr.data-step]="currentStep">
         <div class="rn-wiz-top">
@@ -142,17 +142,38 @@
                     <label class="field-label" for="biz-password">Contraseña</label>
                     <div class="field-input">
                       <span class="field-icon">🔒</span>
-                      <input id="biz-password" name="bizPassword" type="password" class="field-text" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                      <input id="biz-password" name="bizPassword" [type]="showPassword ? 'text' : 'password'" class="field-text rn-password-input" [(ngModel)]="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                      <button
+                        type="button"
+                        class="rn-password-eye"
+                        (click)="showPassword = !showPassword"
+                        [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                      >
+                        {{ showPassword ? '🙈' : '👁️' }}
+                      </button>
                     </div>
                   </div>
                   <div class="field-group">
                     <label class="field-label" for="biz-password2">Repetir contraseña</label>
                     <div class="field-input">
                       <span class="field-icon">🔒</span>
-                      <input id="biz-password2" name="bizPassword2" type="password" class="field-text" [(ngModel)]="passwordRepeat" placeholder="Igual que la anterior" autocomplete="new-password">
+                      <input id="biz-password2" name="bizPassword2" [type]="showPasswordRepeat ? 'text' : 'password'" class="field-text rn-password-input" [(ngModel)]="passwordRepeat" placeholder="Igual que la anterior" autocomplete="new-password">
+                      <button
+                        type="button"
+                        class="rn-password-eye"
+                        (click)="showPasswordRepeat = !showPasswordRepeat"
+                        [attr.aria-label]="showPasswordRepeat ? 'Ocultar contraseña repetida' : 'Mostrar contraseña repetida'"
+                      >
+                        {{ showPasswordRepeat ? '🙈' : '👁️' }}
+                      </button>
                     </div>
                   </div>
                 </div>
+                @if (currentStep === 'enganche' && passwordBlockReason) {
+                  <div class="rn-password-alert" role="alert" aria-live="polite">
+                    {{ passwordBlockReason }}
+                  </div>
+                }
               </div>
             }
 
@@ -201,11 +222,6 @@
                 </div>
               </div>
 
-              
-
-              <div class="coins-hint rn-wiz-final-hint">
-                Los negocios verificados acceden a <strong class="accent">herramientas y estadísticas</strong> del barrio
-              </div>
             }
 
             @default { }

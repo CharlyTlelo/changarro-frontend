@@ -116,16 +116,21 @@
                 </div>
                 <div class="promo-field promo-field--half">
                   <label>Vigencia</label>
-                  <input [(ngModel)]="validUntil" placeholder="HOY HASTA 11PM">
+                  <div class="promo-validity">
+                    <div class="promo-validity__input">
+                      <span class="promo-validity__icon">📅</span>
+                      <input type="date" [(ngModel)]="validDate">
+                    </div>
+                    <div class="promo-validity__input">
+                      <span class="promo-validity__icon">🕒</span>
+                      <input type="time" [(ngModel)]="validTime">
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="promo-field">
                 <label>Nota para el cliente</label>
                 <input [(ngModel)]="note" placeholder="Ej. Menciona Changarro al pedir">
-              </div>
-              <div class="promo-field" style="max-width:180px">
-                <label>Monedas bonus</label>
-                <input type="number" [(ngModel)]="bonusCoins" min="0" placeholder="0">
               </div>
               @if (title) {
                 <div class="promo-preview">
@@ -139,13 +144,13 @@
                     </div>
                     <div>
                       <strong>{{ title }}</strong><br>
-                      <small>{{ validUntil }}</small>
+                      <small>{{ validDate }} · {{ validTime }}</small>
                     </div>
                   </div>
                 </div>
               }
               <div class="promo-form__actions">
-                <button class="cv2-btn cv2-btn-primary" [disabled]="saving() || !title.trim()" (click)="save()">
+                <button class="cv2-btn cv2-btn-primary" [disabled]="saving() || !title.trim() || !validDate || !validTime" (click)="save()">
                   {{ saving() ? 'Guardando...' : 'Guardar promoción →' }}
                 </button>
                 <button class="promo-form__cancel" (click)="cancel()">Cancelar</button>

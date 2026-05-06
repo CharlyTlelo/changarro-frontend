@@ -135,7 +135,7 @@
             [class.menu-item--selected]="selectedItem() === item"
             (click)="selectItem(item)"
           >
-            @if (item.popular) {
+            @if (item.popular && item.available) {
               <span class="menu-item__badge">🔥 MÁS PEDIDO</span>
             }
             @if (!item.available) {

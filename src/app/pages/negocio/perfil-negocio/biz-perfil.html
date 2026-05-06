@@ -1,4 +1,4 @@
-<div class="biz-screen">
+﻿<div class="biz-screen">
   <!-- ═══ SIDEBAR (tablet+) ═══ -->
   <aside class="biz-sidebar tablet-only">
     <div class="biz-sidebar__head">
@@ -58,15 +58,14 @@
                 <div class="biz-preview__info">
                   <span class="biz-preview__name">{{ name }}</span>
                   <span class="biz-preview__cat">{{ categoryId }} · {{ neighborhood }}</span>
-                  <span class="biz-preview__schedule">{{ schedule }}</span>
+                  <span class="biz-preview__schedule">{{ scheduleSummary }}</span>
                 </div>
               </div>
               <div class="perfil-quick">
                 <div class="perfil-quick__row"><span class="perfil-quick__icon">📍</span><span>{{ address }}</span></div>
-                <div class="perfil-quick__row"><span class="perfil-quick__icon">📞</span><span>{{ phone }}</span></div>
-                <div class="perfil-quick__row"><span class="perfil-quick__icon">📸</span><span>{{ instagram }}</span></div>
-                <div class="perfil-quick__row"><span class="perfil-quick__icon">💳</span><span>{{ paymentMethod }}</span></div>
-                <div class="perfil-quick__row"><span class="perfil-quick__icon">💰</span><span>{{ priceRange }}</span></div>
+                <div class="perfil-quick__row"><span class="perfil-quick__icon">💬</span><span>{{ whatsapp }}</span></div>
+                <div class="perfil-quick__row"><span class="perfil-quick__icon">🌐</span><span>{{ instagram || facebook || tiktok || youtube }}</span></div>
+                <div class="perfil-quick__row"><span class="perfil-quick__icon">💳</span><span>{{ paymentSummary }}</span></div>
               </div>
             </div>
 
@@ -77,9 +76,19 @@
                   <label>Nombre del negocio</label>
                   <input [(ngModel)]="name" placeholder="Ej. Taquería la Esquina">
                 </div>
-                <div class="form-group" style="width:80px">
+                <div class="form-group form-group--emoji">
                   <label>Emoji</label>
-                  <input [(ngModel)]="emoji" placeholder="🌮" maxlength="4" style="text-align:center;font-size:22px">
+                  <button type="button" class="emoji-picker-trigger" (click)="toggleEmojiCatalog()" [attr.aria-expanded]="showEmojiCatalog">
+                    <span class="emoji-picker-trigger__value">{{ emoji }}</span>
+                    <span class="emoji-picker-trigger__chev">{{ showEmojiCatalog ? '▲' : '▼' }}</span>
+                  </button>
+                  @if (showEmojiCatalog) {
+                    <div class="emoji-catalog" role="listbox" aria-label="Catálogo de emojis">
+                      @for (e of emojiCatalog; track e) {
+                        <button type="button" class="emoji-catalog__item" (click)="selectEmoji(e)">{{ e }}</button>
+                      }
+                    </div>
+                  }
                 </div>
               </div>
               <div class="form-grid-2">
@@ -102,9 +111,16 @@
             </div>
             <div class="form-section form-section--location">
               <h3 class="form-section__title">Ubicación</h3>
-              <div class="form-grid-2">
-                <div class="form-group"><label>Dirección</label><input [(ngModel)]="address" placeholder="Calle, número, colonia"></div>
-                <div class="form-group"><label>Colonia / Barrio</label><input [(ngModel)]="neighborhood" placeholder="Ej. Roma Norte"></div>
+              <div class="form-grid-1">
+                <div class="form-group">
+                  <label>Ubicación</label>
+                  <div class="address-picker">
+                    <input [(ngModel)]="address" placeholder="Pega enlace de Maps o escribe la ubicación">
+                    <button type="button" class="address-picker__btn" (click)="openGoogleMapsFromAddress()">
+                      📍 Seleccionar en Maps
+                    </button>
+                  </div>
+                </div>
               </div>
               <details class="gmaps-help">
                 <summary>¿Querés cambiarla con Google Maps?</summary>
@@ -117,19 +133,135 @@
             </div>
             <div class="form-section form-section--contact">
               <h3 class="form-section__title">Contacto y horario</h3>
-              <div class="form-row">
-                <div class="form-group form-group--grow"><label>Teléfono</label><input type="tel" [(ngModel)]="phone" placeholder="5512345678"></div>
-                <div class="form-group form-group--grow"><label>Instagram</label><input [(ngModel)]="instagram" placeholder="@tu_negocio"></div>
+              <div class="contact-top">
+                <div class="form-group form-group--grow">
+                  <label>WhatsApp</label>
+                  <input type="tel" [(ngModel)]="whatsapp" placeholder="5512345678">
+                </div>
+                <div class="form-group form-group--grow">
+                  <label>Método de pago</label>
+                  <div class="pay-checks">
+                    <label class="pay-check">
+                      <input type="checkbox" [(ngModel)]="paymentOptions.efectivo">
+                      <span>Efectivo</span>
+                    </label>
+                    <label class="pay-check">
+                      <input type="checkbox" [(ngModel)]="paymentOptions.tarjetas">
+                      <span>Tarjetas</span>
+                    </label>
+                    <label class="pay-check">
+                      <input type="checkbox" [(ngModel)]="paymentOptions.transferencia">
+                      <span>Transferencia</span>
+                    </label>
+                  </div>
+                </div>
               </div>
-              <div class="form-row">
-                <div class="form-group form-group--grow"><label>Horario</label><input [(ngModel)]="schedule" placeholder="Lun-Dom 12:00-23:00"></div>
-                <div class="form-group form-group--grow"><label>Método de pago</label><input [(ngModel)]="paymentMethod" placeholder="Efectivo, tarjeta"></div>
+              <div class="form-group form-group--schedule">
+                <label>Horario semanal</label>
+                <div class="weekly-schedule-v2">
+                  @for (day of days; track day.key) {
+                    <div
+                      class="weekly-schedule-v2__row"
+                      [class.weekly-schedule-v2__row--closed]="!weeklySchedule[day.key].isOpen"
+                      [class.weekly-schedule-v2__row--weekend]="isWeekend(day.key) && weeklySchedule[day.key].isOpen"
+                    >
+                      <div class="weekly-schedule-v2__day">
+                        <button type="button" class="weekly-schedule-v2__daybtn" [class.weekly-schedule-v2__daybtn--off]="!weeklySchedule[day.key].isOpen" (click)="toggleDay(day.key)">
+                          {{ day.abbrev }}
+                        </button>
+                        <div class="weekly-schedule-v2__dayinfo">
+                          <span class="weekly-schedule-v2__dayname">{{ day.label }}</span>
+                          <span class="weekly-schedule-v2__state">{{ weeklySchedule[day.key].isOpen ? 'Abierto' : 'Cerrado' }}</span>
+                        </div>
+                      </div>
+
+                      <div class="weekly-schedule-v2__switch">
+                        <button type="button" class="weekly-schedule-v2__toggle" [class.weekly-schedule-v2__toggle--on]="weeklySchedule[day.key].isOpen" (click)="toggleDay(day.key)">
+                          <span class="weekly-schedule-v2__knob"></span>
+                        </button>
+                      </div>
+
+                      <div class="weekly-schedule-v2__times" [class.weekly-schedule-v2__times--disabled]="!weeklySchedule[day.key].isOpen">
+                        <div class="weekly-schedule-v2__timeblock">
+                          <span class="weekly-schedule-v2__label">🕒 Abre</span>
+                          <select [(ngModel)]="weeklySchedule[day.key].openTime">
+                            @for (t of fullTimeOptions; track t.value) {
+                              <option [value]="t.value">{{ t.value }}</option>
+                            }
+                          </select>
+                          <button
+                            type="button"
+                            class="weekly-schedule-v2__period-switch"
+                            [class.weekly-schedule-v2__period-switch--pm]="weeklySchedule[day.key].openPeriod === 'PM'"
+                            (click)="togglePeriod(day.key, 'openPeriod')"
+                          >
+                            <span class="weekly-schedule-v2__period-track">
+                              <span class="weekly-schedule-v2__period-knob"></span>
+                            </span>
+                            <span class="weekly-schedule-v2__period-text">{{ weeklySchedule[day.key].openPeriod }}</span>
+                          </button>
+                        </div>
+
+                        <span class="weekly-schedule-v2__dash">—</span>
+
+                        <div class="weekly-schedule-v2__timeblock">
+                          <span class="weekly-schedule-v2__label">🕒 Cierra</span>
+                          <select [(ngModel)]="weeklySchedule[day.key].closeTime">
+                            @for (t of fullTimeOptions; track t.value) {
+                              <option [value]="t.value">{{ t.value }}</option>
+                            }
+                          </select>
+                          <button
+                            type="button"
+                            class="weekly-schedule-v2__period-switch"
+                            [class.weekly-schedule-v2__period-switch--pm]="weeklySchedule[day.key].closePeriod === 'PM'"
+                            (click)="togglePeriod(day.key, 'closePeriod')"
+                          >
+                            <span class="weekly-schedule-v2__period-track">
+                              <span class="weekly-schedule-v2__period-knob"></span>
+                            </span>
+                            <span class="weekly-schedule-v2__period-text">{{ weeklySchedule[day.key].closePeriod }}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+                <div class="weekly-schedule-v2__footer">
+                  <div class="weekly-schedule-v2__badges">
+                    @for (day of days; track day.key) {
+                      <span class="weekly-schedule-v2__badge" [class.weekly-schedule-v2__badge--on]="weeklySchedule[day.key].isOpen">{{ day.abbrev }}</span>
+                    }
+                  </div>
+                  <span class="weekly-schedule-v2__meta"><strong>{{ openDaysCount }}</strong> de 7 días activos</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section form-section--social">
+              <h3 class="form-section__title">Redes sociales</h3>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label>Facebook</label>
+                  <input [(ngModel)]="facebook" placeholder="facebook.com/tu_negocio">
+                </div>
+                <div class="form-group">
+                  <label>TikTok</label>
+                  <input [(ngModel)]="tiktok" placeholder="@tu_negocio">
+                </div>
+                <div class="form-group">
+                  <label>Instagram</label>
+                  <input [(ngModel)]="instagram" placeholder="@tu_negocio">
+                </div>
+                <div class="form-group">
+                  <label>YouTube</label>
+                  <input [(ngModel)]="youtube" placeholder="youtube.com/@tu_negocio">
+                </div>
               </div>
             </div>
             <div class="form-section form-section--appearance">
               <h3 class="form-section__title">Apariencia</h3>
               <div class="form-row">
-                <div class="form-group" style="width:160px"><label>Rango de precio</label><input [(ngModel)]="priceRange" placeholder="$25-60"></div>
                 <div class="form-group" style="width:160px">
                   <label>Color de tarjeta</label>
                   <div class="color-field"><input [(ngModel)]="color" placeholder="#FFB57A" maxlength="7"><span class="color-swatch" [style.background]="color"></span></div>
@@ -193,3 +325,6 @@
     </nav>
   </main>
 </div>
+
+
+

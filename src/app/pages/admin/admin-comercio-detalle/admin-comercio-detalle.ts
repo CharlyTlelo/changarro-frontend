@@ -12,7 +12,7 @@ export class AdminComercioDetalle {
   info = [
     { label: 'Dueño', value: 'María Pérez Sánchez' },
     { label: 'Email', value: 'maria.flores@email.com' },
-    { label: 'Teléfono', value: '+52 55 1234 5678' },
+    { label: 'Whatsapp', value: '+52 55 1234 5678' },
     { label: 'Dirección', value: 'Av. Insurgentes 234, Roma Norte' },
     { label: 'RFC', value: 'PESM850612ABC' },
     { label: 'Alta', value: '15 marzo 2026 · hace 51 días' },
