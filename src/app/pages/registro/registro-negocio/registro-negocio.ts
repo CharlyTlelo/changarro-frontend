@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../shared/services/auth.service';
+import { CategoryApiService, type CategoryData, type CategorySubcategory } from '../../../shared/services/category.service';
 
 type StepKey = 'enganche' | 'ubicacion';
 
@@ -12,6 +14,10 @@ type StepKey = 'enganche' | 'ubicacion';
   styleUrls: ['../registro.scss', './registro-negocio.scss'],
 })
 export class RegistroNegocio {
+  private readonly auth = inject(AuthService);
+  private readonly categoryApi = inject(CategoryApiService);
+  submitting = signal(false);
+  submitError = signal('');
   readonly maxPhotos = 6;
 
   readonly steps: Array<{ key: StepKey; title: string; optional?: boolean }> = [
@@ -34,9 +40,53 @@ export class RegistroNegocio {
   showPasswordRepeat = false;
 
   businessPhotos: string[] = [];
+  categories: CategoryData[] = [];
+  categoriesError = '';
+  categoryId = '';
+  subcategoryId = '';
+  otherCategoryName = '';
+
+  selectedDelegacion = '';
+  selectedPueblo = '';
+
+  readonly delegaciones: { id: string; name: string; emoji: string; pueblos: { id: string; name: string }[] }[] = [
+    {
+      id: 'milpa-alta',
+      name: 'Milpa Alta',
+      emoji: '🌽',
+      pueblos: [
+        { id: 'villa-milpa-alta', name: 'Villa Milpa Alta' },
+        { id: 'san-antonio-tecomitl', name: 'San Antonio Tecómitl' },
+        { id: 'san-pedro-atocpan', name: 'San Pedro Atocpan' },
+        { id: 'san-pablo-oztotepec', name: 'San Pablo Oztotepec' },
+        { id: 'san-bartolome-xicomulco', name: 'San Bartolomé Xicomulco' },
+        { id: 'san-salvador-cuauhtenco', name: 'San Salvador Cuauhtenco' },
+        { id: 'santa-ana-tlacotenco', name: 'Santa Ana Tlacotenco' },
+        { id: 'san-lorenzo-tlacoyucan', name: 'San Lorenzo Tlacoyucan' },
+        { id: 'san-jeronimo-miacatlan', name: 'San Jerónimo Miacatlán' },
+        { id: 'san-francisco-tecoxpa', name: 'San Francisco Tecoxpa' },
+        { id: 'san-juan-tepenahuac', name: 'San Juan Tepenahuac' },
+        { id: 'san-agustin-ohtenco', name: 'San Agustín Ohtenco' },
+      ],
+    },
+  ];
+
+  get availablePueblos(): { id: string; name: string }[] {
+    return this.delegaciones.find(d => d.id === this.selectedDelegacion)?.pueblos || [];
+  }
+
+  selectDelegacion(id: string): void {
+    this.selectedDelegacion = id;
+    this.selectedPueblo = '';
+  }
 
   hasBasics(): boolean {
-    return this.fields.every((f) => !!f.value?.trim());
+    const hasIdentity = this.fields.every((f) => !!f.value?.trim());
+    if (!hasIdentity || !this.categoryId) return false;
+    if (this.isOtherCategorySelected) {
+      return !!this.otherCategoryName.trim();
+    }
+    return !!this.subcategoryId;
   }
 
   hasLocation(): boolean {
@@ -173,6 +223,35 @@ export class RegistroNegocio {
    * Si ya pegaste un enlace de Maps: lo abre para revisarlo.
    * Si está vacío: mismo efecto que explorar.
    */
+  submit(): void {
+    this.submitting.set(true);
+    this.submitError.set('');
+
+    const businessName = this.fields[0].value.trim();
+    const whatsapp = this.fields[1].value.trim();
+
+    this.auth.registerBusiness({
+      name: businessName,
+      email: '',
+      password: this.password,
+      businessName,
+      categoryId: this.categoryId,
+      subcategoryId: this.isOtherCategorySelected ? this.otherCategoryName.trim() : this.subcategoryId,
+      phone: whatsapp,
+      address: this.ubicacion.trim(),
+      description: this.descripcion.trim(),
+    }, whatsapp).subscribe({
+      next: () => {
+        this.submitting.set(false);
+        this.auth.navigateAfterAuth();
+      },
+      error: (err) => {
+        this.submitting.set(false);
+        this.submitError.set(err?.error?.error || err?.message || 'Error al registrar');
+      },
+    });
+  }
+
   openGoogleMapsFromField(): void {
     const raw = this.ubicacion.trim();
     if (!raw) {
@@ -189,6 +268,48 @@ export class RegistroNegocio {
       '_blank',
       'noopener,noreferrer'
     );
+  }
+
+  constructor() {
+    this.loadCategories();
+  }
+
+  get availableSubcategories(): CategorySubcategory[] {
+    return this.categories.find((c) => c.id === this.categoryId)?.subcategories || [];
+  }
+
+  get isOtherCategorySelected(): boolean {
+    return this.categoryId === 'otro';
+  }
+
+  selectCategory(categoryId: string): void {
+    this.categoryId = categoryId;
+    if (this.isOtherCategorySelected) {
+      this.subcategoryId = '';
+      return;
+    }
+    this.otherCategoryName = '';
+    if (!this.availableSubcategories.some((s) => s.id === this.subcategoryId)) {
+      this.subcategoryId = '';
+    }
+  }
+
+  loadCategories(): void {
+    this.categoriesError = '';
+    this.categoryApi.getCategories(true).subscribe({
+      next: (categories) => {
+        this.categories = categories || [];
+        if (!this.categoryId && this.categories.length > 0) {
+          this.categoryId = this.categories[0].id;
+        }
+      },
+      error: () => {
+        this.categories = [];
+        this.categoryId = '';
+        this.subcategoryId = '';
+        this.categoriesError = 'No se pudo cargar el catálogo de categorías desde la base de datos.';
+      },
+    });
   }
 }
 

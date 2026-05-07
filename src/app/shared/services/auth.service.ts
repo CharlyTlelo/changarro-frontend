@@ -17,9 +17,12 @@ export interface AuthResponse {
 
 export interface RegisterBusinessPayload {
   name: string;
-  email: string;
+  email?: string;
+  whatsapp?: string;
   password: string;
   businessName: string;
+  categoryId?: string;
+  subcategoryId?: string;
   phone?: string;
   address?: string;
   description?: string;
@@ -67,14 +70,17 @@ export class AuthService {
     );
   }
 
-  register(name: string, email: string, password: string) {
-    return this.http.post<AuthResponse>(`${API}/register`, { name, email, password }).pipe(
+  register(name: string, whatsapp: string, password: string) {
+    return this.http.post<AuthResponse>(`${API}/register`, { name, whatsapp, phone: whatsapp, password }).pipe(
       tap(res => this.persist(res))
     );
   }
 
-  registerBusiness(payload: RegisterBusinessPayload) {
-    return this.http.post<AuthResponse>(`${API}/register-business`, payload).pipe(
+  registerBusiness(payload: RegisterBusinessPayload, whatsapp?: string) {
+    const body: any = { ...payload };
+    if (whatsapp) body.whatsapp = whatsapp;
+    if (!body.email) delete body.email;
+    return this.http.post<AuthResponse>(`${API}/register-business`, body).pipe(
       tap(res => this.persist(res))
     );
   }

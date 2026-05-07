@@ -1,8 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TabBar } from '../../shared/components/tab-bar/tab-bar';
 import { Sidebar } from '../../shared/components/sidebar/sidebar';
 import { AuthService } from '../../shared/services/auth.service';
+import {
+  UserProfileApiService,
+  UserStat,
+  UserStamp,
+  UserActivity,
+  UserCollectionItem,
+} from '../../shared/services/user-profile.service';
 import {
   CHANGARRO_PROFILE_AVATAR_DRAFT_KEY,
   CHANGARRO_PROFILE_NAME_DRAFT_KEY,
@@ -10,7 +17,7 @@ import {
   gradientFromName,
   initialsFromDisplayName,
 } from '../../shared/utils/avatar-placeholder';
-import { COLLECTION, SELLOS } from '../../shared/data/mock-data';
+import { catchError, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-perfil',
@@ -21,64 +28,132 @@ import { COLLECTION, SELLOS } from '../../shared/data/mock-data';
 })
 export class Perfil implements OnInit {
   private readonly auth = inject(AuthService);
+  private readonly userApi = inject(UserProfileApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  collection = COLLECTION;
-  sellos = SELLOS;
+  stats: UserStat[] = [];
+  sellos: UserStamp[] = [];
+  activity: UserActivity[] = [];
+  collection: UserCollectionItem[] = [];
 
-  stats = [
-    { v: '47', l: 'Visitados', emoji: '🚶' },
-    { v: '13', l: 'Favoritos', emoji: '♥' },
-    { v: '21', l: 'Reseñas', emoji: '✍️' },
-    { v: '4', l: 'Sellos', emoji: '🏆' },
-  ];
+  userLevel = 1;
+  userLevelName = 'Nuevo';
+  userCoins = 0;
+  userCreatedAt = '';
+  userRole = '';
 
   tabs = ['Mi colección', 'Reseñas', 'Listas'];
   activeTab = 'Mi colección';
 
+  loading = true;
+  saving = false;
+  loadError = '';
+  saveError = '';
+  saveSuccess = false;
+
   editing = false;
-  editName = 'María Hernández';
-  editPhone = '55 1234 5678';
+  editName = '';
+  editPhone = '';
   profilePhotoUrl: string | null = null;
   private editPhotoSnapshot: string | null = null;
 
-  private savedName = 'María Hernández';
-  private savedPhone = '55 1234 5678';
+  private savedName = '';
+  private savedPhone = '';
+
+  showDeleteModal = false;
+  deleteConfirmText = '';
 
   ngOnInit(): void {
-    const draftAvatar = sessionStorage.getItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY);
-    if (draftAvatar) {
-      this.profilePhotoUrl = draftAvatar;
-      sessionStorage.removeItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY);
-    }
+    this.loadProfile();
+  }
 
-    const draftName = sessionStorage.getItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY)?.trim();
-    if (draftName) {
-      this.editName = draftName;
-      sessionStorage.removeItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY);
-    } else {
-      const u = this.auth.user();
-      if (u?.name?.trim()) {
-        this.editName = u.name.trim();
-      }
-    }
+  loadProfile(): void {
+    this.loading = true;
+    this.loadError = '';
 
-    const draftPhone = sessionStorage.getItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY)?.trim();
-    if (draftPhone) {
-      const formatted =
-        draftPhone.length >= 10
-          ? `${draftPhone.slice(0, 2)} ${draftPhone.slice(2, 6)} ${draftPhone.slice(6)}`
-          : draftPhone;
-      this.editPhone = formatted;
-      sessionStorage.removeItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY);
-    }
+    forkJoin({
+      profile: this.userApi.getMyProfile(),
+      stats: this.userApi.getMyStats().pipe(catchError(() => of(null))),
+      stamps: this.userApi.getMyStamps().pipe(catchError(() => of([]))),
+      activity: this.userApi.getMyActivity().pipe(catchError(() => of([]))),
+      collection: this.userApi.getMyCollection().pipe(catchError(() => of([]))),
+    }).subscribe({
+      next: ({ profile, stats, stamps, activity, collection }) => {
+        this.editName = profile.name || '';
+        this.editPhone = profile.whatsapp || profile.phone || '';
+        this.profilePhotoUrl = profile.profilePhotoUrl || null;
+        this.userLevel = profile.level ?? 1;
+        this.userLevelName = profile.levelName || 'Nuevo';
+        this.userCoins = profile.coins ?? 0;
+        this.userCreatedAt = profile.createdAt || '';
+        this.userRole = profile.role || this.auth.user()?.role || '';
 
-    this.savedName = this.editName;
-    this.savedPhone = this.editPhone;
+        const draftAvatar = sessionStorage.getItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY);
+        if (draftAvatar) {
+          this.profilePhotoUrl = draftAvatar;
+          sessionStorage.removeItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY);
+        }
+
+        const draftName = sessionStorage.getItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY)?.trim();
+        if (draftName) {
+          this.editName = draftName;
+          sessionStorage.removeItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY);
+        }
+
+        const draftPhone = sessionStorage.getItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY)?.trim();
+        if (draftPhone) {
+          this.editPhone =
+            draftPhone.length >= 10
+              ? `${draftPhone.slice(0, 2)} ${draftPhone.slice(2, 6)} ${draftPhone.slice(6)}`
+              : draftPhone;
+          sessionStorage.removeItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY);
+        }
+
+        this.savedName = this.editName;
+        this.savedPhone = this.editPhone;
+
+        this.stats = stats || this.buildStatsFromProfile(profile);
+        this.sellos = this.mergeEarnedStamps(stamps, profile.stampIds || []);
+        this.activity = activity;
+        this.collection = collection;
+
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.loadError = err?.error?.error || err?.message || 'No se pudo cargar tu perfil';
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   get displayName(): string {
     const t = this.editName.trim();
     return t || 'Vecino del barrio';
+  }
+
+  get accountTypeLabel(): string {
+    const role = (this.userRole || '').toUpperCase();
+    if (role === 'BUSINESS') return 'Negocio';
+    if (role === 'ADMIN') return 'Administrador';
+    return 'Cliente';
+  }
+
+
+  private buildStatsFromProfile(profile: { visitedCount?: number; favoriteCount?: number; reviewCount?: number; stampCount?: number }): UserStat[] {
+    return [
+      { v: String(profile.visitedCount ?? 0), l: 'Visitados', emoji: '🏃' },
+      { v: String(profile.favoriteCount ?? 0), l: 'Favoritos', emoji: '♥' },
+      { v: String(profile.reviewCount ?? 0), l: 'Reseñas', emoji: '✍️' },
+      { v: String(profile.stampCount ?? 0), l: 'Sellos', emoji: '🏆' },
+    ];
+  }
+
+  private mergeEarnedStamps(stamps: UserStamp[], earnedIds: string[]): UserStamp[] {
+    if (!earnedIds.length) return stamps;
+    const earned = new Set(earnedIds);
+    return stamps.map(stamp => ({ ...stamp, got: stamp.got || earned.has(stamp.id) }));
   }
 
   get avatarInitials(): string {
@@ -87,6 +162,15 @@ export class Perfil implements OnInit {
 
   avatarPlaceholderGradient(): string {
     return gradientFromName(this.editName);
+  }
+
+  get earnedStampCount(): number {
+    return this.sellos.filter(s => s.got).length;
+  }
+
+  get memberSinceYear(): string {
+    if (!this.userCreatedAt) return '';
+    return new Date(this.userCreatedAt).getFullYear().toString();
   }
 
   onProfilePhotoSelect(ev: Event): void {
@@ -111,54 +195,81 @@ export class Perfil implements OnInit {
     this.profilePhotoUrl = null;
   }
 
-  showDeleteModal = false;
-  deleteConfirmText = '';
-
-  activity = [
-    { emoji: '🌮', text: 'Visitaste Tacos Don Juan', when: 'Hace 2h', coins: '+20' },
-    { emoji: '⭐', text: 'Reseña en Café Avellaneda', when: 'Hace 1 día', coins: '+50' },
-    { emoji: '🥖', text: 'Canjeaste en Panadería Sol', when: 'Hace 3 días', coins: '-400' },
-    { emoji: '💇', text: 'Visitaste Estética Rocío', when: 'Hace 5 días', coins: '+20' },
-    { emoji: '🏆', text: 'Sello "Taquero" obtenido', when: 'Hace 1 sem', coins: '+100' },
-  ];
-
-  startEditing() {
+  startEditing(): void {
     this.editPhotoSnapshot = this.profilePhotoUrl;
     this.editing = true;
+    this.saveError = '';
   }
 
-  cancelEditing() {
+  cancelEditing(): void {
     this.editing = false;
     this.editName = this.savedName;
     this.editPhone = this.savedPhone;
     this.profilePhotoUrl = this.editPhotoSnapshot;
+    this.saveError = '';
   }
 
-  saveProfile() {
+  saveProfile(): void {
     const n = this.editName.trim();
     const p = this.editPhone.trim();
-    if (n) {
-      this.savedName = n;
-      this.editName = n;
+
+    if (!n) {
+      this.saveError = 'El nombre no puede quedar vacío';
+      return;
     }
-    if (p) {
-      this.savedPhone = p;
-      this.editPhone = p;
-    }
-    this.editing = false;
+
+    this.saving = true;
+    this.saveError = '';
+    this.saveSuccess = false;
+
+    this.userApi
+      .updateMyProfile({
+        name: n,
+        phone: p,
+        whatsapp: p,
+        profilePhotoUrl: this.profilePhotoUrl || '',
+      })
+      .subscribe({
+        next: (profile) => {
+          this.savedName = profile.name || n;
+          this.savedPhone = profile.whatsapp || profile.phone || p;
+          this.editName = this.savedName;
+          this.editPhone = this.savedPhone;
+          this.userLevel = profile.level ?? this.userLevel;
+          this.userLevelName = profile.levelName || this.userLevelName;
+          this.userCoins = profile.coins ?? this.userCoins;
+          this.editing = false;
+          this.saving = false;
+          this.saveSuccess = true;
+          this.cdr.markForCheck();
+          setTimeout(() => {
+            this.saveSuccess = false;
+            this.cdr.markForCheck();
+          }, 2400);
+        },
+        error: (err) => {
+          this.saveError =
+            err?.error?.error ||
+            err?.error?.details?.[0]?.message ||
+            err?.message ||
+            'No se pudo guardar tu perfil';
+          this.saving = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
-  openDeleteModal() {
+  openDeleteModal(): void {
     this.showDeleteModal = true;
     this.deleteConfirmText = '';
   }
 
-  closeDeleteModal() {
+  closeDeleteModal(): void {
     this.showDeleteModal = false;
     this.deleteConfirmText = '';
   }
 
-  confirmDelete() {
+  confirmDelete(): void {
     if (this.deleteConfirmText === 'ELIMINAR') {
       this.showDeleteModal = false;
     }

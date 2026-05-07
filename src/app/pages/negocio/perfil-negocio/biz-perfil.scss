@@ -1446,9 +1446,68 @@
   }
 }
 
+/* ═══ LOADING / ERROR / TOAST ═══ */
+.perfil-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: var(--biz-text-2);
+  font-size: 0.95rem;
+}
 
+.perfil-loading__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--biz-line-strong);
+  border-top-color: var(--terracota);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
+.perfil-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px 20px;
+  text-align: center;
+  color: #c0392b;
+  font-size: 0.95rem;
+}
+
+.perfil-toast {
+  margin: 0 16px 12px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  animation: toastIn 0.3s ease;
+}
+
+.perfil-toast--success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.perfil-toast--error {
+  background: #fdecea;
+  color: #c0392b;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 
 

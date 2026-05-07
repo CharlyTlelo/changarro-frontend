@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 import {
   CHANGARRO_PROFILE_AVATAR_DRAFT_KEY,
   CHANGARRO_PROFILE_NAME_DRAFT_KEY,
@@ -27,10 +28,15 @@ interface RegistroField {
 })
 export class Registro {
   private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
 
   nombreRegistro = '';
   apellidoRegistro = '';
   whatsappRegistro = '';
+  passwordRegistro = '';
+  passwordRepeatRegistro = '';
+  submitting = false;
+  error = '';
 
   registrationPhotoUrl: string | null = null;
 
@@ -80,16 +86,40 @@ export class Registro {
 
   continuar(): void {
     const fullName = `${this.nombreRegistro.trim()} ${this.apellidoRegistro.trim()}`.trim();
-    if (fullName) {
-      sessionStorage.setItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY, fullName);
-    }
     const phone = this.whatsappRegistro.replace(/\s+/g, '').trim();
-    if (phone) {
-      sessionStorage.setItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY, phone);
+
+    if (!fullName || !phone || !this.passwordRegistro || !this.passwordRepeatRegistro) {
+      this.error = 'Completa nombre, WhatsApp y contraseÃ±a.';
+      return;
     }
+
+    if (this.passwordRegistro.length < 8) {
+      this.error = 'La contraseÃ±a debe tener al menos 8 caracteres.';
+      return;
+    }
+
+    if (this.passwordRegistro !== this.passwordRepeatRegistro) {
+      this.error = 'Las contraseÃ±as no coinciden.';
+      return;
+    }
+
+    sessionStorage.setItem(CHANGARRO_PROFILE_NAME_DRAFT_KEY, fullName);
+    sessionStorage.setItem(CHANGARRO_PROFILE_PHONE_DRAFT_KEY, phone);
     if (this.registrationPhotoUrl) {
       sessionStorage.setItem(CHANGARRO_PROFILE_AVATAR_DRAFT_KEY, this.registrationPhotoUrl);
     }
-    void this.router.navigate(['/bienvenida']);
+
+    this.submitting = true;
+    this.error = '';
+    this.auth.register(fullName, phone, this.passwordRegistro).subscribe({
+      next: () => {
+        this.submitting = false;
+        void this.router.navigate(['/bienvenida']);
+      },
+      error: (err) => {
+        this.submitting = false;
+        this.error = err?.error?.error || err?.message || 'No se pudo registrar con WhatsApp.';
+      },
+    });
   }
 }

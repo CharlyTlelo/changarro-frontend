@@ -265,6 +265,30 @@
   pointer-events: none;
 }
 
+.cat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cat-pill {
+  border: 1px solid rgba(36, 21, 16, 0.16);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.cat-pill--active {
+  border-color: rgba(221, 77, 42, 0.45);
+  background: rgba(221, 77, 42, 0.1);
+  color: var(--ink);
+}
+
 @keyframes rnSpark {
   0%, 100% {
     transform: translateY(-50%) scale(0.92);
@@ -573,6 +597,65 @@
   &:active {
     transform: scale(0.95);
   }
+}
+
+// ── Delegación / Pueblo ───────────────────────────────────────────
+.rn-delegacion-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--paper-2);
+  border: 1px solid rgba(36, 21, 16, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  margin-bottom: 4px;
+
+  .field-label {
+    color: var(--ink);
+    font-weight: 800;
+  }
+}
+
+.rn-delegacion-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rn-pueblo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.rn-pueblo-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(36, 21, 16, 0.14);
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  text-align: left;
+
+  &:hover {
+    background: #faf8f5;
+    border-color: rgba(36, 21, 16, 0.22);
+  }
+}
+
+.rn-pueblo-chip--active {
+  border-color: rgba(221, 77, 42, 0.45);
+  background: rgba(221, 77, 42, 0.08);
+  color: var(--ink);
+  font-weight: 700;
 }
 
 // ── Tablet layout (split hero + form) ─────────────────────────────
@@ -1008,9 +1091,44 @@
 
   .rn-scroll .rn-two-col,
   .rn-scroll .rn-location-block,
+  .rn-scroll .rn-delegacion-block,
   .rn-scroll .rn-split-desc-photo,
   .rn-scroll .terms-box {
     text-align: left;
+  }
+
+  .rn-delegacion-block {
+    background: var(--studio-card);
+    border: 1px solid var(--studio-line);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 12px rgb(0 0 0 / 0.03);
+    border-radius: var(--studio-radius-card);
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--studio-text-secondary);
+    }
+  }
+
+  .rn-pueblo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .rn-pueblo-chip {
+    border-radius: var(--studio-radius-control);
+    border-color: rgb(210 210 215);
+    transition: border-color 0.2s ease, background 0.2s ease;
+
+    &:hover {
+      border-color: rgb(180 180 185);
+      background: #faf9f6;
+    }
+  }
+
+  .rn-pueblo-chip--active {
+    border-color: rgba(221, 77, 42, 0.45);
+    background: rgba(221, 77, 42, 0.08);
   }
 
   .rn-wiz-card {

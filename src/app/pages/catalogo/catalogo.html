@@ -12,7 +12,7 @@
           <span class="tablet-only">Descubre el </span>
           <span class="cv2-serif-i title-accent">barrio</span>
         </h1>
-        <div class="subtitle tablet-only">133 changarros activos cerca de Roma Norte</div>
+        <div class="subtitle tablet-only">{{ businesses.length }} changarros activos cerca de Roma Norte</div>
       </div>
 
     </div>
@@ -56,11 +56,31 @@
       <div class="cv2-chip tablet-only">&#x2B50; 4.5+</div>
     </div>
 
+    @if (loading) {
+      <div class="catalog-state">
+        <div class="catalog-spinner" aria-hidden="true"></div>
+        <strong>Cargando catalogo</strong>
+        <span>Estamos trayendo los changarros reales de MongoDB.</span>
+      </div>
+    } @else if (error) {
+      <div class="catalog-state catalog-state--error">
+        <strong>No se pudo cargar el catalogo</strong>
+        <span>{{ error }}</span>
+        <button type="button" class="catalog-state__button" (click)="loadBusinesses(true)">Reintentar</button>
+      </div>
+    } @else if (!businesses.length) {
+      <div class="catalog-state">
+        <strong>Aun no hay changarros publicados</strong>
+        <span>Cuando existan negocios en MongoDB apareceran aqui automaticamente.</span>
+      </div>
+    }
+
+    @if (!loading && !error && businesses.length) {
     <!-- Masonry feed (mobile: 2 cols) -->
     <div class="feed mobile-only">
       <div class="masonry">
         <div class="masonry-col">
-          @for (item of col1; track item.name) {
+          @for (item of col1; track item.id) {
             <a [routerLink]="['/detalle']" class="cv2-card card">
               <div class="card-image" [style.height.px]="item.h" [style.background]="item.color">
                 <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" class="card-pattern">
@@ -109,7 +129,7 @@
           }
         </div>
         <div class="masonry-col masonry-col-offset">
-          @for (item of col2; track item.name) {
+          @for (item of col2; track item.id) {
             <a [routerLink]="['/detalle']" class="cv2-card card">
               <div class="card-image" [style.height.px]="item.h" [style.background]="item.color">
                 <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" class="card-pattern">
@@ -165,7 +185,7 @@
       <div class="masonry-tablet">
         @for (col of [col1t, col2t, col3t, col4t]; track $index) {
           <div class="masonry-col-t" [class.offset-1]="$index === 1" [class.offset-3]="$index === 3">
-            @for (item of col; track item.name) {
+            @for (item of col; track item.id) {
               <a [routerLink]="['/detalle']" class="cv2-card card">
                 <div class="card-image" [style.height.px]="item.h" [style.background]="item.color">
                   <span class="card-emoji card-emoji-t">{{ item.emoji }}</span>
@@ -213,6 +233,7 @@
         }
       </div>
     </div>
+    }
   </div>
 
   <app-tab-bar active="catalogo" />

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, shareReplay } from 'rxjs';
 
 const API = 'http://localhost:8080/api/businesses';
 
@@ -16,18 +17,40 @@ export interface Promo {
   validUntil: string;
   note: string;
   bonusCoins: number;
+  active?: boolean;
+}
+
+export interface DaySchedule {
+  isOpen: boolean;
+  openTime: string;
+  openPeriod: 'AM' | 'PM';
+  closeTime: string;
+  closePeriod: 'AM' | 'PM';
+}
+
+export interface PaymentMethods {
+  efectivo: boolean;
+  tarjetas: boolean;
+  transferencia: boolean;
 }
 
 export interface BusinessData {
+  _id?: string;
   id: string;
   name: string;
   categoryId: string;
+  subcategoryId?: string;
   description: string;
   address: string;
   neighborhood: string;
   phone: string;
+  whatsapp: string;
   instagram: string;
+  facebook: string;
+  tiktok: string;
+  youtube: string;
   paymentMethod: string;
+  paymentMethods: PaymentMethods;
   rating: number;
   reviewCount: number;
   visitCount: number;
@@ -37,11 +60,13 @@ export interface BusinessData {
   tag: string;
   priceRange: string;
   schedule: string;
+  weeklySchedule: Record<string, DaySchedule>;
   activePromo: Promo | null;
   menuItems: MenuItem[];
   trending: boolean;
   nuevo: boolean;
   ownerId: string;
+  photos: string[];
 }
 
 export interface Analytics {
@@ -61,6 +86,17 @@ export interface Analytics {
 @Injectable({ providedIn: 'root' })
 export class BusinessApiService {
   private readonly http = inject(HttpClient);
+  private businessesCache$?: Observable<BusinessData[]>;
+
+  getBusinesses(refresh = false) {
+    if (!this.businessesCache$ || refresh) {
+      this.businessesCache$ = this.http.get<BusinessData[]>(API).pipe(
+        shareReplay({ bufferSize: 1, refCount: false })
+      );
+    }
+
+    return this.businessesCache$;
+  }
 
   getMyBusiness() {
     return this.http.get<BusinessData>(`${API}/mine`);
