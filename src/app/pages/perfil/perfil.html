@@ -14,6 +14,19 @@
 
   <div class="main-area">
     <div class="scroll-content">
+      @if (loading) {
+        <div class="perfil-state perfil-state--loading">
+          <span class="perfil-spinner"></span>
+          <span>Cargando perfil...</span>
+        </div>
+      } @else if (loadError) {
+        <div class="perfil-state perfil-state--error">
+          <span>{{ loadError }}</span>
+          <button class="cv2-btn cv2-btn-primary" (click)="loadProfile()">Reintentar</button>
+        </div>
+      }
+
+      @if (!loading && !loadError) {
 
       <!-- ════════════ MOBILE LAYOUT ════════════ -->
 
@@ -31,10 +44,14 @@
               <span class="cv2-serif avatar-initials">{{ avatarInitials }}</span>
             }
           </div>
-          <div class="avatar-level">Lvl 4</div>
+          <div class="avatar-level">Lvl {{ userLevel }}</div>
         </div>
         <h1 class="cv2-serif user-name">{{ displayName }}</h1>
-        <div class="user-info">👑 Embajadora del barrio · Roma Norte</div>
+        <div class="user-info">👑 {{ userLevelName }} del barrio</div>
+        <div class="profile-type-pill">
+          <span class="profile-type-dot"></span>
+          Perfil {{ accountTypeLabel }}
+        </div>
       </div>
 
       <!-- Stats -->
@@ -92,7 +109,7 @@
               <input class="edit-input" [(ngModel)]="editPhone" placeholder="55 1234 5678" type="tel" />
             </div>
             <div class="edit-actions">
-              <button class="cv2-btn save-btn" (click)="saveProfile()">Guardar</button>
+              <button class="cv2-btn save-btn" (click)="saveProfile()" [disabled]="saving">{{ saving ? 'Guardando...' : 'Guardar' }}</button>
               <button class="cv2-btn cancel-btn" (click)="cancelEditing()">Cancelar</button>
             </div>
           </div>
@@ -108,11 +125,15 @@
 
       <!-- Collection grid (mobile) -->
       <div class="collection mobile-only">
-        @for (v of collection; track v.n) {
-          <div class="collection-item" [style.background]="v.c">
-            <span class="collection-emoji">{{ v.e }}</span>
-            <span class="collection-name">{{ v.n }}</span>
-          </div>
+        @if (collection.length === 0) {
+          <div class="collection-empty">Aún no tienes favoritos. Explora el catálogo y guarda tus changarros.</div>
+        } @else {
+          @for (v of collection; track v.id) {
+            <div class="collection-item" [style.background]="v.c">
+              <span class="collection-emoji">{{ v.e }}</span>
+              <span class="collection-name">{{ v.n }}</span>
+            </div>
+          }
         }
       </div>
 
@@ -163,8 +184,14 @@
                 </div>
                 <div class="t-profile-info">
                   <h2 class="cv2-serif t-profile-name">{{ displayName }}</h2>
-                  <div class="t-profile-level">👑 Embajadora del barrio</div>
-                  <div class="t-profile-meta">Roma Norte · Desde 2024</div>
+                  <div class="t-profile-level">👑 {{ userLevelName }} del barrio</div>
+                  <div class="t-profile-kind">
+                    <span class="profile-type-dot"></span>
+                    Perfil {{ accountTypeLabel }}
+                  </div>
+                  @if (memberSinceYear) {
+                    <div class="t-profile-meta">Desde {{ memberSinceYear }}</div>
+                  }
                 </div>
               </div>
 
@@ -234,6 +261,15 @@
                       <div class="t-info-value">{{ editPhone }}</div>
                     </div>
                   </div>
+                  <div class="t-info-row">
+                    <span class="t-info-icon">ID</span>
+                    <div class="t-info-content">
+                      <div class="t-info-label">Tipo de perfil</div>
+                      <div class="t-info-value">
+                        <span class="t-info-value-badge">{{ accountTypeLabel }}</span>
+                      </div>
+                    </div>
+                  </div>
                   
                 </div>
               } @else {
@@ -276,7 +312,7 @@
                     <input class="t-form-input" [(ngModel)]="editPhone" placeholder="55 1234 5678" type="tel" />
                   </div>
                   <div class="t-form-actions">
-                    <button class="cv2-btn cv2-btn-primary t-save-btn" (click)="saveProfile()">Guardar cambios</button>
+                    <button class="cv2-btn cv2-btn-primary t-save-btn" (click)="saveProfile()" [disabled]="saving">{{ saving ? 'Guardando...' : 'Guardar cambios' }}</button>
                     <button class="cv2-btn t-cancel-btn" (click)="cancelEditing()">Cancelar</button>
                   </div>
                 </div>
@@ -299,7 +335,7 @@
             <div class="t-sellos cv2-card">
               <div class="t-section-header">
                 <h3 class="cv2-serif t-section-title">Pasaporte del barrio</h3>
-                <span class="t-section-count">4/{{ sellos.length }}</span>
+                <span class="t-section-count">{{ earnedStampCount }}/{{ sellos.length }}</span>
               </div>
               <div class="t-sellos-grid">
                 @for (s of sellos; track s.label) {
@@ -327,7 +363,10 @@
             <!-- Activity -->
             <div class="t-activity cv2-card">
               <h3 class="cv2-serif t-section-title" style="padding:20px 20px 0">Actividad reciente</h3>
-              @for (a of activity; track a.text) {
+              @if (activity.length === 0) {
+                <div class="t-activity-empty" style="padding:16px 20px;color:var(--ink-mute);font-size:0.875rem">Sin actividad aún. Visita changarros para empezar.</div>
+              }
+              @for (a of activity; track a.id) {
                 <div class="t-activity-item">
                   <span class="t-activity-emoji">{{ a.emoji }}</span>
                   <div class="t-activity-info">
@@ -341,11 +380,17 @@
           </div>
         </div>
       </div>
+      }
+
+      @if (saveError) {
+        <div class="perfil-toast perfil-toast--error">{{ saveError }}</div>
+      }
+      @if (saveSuccess) {
+        <div class="perfil-toast perfil-toast--ok">Cambios guardados</div>
+      }
 
     </div>
 
     <app-tab-bar active="perfil" />
   </div>
 </div>
-
-

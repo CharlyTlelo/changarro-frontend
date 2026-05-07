@@ -1,10 +1,13 @@
-import { Component, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, inject, input } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CATEGORIES } from '../../data/mock-data';
 import { AuthService } from '../../services/auth.service';
+import { CategoryApiService, type CategoryData } from '../../services/category.service';
+import { BusinessApiService, type BusinessData } from '../../services/business.service';
 import { gradientFromName, initialsFromDisplayName } from '../../utils/avatar-placeholder';
 
 interface SubCategory {
+  id?: string;
   label: string;
   emoji: string;
   count: number;
@@ -49,7 +52,7 @@ interface SubCategory {
       <div class="cat-scroll">
         @for (c of categories; track c.id) {
           <div class="cat-group">
-            <div class="cat-item" (click)="toggleCategory(c.id)" [class.expanded]="expandedCat === c.id">
+            <div class="cat-item" (click)="selectCategory(c.id)" [class.expanded]="expandedCat === c.id" [class.active]="isCategoryActive(c.id)">
               <div class="cat-icon" [style.background]="c.bg">{{ c.emoji }}</div>
               <span class="cat-label">{{ c.label }}</span>
               <span class="cat-count">{{ getCatCount(c.id) }}</span>
@@ -59,7 +62,7 @@ interface SubCategory {
             @if (expandedCat === c.id) {
               <div class="sub-list">
                 @for (sub of getSubcategories(c.id); track sub.label) {
-                  <div class="sub-item">
+                  <div class="sub-item" (click)="selectSubcategory(c.id, sub, $event)" [class.active]="isSubcategoryActive(c.id, sub)">
                     <span class="sub-emoji">{{ sub.emoji }}</span>
                     <span class="sub-label">{{ sub.label }}</span>
                     <span class="sub-count">{{ sub.count }}</span>
@@ -188,6 +191,13 @@ interface SubCategory {
       color: var(--ink);
     }
 
+    .cat-item.active {
+      background: rgba(221, 77, 42, 0.14);
+      border: 1px solid rgba(221, 77, 42, 0.32);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
     .cat-icon {
       width: 28px;
       height: 28px;
@@ -243,6 +253,13 @@ interface SubCategory {
       color: var(--ink);
     }
 
+    .sub-item.active {
+      background: rgba(221, 77, 42, 0.14);
+      color: var(--ink);
+      font-weight: 700;
+      border: 1px solid rgba(221, 77, 42, 0.28);
+    }
+
     .sub-emoji {
       font-size: 13px;
       width: 20px;
@@ -295,10 +312,15 @@ interface SubCategory {
     .user-level { font-size: 10px; color: var(--ink-3); margin-top: 2px; }
   `]
 })
-export class Sidebar {
+export class Sidebar implements OnInit {
   readonly auth = inject(AuthService);
+  private readonly categoryApi = inject(CategoryApiService);
+  private readonly businessApi = inject(BusinessApiService);
+  private readonly router = inject(Router);
   active = input<string>('cat');
-  categories = CATEGORIES;
+  categories: CategoryData[] = [...CATEGORIES];
+  private businesses: BusinessData[] = [];
+  private categoryCounts: Record<string, number> = {};
 
   sidebarDisplayName(): string {
     return this.auth.user()?.name?.trim() || 'Vecino del barrio';
@@ -322,7 +344,7 @@ export class Sidebar {
     { id: 'rec', label: 'Recompensas', icon: '★', badge: '+340', route: '/recompensas' },
   ];
 
-  private subcategories: Record<string, SubCategory[]> = {
+  private fallbackSubcategories: Record<string, SubCategory[]> = {
     comida: [
       { label: 'Tacos',          emoji: '🌮', count: 12 },
       { label: 'Tortas',         emoji: '🥖', count: 6 },
@@ -383,19 +405,149 @@ export class Sidebar {
     ],
   };
 
+  ngOnInit(): void {
+    this.categoryApi.getCategories().subscribe({
+      next: (categories) => {
+        if (categories?.length) {
+          this.categories = categories;
+        }
+      },
+    });
+
+    this.businessApi.getBusinesses().subscribe({
+      next: (items) => {
+        this.businesses = items || [];
+        this.categoryCounts = this.computeCategoryCounts(this.businesses);
+      },
+      error: () => {
+        this.businesses = [];
+        this.categoryCounts = {};
+      },
+    });
+  }
+
   toggleCategory(id: string) {
     this.expandedCat = this.expandedCat === id ? null : id;
   }
 
+  selectCategory(id: string): void {
+    const isActive = this.isCategoryActive(id);
+    this.toggleCategory(id);
+    this.router.navigate(['/catalogo'], {
+      queryParams: { cat: isActive ? null : id },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  isCategoryActive(id: string): boolean {
+    const query = this.router.url.split('?')[1] || '';
+    const params = new URLSearchParams(query);
+    return (params.get('cat') || '').toLowerCase() === id.toLowerCase();
+  }
+
+  selectSubcategory(categoryId: string, sub: SubCategory, event: Event): void {
+    event.stopPropagation();
+    const subValue = this.getSubValue(sub);
+    const isActive = this.isSubcategoryActive(categoryId, sub);
+    this.router.navigate(['/catalogo'], {
+      queryParams: {
+        cat: categoryId,
+        sub: isActive ? null : subValue,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  isSubcategoryActive(categoryId: string, sub: SubCategory): boolean {
+    const query = this.router.url.split('?')[1] || '';
+    const params = new URLSearchParams(query);
+    const cat = (params.get('cat') || '').toLowerCase();
+    const subQuery = (params.get('sub') || '').toLowerCase();
+    return cat === categoryId.toLowerCase() && subQuery === this.getSubValue(sub);
+  }
+
+  private slugify(value: string): string {
+    return (value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9 ]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  private getSubValue(sub: SubCategory): string {
+    if (sub.id && sub.id.trim()) {
+      return this.slugify(sub.id);
+    }
+    return this.slugify(sub.label);
+  }
+
   getSubcategories(id: string): SubCategory[] {
-    return this.subcategories[id] || [];
+    const fromApi = this.categories.find((c) => c.id === id)?.subcategories || [];
+    const subs: SubCategory[] = fromApi.length
+      ? fromApi.map((sub) => ({ id: sub.id, label: sub.label, emoji: sub.emoji, count: 0 }))
+      : (this.fallbackSubcategories[id] || []);
+    if (!this.businesses.length) return subs;
+
+    return subs.map((sub) => ({
+      ...sub,
+      count: this.countBusinessesForSubcategory(id, sub.id || sub.label),
+    }));
   }
 
   getCatCount(id: string): string {
-    const subs = this.subcategories[id];
+    if (typeof this.categoryCounts[id] === 'number') {
+      return String(this.categoryCounts[id]);
+    }
+
+    const subs = this.getSubcategories(id);
     if (subs) {
       return String(subs.reduce((sum, s) => sum + s.count, 0));
     }
     return '0';
+  }
+
+  private computeCategoryCounts(items: BusinessData[]): Record<string, number> {
+    const counts: Record<string, number> = {};
+    for (const item of items) {
+      const key = (item.categoryId || '').toLowerCase().trim();
+      if (!key) continue;
+      counts[key] = (counts[key] || 0) + 1;
+    }
+    return counts;
+  }
+
+  private countBusinessesForSubcategory(categoryId: string, subcategoryRef: string): number {
+    const target = this.normalizeText(subcategoryRef);
+    if (!target) return 0;
+
+    return this.businesses.filter((biz) => {
+      if ((biz.categoryId || '').toLowerCase().trim() !== categoryId.toLowerCase().trim()) {
+        return false;
+      }
+
+      const subcategoryId = this.normalizeText(biz.subcategoryId || '');
+      if (subcategoryId && subcategoryId === target) {
+        return true;
+      }
+
+      const tags = (biz.tags || []).map((t) => this.normalizeText(t)).join(' ');
+      const tag = this.normalizeText(biz.tag || '');
+      const name = this.normalizeText(biz.name || '');
+      const desc = this.normalizeText(biz.description || '');
+
+      return tags.includes(target) || tag.includes(target) || name.includes(target) || desc.includes(target);
+    }).length;
+  }
+
+  private normalizeText(value: string): string {
+    return (value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9 ]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 }

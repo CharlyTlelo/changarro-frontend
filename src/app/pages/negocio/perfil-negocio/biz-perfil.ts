@@ -1,22 +1,16 @@
-﻿import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Component, OnDestroy, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
+import { BusinessApiService, DaySchedule } from '../../../shared/services/business.service';
+import { CategoryApiService, type CategoryData, type CategorySubcategory } from '../../../shared/services/category.service';
 
 interface DayConfig {
   key: string;
   label: string;
   abbrev: string;
   order: string;
-}
-
-interface DaySchedule {
-  isOpen: boolean;
-  openTime: string;
-  openPeriod: 'AM' | 'PM';
-  closeTime: string;
-  closePeriod: 'AM' | 'PM';
 }
 
 interface TimeOption {
@@ -32,28 +26,35 @@ interface TimeOption {
 })
 export class BizPerfil implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
+  private readonly bizApi = inject(BusinessApiService);
+  private readonly categoryApi = inject(CategoryApiService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly doc = inject(DOCUMENT);
   private previousHtmlOverflow = '';
   private previousBodyOverflow = '';
 
-  businessName = signal('Tacos Don Juan');
-  businessEmoji = signal('🌮');
+  businessName = signal('');
+  businessEmoji = signal('🏪');
   saving = signal(false);
+  loading = signal(true);
+  error = signal('');
+  saveSuccess = signal(false);
   readonly maxPhotos = 6;
 
-  name = 'Tacos Don Juan';
-  emoji = '🌮';
+  name = '';
+  emoji = '🏪';
   showEmojiCatalog = false;
-  categoryId = 'comida';
-  description = 'Los mejores tacos al pastor de la Roma Norte. Tortillas hechas a mano, salsas de la casa y ambiente familiar. Desde 1998.';
-  address = 'Av. Álvaro Obregón 145';
-  neighborhood = 'Roma Norte';
-  whatsapp = '55 1234 5678';
-  facebook = 'facebook.com/tacosdonjuan';
-  tiktok = '@tacosdonjuan';
-  instagram = '@tacosdonjuan';
-  youtube = 'youtube.com/@tacosdonjuan';
+  categoryId = '';
+  subcategoryId = '';
+  description = '';
+  address = '';
+  neighborhood = '';
+  whatsapp = '';
+  facebook = '';
+  tiktok = '';
+  instagram = '';
+  youtube = '';
+
   readonly days: DayConfig[] = [
     { key: 'lunes', label: 'Lunes', abbrev: 'L', order: '1' },
     { key: 'martes', label: 'Martes', abbrev: 'M', order: '2' },
@@ -72,29 +73,26 @@ export class BizPerfil implements OnInit, OnDestroy {
   ];
 
   weeklySchedule: Record<string, DaySchedule> = {
-    lunes: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
-    martes: { isOpen: true, openTime: '6:30', openPeriod: 'AM', closeTime: '11:00', closePeriod: 'PM' },
-    miercoles: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
-    jueves: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
-    viernes: { isOpen: true, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
-    sabado: { isOpen: false, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
-    domingo: { isOpen: false, openTime: '12:00', openPeriod: 'PM', closeTime: '11:00', closePeriod: 'PM' },
+    lunes: { isOpen: true, openTime: '9:00', openPeriod: 'AM', closeTime: '6:00', closePeriod: 'PM' },
+    martes: { isOpen: true, openTime: '9:00', openPeriod: 'AM', closeTime: '6:00', closePeriod: 'PM' },
+    miercoles: { isOpen: true, openTime: '9:00', openPeriod: 'AM', closeTime: '6:00', closePeriod: 'PM' },
+    jueves: { isOpen: true, openTime: '9:00', openPeriod: 'AM', closeTime: '6:00', closePeriod: 'PM' },
+    viernes: { isOpen: true, openTime: '9:00', openPeriod: 'AM', closeTime: '6:00', closePeriod: 'PM' },
+    sabado: { isOpen: false, openTime: '9:00', openPeriod: 'AM', closeTime: '6:00', closePeriod: 'PM' },
+    domingo: { isOpen: false, openTime: '9:00', openPeriod: 'AM', closeTime: '6:00', closePeriod: 'PM' },
   };
+
   paymentOptions = {
     efectivo: true,
     tarjetas: false,
     transferencia: false,
   };
-  color = '#FFB57A';
+
+  color = '#FF6B35';
   businessPhotos: string[] = [];
 
-  categories = [
-    { id: 'comida', label: 'Comida', emoji: '🌮' },
-    { id: 'tienda', label: 'Tienda', emoji: '🛍️' },
-    { id: 'servicios', label: 'Servicios', emoji: '🔧' },
-    { id: 'entrete', label: 'Diversión', emoji: '🎉' },
-    { id: 'salud', label: 'Salud', emoji: '⚕️' },
-  ];
+  categories: CategoryData[] = [];
+  categoriesError = '';
 
   emojiCatalog = [
     '🌮', '🍔', '🍕', '🌭', '🥗', '🍜', '🍣', '🧁',
@@ -105,18 +103,68 @@ export class BizPerfil implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
     const html = this.doc.documentElement;
     const body = this.doc.body;
     this.previousHtmlOverflow = html.style.overflow;
     this.previousBodyOverflow = body.style.overflow;
     html.style.overflow = 'hidden';
     body.style.overflow = 'hidden';
+
+    this.loadCategories();
+    this.loadProfile();
   }
 
   ngOnDestroy(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.doc.documentElement.style.overflow = this.previousHtmlOverflow;
     this.doc.body.style.overflow = this.previousBodyOverflow;
+  }
+
+  loadProfile(): void {
+    this.loading.set(true);
+    this.error.set('');
+
+    this.bizApi.getMyBusiness().subscribe({
+      next: (biz) => {
+        this.name = biz.name || '';
+        this.emoji = biz.emoji || '🏪';
+        this.categoryId = biz.categoryId || '';
+        this.subcategoryId = biz.subcategoryId || '';
+        this.description = biz.description || '';
+        this.address = biz.address || '';
+        this.neighborhood = biz.neighborhood || '';
+        this.whatsapp = biz.whatsapp || biz.phone || '';
+        this.facebook = biz.facebook || '';
+        this.tiktok = biz.tiktok || '';
+        this.instagram = biz.instagram || '';
+        this.youtube = biz.youtube || '';
+        this.color = biz.color || '#FF6B35';
+        this.businessPhotos = biz.photos || [];
+
+        if (biz.paymentMethods) {
+          this.paymentOptions = { ...biz.paymentMethods };
+        }
+
+        if (biz.weeklySchedule) {
+          for (const day of this.days) {
+            const remote = biz.weeklySchedule[day.key];
+            if (remote) {
+              this.weeklySchedule[day.key] = { ...remote };
+            }
+          }
+        }
+
+        this.businessName.set(this.name);
+        this.businessEmoji.set(this.emoji);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        const msg = err?.error?.error || err?.message || 'Error al cargar perfil';
+        this.error.set(msg);
+        this.loading.set(false);
+      },
+    });
   }
 
   get paymentSummary(): string {
@@ -162,9 +210,44 @@ export class BizPerfil implements OnInit, OnDestroy {
     this.weeklySchedule[key][field] = this.weeklySchedule[key][field] === 'AM' ? 'PM' : 'AM';
   }
 
-  save() {
+  save(): void {
     this.saving.set(true);
-    setTimeout(() => this.saving.set(false), 800);
+    this.error.set('');
+    this.saveSuccess.set(false);
+
+    const payload = {
+      name: this.name,
+      emoji: this.emoji,
+      categoryId: this.categoryId,
+      subcategoryId: this.subcategoryId,
+      description: this.description,
+      address: this.address,
+      neighborhood: this.neighborhood,
+      whatsapp: this.whatsapp,
+      facebook: this.facebook,
+      tiktok: this.tiktok,
+      instagram: this.instagram,
+      youtube: this.youtube,
+      color: this.color,
+      photos: this.businessPhotos,
+      paymentMethods: { ...this.paymentOptions },
+      weeklySchedule: { ...this.weeklySchedule },
+    };
+
+    this.bizApi.updateMyBusiness(payload).subscribe({
+      next: (biz) => {
+        this.businessName.set(biz.name);
+        this.businessEmoji.set(biz.emoji);
+        this.saving.set(false);
+        this.saveSuccess.set(true);
+        setTimeout(() => this.saveSuccess.set(false), 2500);
+      },
+      error: (err) => {
+        const msg = err?.error?.error || err?.error?.details?.[0]?.message || err?.message || 'Error al guardar';
+        this.error.set(msg);
+        this.saving.set(false);
+      },
+    });
   }
 
   logout(): void {
@@ -217,6 +300,42 @@ export class BizPerfil implements OnInit, OnDestroy {
       'noopener,noreferrer'
     );
   }
+
+  loadCategories(): void {
+    this.categoriesError = '';
+    this.categoryApi.getCategories(true).subscribe({
+      next: (categories) => {
+        this.categories = categories || [];
+        if (!this.categoryId && this.categories.length > 0) {
+          this.categoryId = this.categories[0].id;
+        }
+        if (!this.isSubcategoryValid(this.categoryId, this.subcategoryId)) {
+          this.subcategoryId = '';
+        }
+      },
+      error: () => {
+        this.categories = [];
+        this.subcategoryId = '';
+        this.categoriesError = 'No se pudo cargar el catálogo de categorías.';
+      },
+    });
+  }
+
+  selectCategory(categoryId: string): void {
+    this.categoryId = categoryId;
+    if (!this.isSubcategoryValid(this.categoryId, this.subcategoryId)) {
+      this.subcategoryId = '';
+    }
+  }
+
+  get availableSubcategories(): CategorySubcategory[] {
+    return this.categories.find((c) => c.id === this.categoryId)?.subcategories || [];
+  }
+
+  private isSubcategoryValid(categoryId: string, subcategoryId: string): boolean {
+    if (!categoryId || !subcategoryId) return false;
+    return this.categories.find((c) => c.id === categoryId)?.subcategories?.some((s) => s.id === subcategoryId) || false;
+  }
 }
 
 function readFileAsDataUrl(file: File): Promise<string> {
@@ -227,5 +346,3 @@ function readFileAsDataUrl(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
-
-

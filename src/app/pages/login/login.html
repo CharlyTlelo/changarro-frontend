@@ -167,8 +167,9 @@
             class="input-text"
             inputmode="tel"
             autocomplete="tel"
-            maxlength="15"
+            maxlength="30"
             placeholder="Ej. 5512345678"
+            [(ngModel)]="identifier"
             aria-label="Número de Whatsapp">
         </div>
         <div class="field-group-header tablet-only">
@@ -183,6 +184,8 @@
             class="input-text"
             autocomplete="current-password"
             placeholder="Contraseña"
+            [(ngModel)]="password"
+            (keydown.enter)="login()"
             aria-label="Contraseña">
           <span class="input-toggle">Mostrar</span>
         </div>
@@ -198,7 +201,12 @@
         <span class="remember-label">Mantener sesión iniciada en este dispositivo</span>
       </div>
 
-      <button class="cv2-btn cv2-btn-primary login-btn">Iniciar sesión →</button>
+      @if (error()) {
+        <div class="login-error" style="color:#c0392b;text-align:center;font-size:0.875rem;margin-bottom:8px">{{ error() }}</div>
+      }
+      <button class="cv2-btn cv2-btn-primary login-btn" [disabled]="loading()" (click)="login()">
+        {{ loading() ? 'Entrando...' : 'Iniciar sesión →' }}
+      </button>
 
       <div class="signup-cta">
         <span class="signup-cta-copy">¿Aún no tienes cuenta?</span>

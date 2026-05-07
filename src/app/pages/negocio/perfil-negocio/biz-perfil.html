@@ -46,6 +46,25 @@
         <p class="perfil-header__sub">Actualiza la información que ven tus clientes en el catálogo.</p>
       </div>
 
+      @if (loading()) {
+        <div class="perfil-loading">
+          <span class="perfil-loading__spinner"></span>
+          <span>Cargando perfil...</span>
+        </div>
+      } @else if (error() && loading() === false && name === '') {
+        <div class="perfil-error">
+          <span>{{ error() }}</span>
+          <button class="cv2-btn cv2-btn-primary" (click)="loadProfile()">Reintentar</button>
+        </div>
+      } @else {
+
+      @if (error()) {
+        <div class="perfil-toast perfil-toast--error">{{ error() }}</div>
+      }
+      @if (saveSuccess()) {
+        <div class="perfil-toast perfil-toast--success">Cambios guardados correctamente</div>
+      }
+
       <div class="perfil-layout">
         <!-- Single panel: preview + form -->
         <div class="perfil-layout__form">
@@ -94,13 +113,26 @@
               <div class="form-grid-2">
                 <div class="form-group">
                   <label>Categoría</label>
+                  @if (categoriesError) {
+                    <div class="perfil-toast perfil-toast--error" style="position: static; margin-bottom: 8px;">{{ categoriesError }}</div>
+                    <button type="button" class="address-picker__btn" style="margin-bottom: 8px;" (click)="loadCategories()">Reintentar categorías</button>
+                  }
                   <div class="cat-pills">
                     @for (c of categories; track c.id) {
-                      <button class="cat-pill" [class.cat-pill--active]="categoryId === c.id" (click)="categoryId = c.id">
+                      <button class="cat-pill" [class.cat-pill--active]="categoryId === c.id" (click)="selectCategory(c.id)">
                         {{ c.emoji }} {{ c.label }}
                       </button>
                     }
                   </div>
+                </div>
+                <div class="form-group">
+                  <label>Subcategoría</label>
+                  <select [(ngModel)]="subcategoryId">
+                    <option value="">Selecciona subcategoría</option>
+                    @for (s of availableSubcategories; track s.id) {
+                      <option [value]="s.id">{{ s.emoji }} {{ s.label }}</option>
+                    }
+                  </select>
                 </div>
                 <div class="form-group">
                   <label>Descripción</label>
@@ -321,6 +353,8 @@
           </div>
         </div>
       </div>
+
+      } <!-- end @else (loaded) -->
     </div>
 
     <nav class="biz-bottomnav mobile-only">

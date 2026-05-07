@@ -91,6 +91,46 @@
                   }
                 </div>
 
+                <div class="rn-two-col">
+                  <div class="field-group">
+                    <label class="field-label">Categoría</label>
+                    @if (categoriesError) {
+                      <div class="rn-password-alert" role="alert">{{ categoriesError }}</div>
+                      <button type="button" class="rn-maps-btn rn-maps-btn--secondary" (click)="loadCategories()">Reintentar categorías</button>
+                    }
+                    <div class="cat-pills">
+                      @for (c of categories; track c.id) {
+                        <button type="button" class="cat-pill" [class.cat-pill--active]="categoryId === c.id" (click)="selectCategory(c.id)">
+                          {{ c.emoji }} {{ c.label }}
+                        </button>
+                      }
+                      <button type="button" class="cat-pill" [class.cat-pill--active]="isOtherCategorySelected" (click)="selectCategory('otro')">
+                        ➕ Otro
+                      </button>
+                    </div>
+                  </div>
+                  <div class="field-group">
+                    @if (isOtherCategorySelected) {
+                      <label class="field-label">Escribe tu categoría</label>
+                      <div class="field-input">
+                        <span class="field-icon">✍️</span>
+                        <input class="field-text" [(ngModel)]="otherCategoryName" placeholder="Ej. Repostería, Barbería, etc.">
+                      </div>
+                    } @else {
+                      <label class="field-label">Subcategoría</label>
+                      <div class="field-input">
+                        <span class="field-icon">🏷️</span>
+                        <select class="field-text" [(ngModel)]="subcategoryId">
+                          <option value="">Selecciona subcategoría</option>
+                          @for (s of availableSubcategories; track s.id) {
+                            <option [value]="s.id">{{ s.emoji }} {{ s.label }}</option>
+                          }
+                        </select>
+                      </div>
+                    }
+                  </div>
+                </div>
+
                 <div class="field-group">
                   <label class="field-label" for="biz-descripcion">Descripción (corta y clara)</label>
                   <div class="field-input field-input--stack">
@@ -179,6 +219,34 @@
 
             @case ('ubicacion') {
               <p class="rn-wiz-hint">Pegá el link de Maps o la dirección. Con eso ya estás.</p>
+
+              <!-- Delegación y pueblo -->
+              <div class="rn-delegacion-block">
+                <div class="field-group">
+                  <label class="field-label">Delegación</label>
+                  <div class="rn-delegacion-pills">
+                    @for (d of delegaciones; track d.id) {
+                      <button type="button" class="cat-pill" [class.cat-pill--active]="selectedDelegacion === d.id" (click)="selectDelegacion(d.id)">
+                        {{ d.emoji }} {{ d.name }}
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                @if (selectedDelegacion) {
+                  <div class="field-group">
+                    <label class="field-label">Pueblo</label>
+                    <div class="rn-pueblo-grid">
+                      @for (p of availablePueblos; track p.id) {
+                        <button type="button" class="rn-pueblo-chip" [class.rn-pueblo-chip--active]="selectedPueblo === p.id" (click)="selectedPueblo = p.id">
+                          📍 {{ p.name }}
+                        </button>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+
               <div class="field-group rn-location-block">
                 <label class="field-label" for="biz-ubicacion">Ubicación (Google Maps o dirección)</label>
                 <div class="field-input field-input--stack">
@@ -232,11 +300,9 @@
           <button type="button" class="ghost-btn rn-wiz-back" (click)="goBack()" [disabled]="currentStep === 'enganche'">← Atrás</button>
           <div class="rn-wiz-nav-right">
             @if (currentStep === 'ubicacion') {
-              <a routerLink="/negocio" class="rn-cta-link">
-                <button type="button" class="cv2-btn cv2-btn-primary rn-wiz-next" [disabled]="!canGoNext">
-                  Finalizar →
-                </button>
-              </a>
+              <button type="button" class="cv2-btn cv2-btn-primary rn-wiz-next" [disabled]="!canGoNext || submitting()" (click)="submit()">
+                {{ submitting() ? 'Registrando...' : 'Finalizar →' }}
+              </button>
             } @else {
               <button type="button" class="cv2-btn cv2-btn-primary rn-wiz-next" (click)="goNext()" [disabled]="!canGoNext">
                 Siguiente →
@@ -245,6 +311,9 @@
           </div>
         </div>
 
+        @if (submitError()) {
+          <div style="color:#c0392b;text-align:center;font-size:0.875rem;margin-bottom:8px">{{ submitError() }}</div>
+        }
         <div class="rn-wiz-mot" aria-live="polite">
           @if (canGoNext && currentStep !== 'ubicacion') {
             <span class="rn-wiz-mot-pill">Listo. Dale “Siguiente”.</span>

@@ -190,6 +190,8 @@
                 [placeholder]="f.placeholder"
                 [attr.inputmode]="f.inputmode || null"
                 [attr.autocomplete]="f.autocomplete || null"
+                [ngModel]="$index === 0 ? passwordRegistro : passwordRepeatRegistro"
+                (ngModelChange)="$index === 0 ? passwordRegistro = $event : passwordRepeatRegistro = $event"
               >
             </div>
           </div>
